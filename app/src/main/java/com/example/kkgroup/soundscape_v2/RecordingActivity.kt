@@ -1,9 +1,11 @@
 package com.example.kkgroup.soundscape_v2
 
+import android.Manifest
 import android.media.*
-import android.support.v7.app.AppCompatActivity
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_recording.*
 import org.jetbrains.anko.toast
@@ -25,21 +27,24 @@ class RecordingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recording)
 
-        recordingBtn.setOnClickListener { startRecording() }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(arrayOf(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.RECORD_AUDIO,
+                    Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS), 5)
+        }
 
-        playRecordingBtn.setOnClickListener { playRecording() }
+        recordingBtn.setOnClickListener { startRecording() }
+        playBtn.setOnClickListener { playRecording() }
     }
 
     private fun startRecording() {
         if(isStart){
-            toast("stop")
-            recordingBtn.text = "Start Recording"
+            recordingBtn.setImageDrawable(resources.getDrawable(R.drawable.ic_mic))
             isRecording = !isRecording
             storageTV.text = filePath
         }else{
-            toast("start")
-            recordingBtn.text = "Stop"
-
+            recordingBtn.setImageDrawable(resources.getDrawable(R.drawable.ic_stop))
             Thread(){
                 kotlin.run {
                     doRecord()
@@ -70,7 +75,7 @@ class RecordingActivity : AppCompatActivity() {
                     audioEncoding, bufferSize)
 
             val buffer = ShortArray(bufferSize)
-
+            // start recording
             audioRecord.startRecording()
 
             isRecording = true
@@ -81,7 +86,6 @@ class RecordingActivity : AppCompatActivity() {
             }
 
             audioRecord.stop()
-
             audioRecord.release()
             dos.close()
 
@@ -91,46 +95,50 @@ class RecordingActivity : AppCompatActivity() {
     }
 
     private fun playRecording() {
-        toast("play")
-        Thread(){
-            kotlin.run {
-                // Get the file we want toplayback.
-                val file = File(Environment.getExternalStorageDirectory().absolutePath + "/test.pcm")
-                // Get the length of the audio stored in the file(16 bit so 2 bytes per short)
-                // and create a short array to store the recordedaudio.
-                val musicLength = (file.length() / 2).toInt()
-                val music = ShortArray(musicLength)
+        if (!isStart) {
+            Thread(){
+                kotlin.run {
+                    // Get the file we want toplayback.
+                    val file = File(Environment.getExternalStorageDirectory().absolutePath + "/test.pcm")
+                    // Get the length of the audio stored in the file(16 bit so 2 bytes per short)
+                    // and create a short array to store the recordedaudio.
+                    val musicLength = (file.length() / 2).toInt()
+                    val music = ShortArray(musicLength)
 
-                try {
-                    // Create a DataInputStream to read the audio databack from the saved file.
-                    val fis = FileInputStream(file)
-                    val bis = BufferedInputStream(fis)
-                    val dis = DataInputStream(bis)
+                    try {
+                        // Create a DataInputStream to read the audio databack from the saved file.
+                        val fis = FileInputStream(file)
+                        val bis = BufferedInputStream(fis)
+                        val dis = DataInputStream(bis)
 
-                    // Read the file into the musicarray.
-                    var i = 0
-                    while (dis.available() > 0) {
-                        music[i] = dis.readShort()
-                        i++
+                        // Read the file into the musicarray.
+                        var i = 0
+                        while (dis.available() > 0) {
+                            music[i] = dis.readShort()
+                            i++
+                        }
+                        dis.close()
+                        val audioTrack = AudioTrack(AudioManager.STREAM_MUSIC,
+                                frequency,
+                                AudioFormat.CHANNEL_OUT_MONO,
+                                AudioFormat.ENCODING_PCM_16BIT,
+                                musicLength * 2,
+                                AudioTrack.MODE_STREAM)
+                        // Start playback
+                        audioTrack.play()
+
+                        // Write the music buffer to the AudioTrackobject
+                        audioTrack.write(music, 0, musicLength)
+
+                        audioTrack.stop()
+                    } catch (t: Throwable) {
+                        Log.e("AudioTrack", t.message)
+                        Log.e("AudioTrack", t.localizedMessage)
+                        toast("Error: ${t.localizedMessage}")
                     }
-                    dis.close()
-                    val audioTrack = AudioTrack(AudioManager.STREAM_MUSIC,
-                            frequency,
-                            AudioFormat.CHANNEL_OUT_MONO,
-                            AudioFormat.ENCODING_PCM_16BIT,
-                            musicLength * 2,
-                            AudioTrack.MODE_STREAM)
-                    // Start playback
-                    audioTrack.play()
-                    // Write the music buffer to the AudioTrackobject
-                    audioTrack.write(music, 0, musicLength)
 
-                    audioTrack.stop()
-                } catch (t: Throwable) {
-                    Log.e("AudioTrack", "Playback Failed")
                 }
-
-            }
-        }.start()
+            }.start()
+        }
     }
 }
