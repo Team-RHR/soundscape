@@ -72,6 +72,8 @@ class RecordingActivity : AppCompatActivity() {
 
         filePath = file.absolutePath
 
+        Log.e("hero","test")
+
         try {
             // Create a DataOuputStream to write the audiodata into the saved file.
             val os = FileOutputStream(file)
