@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import kotlinx.android.synthetic.main.activity_audio_files_list.*
-import org.jetbrains.anko.toast
 import java.io.File
 import java.util.*
 
@@ -79,15 +78,12 @@ class AudioFilesActivity : AppCompatActivity() {
             }
 
             audioRow.setOnClickListener {
-                // use file from "raw"- folder for testing purposes
-//                var audioFile = R.raw.muscle_car
-//                val playIntent = Intent(mContext, PlayActivity::class.java)
-//                playIntent.putExtra("audio", audioFile)
+                var audioFile = Environment.getExternalStorageDirectory().absolutePath + File.separator +
+                        "soundscape" + File.separator + name
+                val playIntent = Intent(mContext, PlayActivity::class.java)
+                playIntent.putExtra("audio", audioFile)
 
-                mContext.toast("${Environment.getExternalStorageDirectory().absolutePath
-                        + File.separator + "soundscape" + File.separator + "$name"}")
-                
-                // mContext.startActivity(playIntent)
+                mContext.startActivity(playIntent)
             }
 
             return audioRow
@@ -136,7 +132,10 @@ class AudioFilesActivity : AppCompatActivity() {
         val fileList: ArrayList<File> = ArrayList()
         val listAllFiles = root.listFiles()
 
-        if (listAllFiles != null && listAllFiles.size > 0) {
+        if (listAllFiles != null && listAllFiles.isNotEmpty()) {
+
+            GlobalModel.audioFiles.clear()      /* fixed, avoid add the same file more times when jump to this activity again */
+
             for (currentFile in listAllFiles) {
                 if (currentFile.name.endsWith(".3gp")) {
                     // File absolute path
@@ -145,6 +144,7 @@ class AudioFilesActivity : AppCompatActivity() {
                     Log.e("downloadFileName", currentFile.getName())
                     fileList.add(currentFile.absoluteFile)
                     var fileName = currentFile.getName()
+
                     GlobalModel.audioFiles.add(AudioFiles(fileName))
                 }
             }
