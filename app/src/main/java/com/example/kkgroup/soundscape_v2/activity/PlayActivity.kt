@@ -1,10 +1,12 @@
-package com.example.kkgroup.soundscape_v2
+package com.example.kkgroup.soundscape_v2.activity
 
 import android.media.MediaPlayer
+import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import com.example.kkgroup.soundscape_v2.R
 import kotlinx.android.synthetic.main.activity_play.*
 
 class PlayActivity : AppCompatActivity() {
@@ -17,9 +19,8 @@ class PlayActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
 
-        val audioFile = intent.extras.getInt("audio")
-
-        mPlayer = MediaPlayer.create(this, audioFile)
+        val audioFile = intent.extras.getString("audio")
+        mPlayer = MediaPlayer.create(this, Uri.parse(audioFile))
 
         audioDurationText.text = getTimeString(currentPos.toLong())
 

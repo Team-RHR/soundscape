@@ -1,17 +1,22 @@
-package com.example.kkgroup.soundscape_v2
+package com.example.kkgroup.soundscape_v2.activity
 
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
-import android.support.v4.content.ContextCompat.startActivity
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.*
-import java.io.File
+import com.example.kkgroup.soundscape_v2.model.AudioFiles
+import com.example.kkgroup.soundscape_v2.model.GlobalModel
+import com.example.kkgroup.soundscape_v2.R
+import com.example.kkgroup.soundscape_v2.Tools.Tools
 import kotlinx.android.synthetic.main.activity_audio_files_list.*
-import org.jetbrains.anko.startActivity
+import java.io.File
+import java.util.*
 
 class AudioFilesActivity : AppCompatActivity() {
 
@@ -22,12 +27,7 @@ class AudioFilesActivity : AppCompatActivity() {
         val listView = findViewById<ListView>(R.id.sound_listView)
         listView.adapter = audioAdapter(this)
 
-        //Getting audio file names
-        var gpath: String = Environment.getExternalStorageDirectory().absolutePath
-        var spath = "soundscape"
-        var fullpath = File(gpath + File.separator + spath)
-        getAudioFiles(fullpath)
-
+        getAudioFiles(File(Tools.getSoundScapePath()))
 
         // Testing code for adding options menu for all audio files
         val clickListener = View.OnClickListener { view ->
@@ -39,7 +39,6 @@ class AudioFilesActivity : AppCompatActivity() {
         }
 
         my_button.setOnClickListener(clickListener)
-
     }
 
 
@@ -76,18 +75,14 @@ class AudioFilesActivity : AppCompatActivity() {
             }
 
             audioRow.setOnClickListener {
-                // use file from "raw"- folder for testing purposes
-                var audioFile = R.raw.muscle_car
+                var audioFile = Tools.getSoundScapePath() + name
                 val playIntent = Intent(mContext, PlayActivity::class.java)
                 playIntent.putExtra("audio", audioFile)
 
                 mContext.startActivity(playIntent)
             }
-
             return audioRow
         }
-
-
 
         override fun getItemId(p0: Int): Long {
             return p0.toLong()
@@ -98,7 +93,6 @@ class AudioFilesActivity : AppCompatActivity() {
         }
 
     }
-
 
     private fun showPopup(view: View) {
 
@@ -130,17 +124,20 @@ class AudioFilesActivity : AppCompatActivity() {
         val fileList: ArrayList<File> = ArrayList()
         val listAllFiles = root.listFiles()
 
-        if (listAllFiles != null && listAllFiles.size > 0) {
+        if (listAllFiles != null && listAllFiles.isNotEmpty()) {
+
+            GlobalModel.audioFiles.clear()      /* fixed, avoid add the same file more times when jump to this activity again */
+
             for (currentFile in listAllFiles) {
-                if (currentFile.name.endsWith(".pcm")) {
+                if (currentFile.name.endsWith(".3gp")) {
                     // File absolute path
                     Log.e("downloadFilePath", currentFile.getAbsolutePath())
                     // File Name
                     Log.e("downloadFileName", currentFile.getName())
                     fileList.add(currentFile.absoluteFile)
                     var fileName = currentFile.getName()
-                    GlobalModel.audioFiles.add(AudioFiles(fileName))
 
+                    GlobalModel.audioFiles.add(AudioFiles(fileName))
                 }
             }
             Log.w("fileList", "" + fileList.size)

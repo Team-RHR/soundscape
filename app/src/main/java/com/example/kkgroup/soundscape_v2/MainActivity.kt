@@ -3,6 +3,8 @@ package com.example.kkgroup.soundscape_v2
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.example.kkgroup.soundscape_v2.activity.AudioFilesActivity
+import com.example.kkgroup.soundscape_v2.activity.RecordingActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 
