@@ -1,6 +1,4 @@
-package com.example.kkgroup.soundscape_v2
-
-import android.util.Log
+package com.example.kkgroup.soundscape_v2.model
 
 class AudioFiles(var name: String) : Comparable<AudioFiles> {
 

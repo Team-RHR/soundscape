@@ -1,4 +1,4 @@
-package com.example.kkgroup.soundscape_v2
+package com.example.kkgroup.soundscape_v2.activity
 
 import android.media.MediaPlayer
 import android.net.Uri
@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import com.example.kkgroup.soundscape_v2.R
 import kotlinx.android.synthetic.main.activity_play.*
 
 class PlayActivity : AppCompatActivity() {

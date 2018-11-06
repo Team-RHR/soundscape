@@ -1,4 +1,4 @@
-package com.example.kkgroup.soundscape_v2
+package com.example.kkgroup.soundscape_v2.activity
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -6,9 +6,10 @@ import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import com.example.kkgroup.soundscape_v2.R
+import com.example.kkgroup.soundscape_v2.Tools.Tools
 import kotlinx.android.synthetic.main.activity_recording.*
 import java.io.File
 import java.io.IOException
@@ -96,8 +97,7 @@ class RecordingActivity : AppCompatActivity() {
     }
 
     private fun startRecording() {
-        audioFile = File(Environment.getExternalStorageDirectory().absolutePath
-                + File.separator + "soundscape" + File.separator + "${Date().time}.3gp")
+        audioFile = File(Tools.getSoundScapePath() + "${Date().time}.3gp")
 
         mRecorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
