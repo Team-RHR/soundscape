@@ -10,7 +10,6 @@ import android.util.Log
 import kotlinx.android.synthetic.main.activity_recording.*
 import org.jetbrains.anko.toast
 import java.io.*
-import java.text.SimpleDateFormat
 import java.util.*
 
 class RecordingActivity : AppCompatActivity() {
@@ -22,7 +21,7 @@ class RecordingActivity : AppCompatActivity() {
     private val channelConfiguration = AudioFormat.CHANNEL_IN_MONO
     private val audioEncoding = AudioFormat.ENCODING_PCM_16BIT
     private lateinit var file: File
-    private val wavfile = File(Environment.getExternalStorageDirectory().absolutePath + "/wavtest.wav")
+    private lateinit var wavfile: File
     private val bufferSize:Int = AudioRecord.getMinBufferSize(frequency, channelConfiguration, audioEncoding)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +69,9 @@ class RecordingActivity : AppCompatActivity() {
         } catch (e: IOException) {
             throw IllegalStateException("Failed to create " + file.toString())
         }
+
         filePath = file.absolutePath
+
         try {
             // Create a DataOuputStream to write the audiodata into the saved file.
             val os = FileOutputStream(file)
