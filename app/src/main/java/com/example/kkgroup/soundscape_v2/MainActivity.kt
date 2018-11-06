@@ -12,6 +12,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
         startRecordingActivityBtn.setOnClickListener {
             val intent = Intent(this, RecordingActivity::class.java)
             startActivity(intent)
@@ -20,8 +21,8 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent (this, AudioFilesActivity::class.java)
             startActivity(intent)
         }
-
     }
+
 }
 
 

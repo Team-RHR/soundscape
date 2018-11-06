@@ -24,9 +24,13 @@
             </intent-filter>
         </activity>
 
+
         <activity android:name=".RecordingActivity"></activity>
 
         <activity android:name=".AudioFilesActivity"></activity>
+
+
+        <activity android:name=".PlayActivity" />
 
     </application>
 

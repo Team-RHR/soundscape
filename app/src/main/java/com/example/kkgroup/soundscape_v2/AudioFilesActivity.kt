@@ -1,14 +1,17 @@
 package com.example.kkgroup.soundscape_v2
 
 import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.support.v4.content.ContextCompat.startActivity
 import android.util.Log
 import android.view.*
 import android.widget.*
 import java.io.File
 import kotlinx.android.synthetic.main.activity_audio_files_list.*
+import org.jetbrains.anko.startActivity
 
 class AudioFilesActivity : AppCompatActivity() {
 
@@ -72,8 +75,19 @@ class AudioFilesActivity : AppCompatActivity() {
                 notifyDataSetChanged()
             }
 
+            audioRow.setOnClickListener {
+                // use file from "raw"- folder for testing purposes
+                var audioFile = R.raw.muscle_car
+                val playIntent = Intent(mContext, PlayActivity::class.java)
+                playIntent.putExtra("audio", audioFile)
+
+                mContext.startActivity(playIntent)
+            }
+
             return audioRow
         }
+
+
 
         override fun getItemId(p0: Int): Long {
             return p0.toLong()
