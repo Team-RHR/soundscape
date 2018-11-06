@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
 
+
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,6 +16,12 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, RecordingActivity::class.java)
             startActivity(intent)
         }
+        redirectButton.setOnClickListener {
+            val intent = Intent (this, AudioFilesActivity::class.java)
+            startActivity(intent)
+        }
 
     }
 }
+
+
