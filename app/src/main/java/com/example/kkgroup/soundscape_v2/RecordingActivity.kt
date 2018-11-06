@@ -10,6 +10,8 @@ import android.util.Log
 import kotlinx.android.synthetic.main.activity_recording.*
 import org.jetbrains.anko.toast
 import java.io.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class RecordingActivity : AppCompatActivity() {
 
@@ -19,7 +21,7 @@ class RecordingActivity : AppCompatActivity() {
     private var filePath:String = ""
     private val channelConfiguration = AudioFormat.CHANNEL_IN_MONO
     private val audioEncoding = AudioFormat.ENCODING_PCM_16BIT
-    private val file = File(Environment.getExternalStorageDirectory().absolutePath + "/test.pcm")
+    private lateinit var file: File
     private val wavfile = File(Environment.getExternalStorageDirectory().absolutePath + "/wavtest.wav")
     private val bufferSize:Int = AudioRecord.getMinBufferSize(frequency, channelConfiguration, audioEncoding)
 
@@ -56,6 +58,10 @@ class RecordingActivity : AppCompatActivity() {
 
     private fun doRecord() {
         // Delete any previousrecording.
+
+        file = File(Environment.getExternalStorageDirectory().absolutePath
+                + File.separator + "soundscape" + "/${Date().time}.pcm")
+
         if (file.exists())
             file.delete()
         // Create the new file.
@@ -99,7 +105,10 @@ class RecordingActivity : AppCompatActivity() {
             Thread(){
                 kotlin.run {
                     // Get the file we want toplayback.
-                    val file = File(Environment.getExternalStorageDirectory().absolutePath + "/test.pcm")
+
+                    Log.e("hero","${file.absolutePath}")
+                    val file = file
+
                     // Get the length of the audio stored in the file(16 bit so 2 bytes per short)
                     // and create a short array to store the recordedaudio.
                     val musicLength = (file.length() / 2).toInt()
