@@ -2,16 +2,19 @@ package com.example.kkgroup.soundscape_v2
 
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
-import android.support.v4.content.ContextCompat.startActivity
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.*
-import java.io.File
 import kotlinx.android.synthetic.main.activity_audio_files_list.*
-import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
+import java.io.File
+import java.util.*
 
 class AudioFilesActivity : AppCompatActivity() {
 
@@ -77,11 +80,14 @@ class AudioFilesActivity : AppCompatActivity() {
 
             audioRow.setOnClickListener {
                 // use file from "raw"- folder for testing purposes
-                var audioFile = R.raw.muscle_car
-                val playIntent = Intent(mContext, PlayActivity::class.java)
-                playIntent.putExtra("audio", audioFile)
+//                var audioFile = R.raw.muscle_car
+//                val playIntent = Intent(mContext, PlayActivity::class.java)
+//                playIntent.putExtra("audio", audioFile)
 
-                mContext.startActivity(playIntent)
+                mContext.toast("${Environment.getExternalStorageDirectory().absolutePath
+                        + File.separator + "soundscape" + File.separator + "$name"}")
+                
+                // mContext.startActivity(playIntent)
             }
 
             return audioRow
@@ -132,7 +138,7 @@ class AudioFilesActivity : AppCompatActivity() {
 
         if (listAllFiles != null && listAllFiles.size > 0) {
             for (currentFile in listAllFiles) {
-                if (currentFile.name.endsWith(".pcm")) {
+                if (currentFile.name.endsWith(".3gp")) {
                     // File absolute path
                     Log.e("downloadFilePath", currentFile.getAbsolutePath())
                     // File Name
@@ -140,7 +146,6 @@ class AudioFilesActivity : AppCompatActivity() {
                     fileList.add(currentFile.absoluteFile)
                     var fileName = currentFile.getName()
                     GlobalModel.audioFiles.add(AudioFiles(fileName))
-
                 }
             }
             Log.w("fileList", "" + fileList.size)

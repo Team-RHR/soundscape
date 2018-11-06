@@ -1,28 +1,30 @@
 package com.example.kkgroup.soundscape_v2
 
 import android.Manifest
-import android.media.*
+import android.content.pm.PackageManager
+import android.media.MediaPlayer
+import android.media.MediaRecorder
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_recording.*
-import org.jetbrains.anko.toast
-import java.io.*
+import java.io.File
+import java.io.IOException
 import java.util.*
+
+private const val LOG_TAG = "hero"
+private const val REQUEST_RECORD_AUDIO_PERMISSION = 200
 
 class RecordingActivity : AppCompatActivity() {
 
-    private var isStart:Boolean = false
-    private var isRecording:Boolean = false
-    private val frequency = 44100
-    private var filePath:String = ""
-    private val channelConfiguration = AudioFormat.CHANNEL_IN_MONO
-    private val audioEncoding = AudioFormat.ENCODING_PCM_16BIT
-    private lateinit var file: File
-    private lateinit var wavfile: File
-    private val bufferSize:Int = AudioRecord.getMinBufferSize(frequency, channelConfiguration, audioEncoding)
+    private var permissionToRecordAccepted = false
+    private var mRecorder: MediaRecorder? = null
+    private var mPlayer: MediaPlayer? = null
+    private var audioFile:File? = null
+    private var mStartPlaying = true
+    private var mStartRecording = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,123 +34,112 @@ class RecordingActivity : AppCompatActivity() {
             requestPermissions(arrayOf(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.RECORD_AUDIO,
-                    Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS), 5)
+                    Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS), REQUEST_RECORD_AUDIO_PERMISSION)
         }
 
-        recordingBtn.setOnClickListener { startRecording() }
-        playBtn.setOnClickListener { playRecording() }
+        recordingBtn.setOnClickListener {
+            onRecord(mStartRecording)
+            if (mStartRecording) {
+                recordingBtn.setImageDrawable(resources.getDrawable(R.drawable.ic_stop))
+            } else {
+                recordingBtn.setImageDrawable(resources.getDrawable(R.drawable.ic_mic))
+            }
+
+            mStartRecording = !mStartRecording
+        }
+
+        playBtn.setOnClickListener {
+            onPlay(mStartPlaying)
+
+            if (mStartPlaying) {
+                playBtn.setImageDrawable(resources.getDrawable(R.drawable.ic_stop))
+            } else {
+                playBtn.setImageDrawable(resources.getDrawable(R.drawable.ic_play))
+            }
+
+            mStartPlaying = !mStartPlaying
+        }
+    }
+
+    private fun onRecord(start: Boolean) = if (start) {
+        startRecording()
+    } else {
+        stopRecording()
+        storageTV.text = audioFile?.absolutePath
+    }
+
+    private fun onPlay(start: Boolean) = if (start) {
+        startPlaying()
+    } else {
+        stopPlaying()
+    }
+
+    private fun startPlaying() {
+        mPlayer = MediaPlayer().apply {
+            try {
+                setDataSource(audioFile?.absolutePath)
+                prepare()
+                start()
+                this.setOnCompletionListener {
+                    playBtn.setImageDrawable(resources.getDrawable(R.drawable.ic_play))
+                    mStartPlaying = !mStartPlaying
+                }
+            } catch (e: IOException) {
+                Log.e(LOG_TAG, "prepare() failed")
+            }
+        }
+    }
+
+    private fun stopPlaying() {
+        mPlayer?.release()
+        mPlayer = null
     }
 
     private fun startRecording() {
-        if(isStart){
-            recordingBtn.setImageDrawable(resources.getDrawable(R.drawable.ic_mic))
-            isRecording = !isRecording
-            storageTV.text = filePath
-        }else{
-            recordingBtn.setImageDrawable(resources.getDrawable(R.drawable.ic_stop))
-            Thread(){
-                kotlin.run {
-                    doRecord()
-                }
-            }.start()
-        }
-        isStart = !isStart
-    }
+        audioFile = File(Environment.getExternalStorageDirectory().absolutePath
+                + File.separator + "soundscape" + File.separator + "${Date().time}.3gp")
 
-    private fun doRecord() {
-        // Delete any previousrecording.
+        mRecorder = MediaRecorder().apply {
+            setAudioSource(MediaRecorder.AudioSource.MIC)
+            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+            setAudioEncodingBitRate(16)
+            setAudioSamplingRate(44100)
+            setOutputFile(audioFile?.absolutePath)
 
-        file = File(Environment.getExternalStorageDirectory().absolutePath
-                + File.separator + "soundscape" + "/${Date().time}.pcm")
-
-        if (file.exists())
-            file.delete()
-        // Create the new file.
-        try {
-            file.createNewFile()
-        } catch (e: IOException) {
-            throw IllegalStateException("Failed to create " + file.toString())
-        }
-
-        filePath = file.absolutePath
-
-        try {
-            // Create a DataOuputStream to write the audiodata into the saved file.
-            val os = FileOutputStream(file)
-            val bos = BufferedOutputStream(os)
-            val dos = DataOutputStream(bos)
-            val audioRecord = AudioRecord(MediaRecorder.AudioSource.MIC,
-                    frequency, channelConfiguration,
-                    audioEncoding, bufferSize)
-
-            val buffer = ShortArray(bufferSize)
-            // start recording
-            audioRecord.startRecording()
-
-            isRecording = true
-            while (isRecording) {
-                val bufferReadResult = audioRecord.read(buffer, 0, bufferSize)
-                for (i in 0 until bufferReadResult)
-                    dos.writeShort(buffer[i].toInt())
+            try {
+                prepare()
+            } catch (e: IOException) {
+                Log.e(LOG_TAG, "prepare() failed")
             }
 
-            audioRecord.stop()
-            audioRecord.release()
-            dos.close()
-
-        } catch (t: Throwable) {
-            Log.e("AudioRecord", "Recording Failed")
+            start()
         }
     }
 
-    private fun playRecording() {
-        if (!isStart) {
-            Thread(){
-                kotlin.run {
-                    // Get the file we want toplayback.
-
-                    Log.e("hero","${file.absolutePath}")
-                    val file = file
-
-                    // Get the length of the audio stored in the file(16 bit so 2 bytes per short)
-                    // and create a short array to store the recordedaudio.
-                    val musicLength = (file.length() / 2).toInt()
-                    val music = ShortArray(musicLength)
-
-                    try {
-                        // Create a DataInputStream to read the audio databack from the saved file.
-                        val fis = FileInputStream(file)
-                        val bis = BufferedInputStream(fis)
-                        val dis = DataInputStream(bis)
-
-                        // Read the file into the musicarray.
-                        var i = 0
-                        while (dis.available() > 0) {
-                            music[i] = dis.readShort()
-                            i++
-                        }
-                        dis.close()
-                        val audioTrack = AudioTrack(AudioManager.STREAM_MUSIC,
-                                frequency,
-                                AudioFormat.CHANNEL_OUT_MONO,
-                                AudioFormat.ENCODING_PCM_16BIT,
-                                musicLength * 2,
-                                AudioTrack.MODE_STREAM)
-                        // Start playback
-                        audioTrack.play()
-
-                        // Write the music buffer to the AudioTrackobject
-                        audioTrack.write(music, 0, musicLength)
-
-                        audioTrack.stop()
-                    } catch (t: Throwable) {
-                        Log.e("AudioTrack", t.message)
-                        Log.e("AudioTrack", t.localizedMessage)
-                        toast("Error: ${t.localizedMessage}")
-                    }
-
-                }
-            }.start()
+    private fun stopRecording() {
+        mRecorder?.apply {
+            stop()
+            release()
         }
+        mRecorder = null
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        permissionToRecordAccepted = if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION) {
+            grantResults[0] == PackageManager.PERMISSION_GRANTED
+        } else {
+            false
+        }
+        if (!permissionToRecordAccepted) finish()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mRecorder?.release()
+        mRecorder = null
+        mPlayer?.release()
+        mPlayer = null
     }
 }
