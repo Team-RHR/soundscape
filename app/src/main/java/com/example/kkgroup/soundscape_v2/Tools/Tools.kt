@@ -14,7 +14,7 @@ class Tools {
 
         // return -> /storage/emulated/0/soundscape/
         fun getSoundScapePath(): String{
-            return Environment.getExternalStorageDirectory().absolutePath + File.separator + "download" + File.separator
+            return Environment.getExternalStorageDirectory().absolutePath + File.separator + "soundscape" + File.separator
         }
     }
 

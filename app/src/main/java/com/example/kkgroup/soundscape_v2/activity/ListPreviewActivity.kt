@@ -107,7 +107,7 @@ class ListPreviewActivity : AppCompatActivity() {
         if (listAllFiles != null && listAllFiles.isNotEmpty()) {
 
             for (currentFile in listAllFiles) {
-                if (currentFile.name.endsWith(".mp3") || currentFile.name.endsWith(".jpg")) {
+                if (currentFile.name.endsWith(".3gp") || currentFile.name.endsWith(".jpg")) {
                     // File absolute path
                     Log.e("downloadFilePath", currentFile.getAbsolutePath())
                     // File Name

@@ -33,4 +33,9 @@ dependencies {
 
     implementation 'org.jetbrains.anko:anko:0.10.5'
     implementation 'com.android.support:design:28.0.0'
+
+    // Networking
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
 }
