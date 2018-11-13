@@ -2,6 +2,9 @@ package com.example.kkgroup.soundscape_v2.activity
 
 import android.content.Context
 import android.content.Intent
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -15,36 +18,35 @@ import com.example.kkgroup.soundscape_v2.model.GlobalModel
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import kotlinx.android.synthetic.main.activity_audio_files_list.*
+import kotlinx.android.synthetic.main.activity_play.*
+import kotlinx.android.synthetic.main.row_audio_file.view.*
 import java.io.File
 import java.util.*
 
-class AudioFilesActivity : AppCompatActivity() {
+class ListPreviewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audio_files_list)
 
         val listView = findViewById<ListView>(R.id.sound_listView)
-        listView.adapter = audioAdapter(this)
+        val fileFolder = intent.extras.getString("test")
 
-        getAudioFiles(File(Tools.getSoundScapePath()))
+        listView.adapter = audioAdapter(this, fileFolder)
 
-        // Testing code for adding options menu for all audio files
-        val clickListener = View.OnClickListener { view ->
-            when (view.id) {
-                R.id.my_button -> {
-                    showPopup(view)
-                }
-            }
-        }
+        GlobalModel.audioFiles.clear()
+        getAudioFiles(File(Tools.getSoundScapePath() + fileFolder + File.separator))
 
-        my_button.setOnClickListener(clickListener)
+        my_button.text = "idk test"
     }
 
 
-    private class audioAdapter(context: Context): BaseAdapter() {
+    private class audioAdapter(context: Context, folder: String) : BaseAdapter() {
 
         private val mContext: Context
+        private val folder = folder
+
+        var mediaPlayer: MediaPlayer? = MediaPlayer()
 
         init {
             this.mContext = context
@@ -65,25 +67,25 @@ class AudioFilesActivity : AppCompatActivity() {
             val name = GlobalModel.audioFiles[position].getAudioFileName()
             nameTextView.text = name
 
-            //Options button shit
-            val optionsButton = audioRow.findViewById(R.id.audio_list_button) as ImageButton
+            audioRow.audio_list_button.setImageResource(R.drawable.ic_play_circle_filled_black)
 
-            optionsButton.setOnClickListener {
-                GlobalModel.audioFiles.removeAt(position)
-                Toast.makeText(mContext, "Removed position: $position ", Toast.LENGTH_SHORT).show()
-                notifyDataSetChanged()
-            }
+            val playButton = audioRow.findViewById(R.id.audio_list_button) as ImageButton
 
-            audioRow.setOnClickListener {
+            playButton.setOnClickListener {
+                val filePath = Tools.getSoundScapePath() + folder + File.separator + nameTextView.text
 
+                    if (mediaPlayer?.isPlaying!!) {
+                        mediaPlayer?.stop()
+                        mediaPlayer?.reset()
+                        audioRow.audio_list_button.setImageResource(R.drawable.ic_play_circle_filled_black)
+                    } else {
+                        mediaPlayer?.setDataSource(filePath)
+                        mediaPlayer?.prepare()
+                        mediaPlayer?.start()
+                        audioRow.audio_list_button.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp)
+                    }
 
-                var audioFile = Tools.getSoundScapePath() + name
-                val playIntent = Intent(mContext, PlayActivity::class.java)
-                playIntent.putExtra("audio", audioFile)
-
-                mContext.startActivity(playIntent)
-
-            }
+                }
             return audioRow
         }
 
@@ -92,36 +94,11 @@ class AudioFilesActivity : AppCompatActivity() {
         }
 
         override fun getItem(p0: Int): Any {
-           return "Test"
+            return "Test"
         }
 
     }
 
-    private fun showPopup(view: View) {
-
-        var popup: PopupMenu? = null;
-        popup = PopupMenu(this, view)
-        popup.inflate(R.menu.audio_list_menu)
-
-        popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
-
-            when (item!!.itemId) {
-                R.id.item1 -> {
-                    Toast.makeText(this@AudioFilesActivity, item.title, Toast.LENGTH_SHORT).show();
-                }
-                R.id.item2 -> {
-                    Toast.makeText(this@AudioFilesActivity, item.title, Toast.LENGTH_SHORT).show();
-                }
-                R.id.item3 -> {
-                    Toast.makeText(this@AudioFilesActivity, item.title, Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            true
-        })
-
-        popup.show()
-    }
 
     fun getAudioFiles(root: File) {
         val fileList: ArrayList<File> = ArrayList()
@@ -129,10 +106,8 @@ class AudioFilesActivity : AppCompatActivity() {
 
         if (listAllFiles != null && listAllFiles.isNotEmpty()) {
 
-            GlobalModel.audioFiles.clear()      /* fixed, avoid add the same file more times when jump to this activity again */
-
             for (currentFile in listAllFiles) {
-                if (currentFile.name.endsWith(".3gp")) {
+                if (currentFile.name.endsWith(".mp3") || currentFile.name.endsWith(".jpg")) {
                     // File absolute path
                     Log.e("downloadFilePath", currentFile.getAbsolutePath())
                     // File Name
@@ -146,7 +121,6 @@ class AudioFilesActivity : AppCompatActivity() {
             Log.w("fileList", "" + fileList.size)
         }
     }
-
 }
 
 

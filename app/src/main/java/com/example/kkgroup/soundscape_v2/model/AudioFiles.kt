@@ -1,5 +1,7 @@
 package com.example.kkgroup.soundscape_v2.model
 
+import com.example.kkgroup.soundscape_v2.model.GlobalModel.audioFiles
+
 class AudioFiles(var name: String) : Comparable<AudioFiles> {
 
     override fun compareTo(other: AudioFiles): Int {
@@ -8,6 +10,12 @@ class AudioFiles(var name: String) : Comparable<AudioFiles> {
 
     fun getAudioFileName(): String {
         return name
+    }
+
+    fun removeNames() {
+        for (s in audioFiles) {
+            audioFiles.remove(s)
+        }
     }
 
 }

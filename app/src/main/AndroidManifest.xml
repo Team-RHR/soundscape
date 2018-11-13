@@ -28,7 +28,8 @@
         <activity android:name=".activity.RecordingActivity"></activity>
 
         <activity android:name=".activity.AudioFilesActivity"></activity>
-
+        <activity android:name=".activity.SelectAudioActivity"></activity>
+        <activity android:name=".activity.ListPreviewActivity"></activity>
 
         <activity android:name=".activity.PlayActivity" />
 

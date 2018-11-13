@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.example.kkgroup.soundscape_v2.activity.AudioFilesActivity
 import com.example.kkgroup.soundscape_v2.activity.RecordingActivity
+import com.example.kkgroup.soundscape_v2.activity.SelectAudioActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -19,11 +20,19 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, RecordingActivity::class.java)
             startActivity(intent)
         }
+        testPageButton.setOnClickListener {
+            val intent = Intent(this, SelectAudioActivity::class.java)
+            startActivity(intent)
+        }
+
         redirectButton.setOnClickListener {
             val intent = Intent (this, AudioFilesActivity::class.java)
             startActivity(intent)
         }
     }
+
+
+
 
 }
 
