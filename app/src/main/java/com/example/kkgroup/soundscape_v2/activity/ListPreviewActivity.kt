@@ -16,6 +16,7 @@ import android.widget.*
 import com.example.kkgroup.soundscape_v2.model.AudioFiles
 import com.example.kkgroup.soundscape_v2.model.GlobalModel
 import com.example.kkgroup.soundscape_v2.R
+import com.example.kkgroup.soundscape_v2.R.id.mainButton
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import kotlinx.android.synthetic.main.activity_audio_files_list.*
 import kotlinx.android.synthetic.main.activity_play.*
@@ -67,25 +68,38 @@ class ListPreviewActivity : AppCompatActivity() {
             val name = GlobalModel.audioFiles[position].getAudioFileName()
             nameTextView.text = name
 
+
+            mediaPlayer!!.setOnCompletionListener {
+                mediaPlayer?.stop()
+                mediaPlayer?.reset()
+                notifyDataSetChanged()
+            }
+
+
+
             audioRow.audio_list_button.setImageResource(R.drawable.ic_play_circle_filled_black)
 
             val playButton = audioRow.findViewById(R.id.audio_list_button) as ImageButton
 
             playButton.setOnClickListener {
                 val filePath = Tools.getSoundScapePath() + folder + File.separator + nameTextView.text
-
-                    if (mediaPlayer?.isPlaying!!) {
-                        mediaPlayer?.stop()
-                        mediaPlayer?.reset()
-                        audioRow.audio_list_button.setImageResource(R.drawable.ic_play_circle_filled_black)
-                    } else {
-                        mediaPlayer?.setDataSource(filePath)
-                        mediaPlayer?.prepare()
-                        mediaPlayer?.start()
-                        audioRow.audio_list_button.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp)
-                    }
-
+                if (mediaPlayer?.isPlaying!! && playButton.tag == "paused") {
+                    mediaPlayer?.stop()
+                    mediaPlayer?.reset()
+                    notifyDataSetChanged()
+                } else if (mediaPlayer?.isPlaying!!) {
+                    mediaPlayer?.stop()
+                    mediaPlayer?.reset()
+                    notifyDataSetChanged()
+                } else {
+                    mediaPlayer?.setDataSource(filePath)
+                    mediaPlayer?.prepare()
+                    mediaPlayer?.start()
+                    playButton.tag = "playing"
+                    playButton.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp)
                 }
+
+            }
             return audioRow
         }
 
