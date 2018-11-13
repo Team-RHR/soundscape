@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <!-- permission for internet usage -->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -17,26 +17,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-
-        <activity android:name=".activity.RecordingActivity"></activity>
-
-        <activity android:name=".activity.AudioFilesActivity"></activity>
-        <activity android:name=".activity.SelectAudioActivity"></activity>
-        <activity android:name=".activity.ListPreviewActivity"></activity>
-
-
-
+        <activity android:name=".activity.RecordingActivity" />
+        <activity android:name=".activity.AudioFilesActivity" />
+        <activity android:name=".activity.SelectAudioActivity" />
+        <activity android:name=".activity.ListPreviewActivity" />
         <activity android:name=".activity.PlayActivity" />
-        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.NewSoundscapeActivity"></activity>
     </application>
 
 </manifest>

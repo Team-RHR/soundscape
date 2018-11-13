@@ -30,12 +30,13 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
-    implementation 'org.jetbrains.anko:anko:0.10.5'
     implementation 'com.android.support:design:28.0.0'
 
-    // Networking
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-    implementation 'com.google.code.gson:gson:2.8.5'
+    // ====================== third party dependencies =============================
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'              // Networking
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'        // Networking
+    implementation 'com.google.code.gson:gson:2.8.5'                    // Json convertor
+    implementation 'com.mikhaellopez:circularimageview:3.2.0'           // circle image view
+    implementation 'com.balysv:material-ripple:1.0.2'                   // ripple effect
+    implementation 'org.jetbrains.anko:anko:0.10.5'                     // anko
 }
