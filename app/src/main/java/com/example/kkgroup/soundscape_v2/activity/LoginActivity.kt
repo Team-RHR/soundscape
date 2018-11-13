@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.Tools.Networking
+import com.example.kkgroup.soundscape_v2.Tools.PrefManager
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Call
@@ -14,22 +15,33 @@ import retrofit2.Response
 
 class LoginActivity : AppCompatActivity() {
 
+    private lateinit var prefManager: PrefManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        prefManager = PrefManager(this)
+
+        // check if user is already logged in and has API key in shared preferences
+        if (prefManager.isApiKeySet()) {
+            // set api token from sharedpreferences before continuing to another activity
+            Networking.API_TOKEN = prefManager.getApiKey()
+            // TODO: go to next screen, user already logged in
+
+            Log.d("DBG","Already logged in")
+        } else {
+            Log.d("DBG", "Need to log in")
+        }
 
         submitLoginBtn.setOnClickListener {
             val usernameInput = usrInput.text.toString()
             val passwordInput = passInput.text.toString()
 
-            Log.d("DBG", "USR: $usernameInput PASS: $passwordInput")
-
             // create json object that gets sent to API in a POST body
             val json: JsonObject = JsonObject()
             json.addProperty("username", usernameInput)
             json.addProperty("password", passwordInput)
-
-            Log.d("DBG", "b4 retrofit: ${Networking.API_TOKEN}")
 
             callWebService(json)
         }
@@ -52,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
 
                         Networking.API_TOKEN = res["api_key"].toString()
 
-                        Log.d("DBG", "after retrofit: ${Networking.API_TOKEN}")
+                        prefManager.setApiKey(Networking.API_TOKEN)
 
                         // TODO: go to next screen, login succesfull
                     } else {
