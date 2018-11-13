@@ -27,4 +27,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/submitLoginBtn"
+        android:layout_width="211dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="184dp"
+        android:layout_marginEnd="86dp"
+        android:layout_marginStart="87dp"
+        android:layout_marginTop="173dp"
+        android:text="Login activity"
+        app:layout_constraintBottom_toTopOf="@+id/startRecordingActivityBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/redirectButton" />
+
 </android.support.constraint.ConstraintLayout>

@@ -2,12 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.kkgroup.soundscape_v2">
 
-
     <!-- permissions for audio recording -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
+    <!-- permission for internet usage -->
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -23,15 +24,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-        <activity android:name=".activity.RecordingActivity"></activity>
-
-        <activity android:name=".activity.AudioFilesActivity"></activity>
-
-
+        <activity android:name=".activity.RecordingActivity" />
+        <activity android:name=".activity.AudioFilesActivity" />
         <activity android:name=".activity.PlayActivity" />
-
+        <activity android:name=".activity.LoginActivity" />
     </application>
 
 </manifest>
