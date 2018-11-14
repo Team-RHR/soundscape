@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.widget.Toolbar
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.Tools.Tools
-import com.example.kkgroup.soundscape_v2.fragments.AudioListFragment
+import com.example.kkgroup.soundscape_v2.fragments.CategoryListFragment
 import com.example.kkgroup.soundscape_v2.fragments.RecordingFragment
 import kotlinx.android.synthetic.main.select_audio_file.*
 
@@ -21,7 +21,7 @@ class SelectAudioActivity : AppCompatActivity() {
         initToolbar()
 
         val adapter = MyViewPagerAdapter(supportFragmentManager)
-        adapter.addFragment(AudioListFragment())
+        adapter.addFragment(CategoryListFragment())
         adapter.addFragment(RecordingFragment())
         viewPager.adapter = adapter
         tabs.setupWithViewPager(viewPager)

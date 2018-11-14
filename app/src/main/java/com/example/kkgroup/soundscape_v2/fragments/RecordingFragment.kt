@@ -13,7 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.Tools.Tools
-import kotlinx.android.synthetic.main.activity_recording.*
+import kotlinx.android.synthetic.main.fragment_recording.*
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -24,7 +24,6 @@ class RecordingFragment : Fragment() {
     private var mRecorder: MediaRecorder? = null
     private var mPlayer: MediaPlayer? = null
     private var audioFile:File? = null
-    private var mStartPlaying = true
     private var mStartRecording = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -50,18 +49,6 @@ class RecordingFragment : Fragment() {
 
             mStartRecording = !mStartRecording
         }
-
-        playBtn.setOnClickListener {
-            onPlay(mStartPlaying)
-
-            if (mStartPlaying) {
-                playBtn.setImageDrawable(resources.getDrawable(R.drawable.ic_stop))
-            } else {
-                playBtn.setImageDrawable(resources.getDrawable(R.drawable.ic_play))
-            }
-
-            mStartPlaying = !mStartPlaying
-        }
     }
 
     private fun onRecord(start: Boolean) = if (start) {
@@ -69,33 +56,6 @@ class RecordingFragment : Fragment() {
     } else {
         stopRecording()
         storageTV.text = audioFile?.absolutePath
-    }
-
-    private fun onPlay(start: Boolean) = if (start) {
-        startPlaying()
-    } else {
-        stopPlaying()
-    }
-
-    private fun startPlaying() {
-        mPlayer = MediaPlayer().apply {
-            try {
-                setDataSource(audioFile?.absolutePath)
-                prepare()
-                start()
-                this.setOnCompletionListener {
-                    playBtn.setImageDrawable(resources.getDrawable(R.drawable.ic_play))
-                    mStartPlaying = !mStartPlaying
-                }
-            } catch (e: IOException) {
-                Tools.log_e("prepare() failed")
-            }
-        }
-    }
-
-    private fun stopPlaying() {
-        mPlayer?.release()
-        mPlayer = null
     }
 
     private fun startRecording() {
