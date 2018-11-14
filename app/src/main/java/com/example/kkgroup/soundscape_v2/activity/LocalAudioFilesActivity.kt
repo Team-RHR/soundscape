@@ -2,9 +2,10 @@ package com.example.kkgroup.soundscape_v2.activity
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -22,12 +23,12 @@ import kotlinx.android.synthetic.main.activity_audio_files_of_local.*
 import org.jetbrains.anko.startActivity
 import java.io.File
 
+
 private val REQUEST_READ_AUDIO_PERMISSION = 200
 class LocalAudioFilesActivity : AppCompatActivity() {
 
     private val LOADING_DURATION = 2000
     private var mExitTime: Long = 0
-    private var permissionToReadAccepted = false
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var mAudioItemAdapter: AudioItemAdapter
@@ -36,16 +37,24 @@ class LocalAudioFilesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audio_files_of_local)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(arrayOf(
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS), REQUEST_READ_AUDIO_PERMISSION)
-        }
+        requestPermission()
 
         recyclerView = findViewById(R.id.recyclerView)
         initToolbar()
         initListeners()
+    }
+
+    private fun requestPermission() {
+
+        if(ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED){
+            // No permission
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    ,REQUEST_READ_AUDIO_PERMISSION);
+        }else{
+            // have permission
+        }
     }
 
     private fun initListeners() {
@@ -125,14 +134,20 @@ class LocalAudioFilesActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        permissionToReadAccepted = if (requestCode == REQUEST_READ_AUDIO_PERMISSION) {
-            grantResults[0] == PackageManager.PERMISSION_GRANTED
-        } else {
-            false
-        }
-        if (!permissionToReadAccepted) {
-            Tools.toastShow(this, " Permission Denied")
-            finish()
+
+        when (requestCode) {
+            REQUEST_READ_AUDIO_PERMISSION -> {
+                if (grantResults.isNotEmpty()
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // user granted the permission
+
+                } else {
+                    // user denied the permission
+                    Tools.toastShow(this, " Permission Denied")
+                    finish()
+                }
+                return;
+            }
         }
     }
 }
