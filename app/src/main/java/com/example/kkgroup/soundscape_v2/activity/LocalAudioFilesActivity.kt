@@ -1,5 +1,8 @@
 package com.example.kkgroup.soundscape_v2.activity
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
@@ -19,10 +22,12 @@ import kotlinx.android.synthetic.main.activity_audio_files_of_local.*
 import org.jetbrains.anko.startActivity
 import java.io.File
 
+private val REQUEST_READ_AUDIO_PERMISSION = 200
 class LocalAudioFilesActivity : AppCompatActivity() {
 
     private val LOADING_DURATION = 2000
     private var mExitTime: Long = 0
+    private var permissionToReadAccepted = false
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var mAudioItemAdapter: AudioItemAdapter
@@ -30,6 +35,13 @@ class LocalAudioFilesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audio_files_of_local)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(arrayOf(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS), REQUEST_READ_AUDIO_PERMISSION)
+        }
 
         recyclerView = findViewById(R.id.recyclerView)
         initToolbar()
@@ -109,6 +121,19 @@ class LocalAudioFilesActivity : AppCompatActivity() {
             return true
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        permissionToReadAccepted = if (requestCode == REQUEST_READ_AUDIO_PERMISSION) {
+            grantResults[0] == PackageManager.PERMISSION_GRANTED
+        } else {
+            false
+        }
+        if (!permissionToReadAccepted) {
+            Tools.toastShow(this, " Permission Denied")
+            finish()
+        }
     }
 }
 

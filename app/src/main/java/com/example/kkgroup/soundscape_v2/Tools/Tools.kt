@@ -79,6 +79,8 @@ object Tools {
     // return list of audio file in a certain folder
     fun getLocalAudioFiles(folderPath: String) : MutableList<File>{
 
+        Tools.log_e(" File(folderPath): ${ File(folderPath) == null}")
+        Tools.log_e(" File(folderPath).listFiles: ${ File(folderPath).listFiles()== null}")
         val listFiles = File(folderPath).listFiles().filter {
             it.name.endsWith(Tools.audioFormat)
         }
