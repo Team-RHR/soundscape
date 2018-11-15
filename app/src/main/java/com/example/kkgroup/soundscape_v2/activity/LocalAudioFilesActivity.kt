@@ -16,6 +16,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import com.example.kkgroup.soundscape_v2.R
+import com.example.kkgroup.soundscape_v2.Tools.PrefManager
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.adapter.AudioItemAdapter
 import com.example.kkgroup.soundscape_v2.widget.ItemAnimation
@@ -108,6 +109,11 @@ class LocalAudioFilesActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_refresh) {
             loadingAndDisplayContent()
+        } else if(item.itemId == R.id.action_logout) {
+            val prefManager = PrefManager(this)
+
+            prefManager.setApiKey(null)
+            startActivity<LoginActivity>()
         } else {
             Tools.toastShow(this,"Maybe will added later")
         }

@@ -16,6 +16,7 @@ import retrofit2.Response
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var prefManager: PrefManager
+    private var mExitTime: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +46,18 @@ class LoginActivity : AppCompatActivity() {
             json.addProperty("password", passwordInput)
 
             callWebService(json)
+        }
+    }
+
+    // this is to prevent from going back in activity stack, so if user clicks logout and is redirected to login page they cant go back to soundscapes activity
+    override fun onBackPressed() {
+        if (System.currentTimeMillis() - mExitTime > 2000) {
+            Tools.toastShow(this, "Press again to exit")
+            mExitTime = System.currentTimeMillis()
+        } else {
+            Tools.toastCancel()
+            moveTaskToBack(true)
+            // finish()
         }
     }
 
