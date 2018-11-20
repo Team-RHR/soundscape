@@ -1,7 +1,7 @@
 package com.example.kkgroup.soundscape_v2.activity
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -11,15 +11,11 @@ import com.example.kkgroup.soundscape_v2.Model.SearchApiModel
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.Tools.Networking
 import com.example.kkgroup.soundscape_v2.Tools.Tools
-import com.example.kkgroup.soundscape_v2.adapter.AudioItemAdapter
 import com.example.kkgroup.soundscape_v2.adapter.SearchItemAdapter
 import com.example.kkgroup.soundscape_v2.widget.ItemAnimation
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
-import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_search.*
-import org.jetbrains.anko.startActivity
-import java.io.File
 
 class SearchActivity : AppCompatActivity() {
 
@@ -35,7 +31,7 @@ class SearchActivity : AppCompatActivity() {
         // click listener for search button in phone keyboard
         search_input.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                Log.d("DBG", search_input.text.toString())
+                //Log.d("DBG", search_input.text.toString())
                 searchAudioFiles()
             }
             true
@@ -52,8 +48,24 @@ class SearchActivity : AppCompatActivity() {
                 if (response != null) {
                     Tools.toastShow(this@SearchActivity, "Search successfull")
 
+                    /** here we filter the response and alter the json so format is
+                     * [
+                     *  {},
+                     *  {}
+                     * ]
+                     *
+                     * instead of
+                     *
+                     * [
+                     *  [{}],
+                     *  [{}]
+                     * ]
+                     */
                     val res = "[" + response.body().toString().filter { c:Char -> (c.toString() != "[" && c.toString() != "]")  } + "]"
 
+                    /**
+                     * here we create a array of SearchApiModels that we can better use for adapters etc.
+                     */
                     val gson = GsonBuilder().create()
                     val model: Array<SearchApiModel> = gson.fromJson(res, Array<SearchApiModel>::class.java)
 
@@ -83,8 +95,8 @@ class SearchActivity : AppCompatActivity() {
         mSearchItemAdapter.setOnItemClickListener(object : SearchItemAdapter.OnItemClickListener {
             override fun onItemClick(view: View, obj: SearchItemAdapter, position: Int) {
                 Log.d("DBG", "Clicked ${obj.items[position].title}")
+                // TODO: make the item selected go to the "create soundscape" activity
             }
-
         })
     }
 }

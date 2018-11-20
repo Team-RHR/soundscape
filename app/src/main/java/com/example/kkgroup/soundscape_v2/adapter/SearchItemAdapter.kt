@@ -10,7 +10,6 @@ import android.widget.TextView
 import com.example.kkgroup.soundscape_v2.Model.SearchApiModel
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.widget.ItemAnimation
-import java.io.File
 
 class SearchItemAdapter(val ctx: Context,
                         val items: Array<SearchApiModel>,
