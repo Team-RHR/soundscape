@@ -1,10 +1,15 @@
 package com.example.kkgroup.soundscape_v2.Tools
 
+import com.example.kkgroup.soundscape_v2.Model.SearchApiModel
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Query
 
 object Networking {
     private const val BASE_URL = "http://resourcespace.tekniikanmuseo.fi/"
@@ -12,13 +17,14 @@ object Networking {
 
     var API_TOKEN = ""
 
-    object NetworkModels {
-        data class LoginUser(val username: String, val password: String)
-    }
-
     interface NetworkServices {
         @POST("plugins/api_auth/auth.php")
         fun login(@Body user: JsonObject): Call<JsonObject>
+
+        @GET("plugins/api_audio_search/index.php/")
+        fun searchAudioFiles(@Query("key") key: String,
+                             @Query("collection") collection: String,
+                             @Query("search") search: String): Call<JsonArray>
     }
 
     fun loginResponseValidation(apiKey: String): Boolean {

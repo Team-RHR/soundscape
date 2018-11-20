@@ -2,6 +2,7 @@ package com.example.kkgroup.soundscape_v2.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.Tools.Networking
 import com.example.kkgroup.soundscape_v2.Tools.PrefManager
@@ -63,17 +64,19 @@ class LoginActivity : AppCompatActivity() {
 
     private fun callWebService(json: JsonObject) {
         val call = Networking.service.login(json)
+
         val value = object: Callback<JsonObject> {
             // this method gets called after a http call, no matter the http code
             override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>?) {
                 if (response != null) {
                     val res: JsonObject = response.body()!!
 
-                    val apiKey = res["api_key"].asString
+                    // HACK: here we filter the inverted commas away from the response ("apikey" -> apikey)
+                    val apiKey = res["api_key"].asString.filter { c:Char -> c.toString() != "\"" }
 
                     if (Networking.loginResponseValidation(apiKey)) {
                         Tools.toastShow(this@LoginActivity, "Login successful!")
-                        Networking.API_TOKEN = res["api_key"].toString()
+                        Networking.API_TOKEN = apiKey
                         prefManager.setApiKey(Networking.API_TOKEN)
                         // TODO: go to next screen, login succesfull
                         startActivity<LocalAudioFilesActivity>()
@@ -89,6 +92,7 @@ class LoginActivity : AppCompatActivity() {
                 Tools.toastShow(this@LoginActivity, "Login failed, check out your network")
             }
         }
-        call.enqueue(value) // asyncronous request
+
+        call.enqueue(value) // asynchronous request
     }
 }

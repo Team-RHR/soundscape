@@ -23,10 +23,6 @@ class PrefManager(context: Context) {
     }
 
     fun isApiKeySet(): Boolean {
-        if (pref!!.getString(API_KEY, null) == null) {
-            return false
-        } else {
-            return true
-        }
+        return pref!!.getString(API_KEY, null) != null
     }
 }
