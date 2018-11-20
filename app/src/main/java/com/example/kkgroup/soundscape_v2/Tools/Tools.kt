@@ -10,7 +10,10 @@ import android.support.annotation.ColorRes
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.animation.Animation
+import android.view.animation.Transformation
 import android.widget.TextView
 import android.widget.Toast
 import com.example.kkgroup.soundscape_v2.R
@@ -80,14 +83,71 @@ object Tools {
     fun getLocalAudioFiles(folderPath: String) : MutableList<File>{
 
         val folderPath = File(folderPath)
-        if (!folderPath.exists()) {
-            folderPath.mkdirs()
-        }
-        Tools.log_e(" File(folderPath): ${ folderPath == null}")
-        Tools.log_e(" File(folderPath).listFiles: ${ folderPath.listFiles()== null}")
+        if (!folderPath.exists()) folderPath.mkdirs()
+
         val listFiles = folderPath.listFiles().filter {
             it.name.endsWith(Tools.audioFormat)
         }
         return listFiles.toMutableList()
+    }
+
+    /**
+     * collapse the view, used in search suggestion bar
+     */
+    fun viewCollapse(v: View) {
+        val a = collapseAction(v)
+        v.startAnimation(a)
+    }
+
+    fun viewExpand(v: View) {
+        val a = expandAction(v)
+        v.startAnimation(a)
+    }
+
+    /**
+     * Cutomized Animation, learned from online blog
+     */
+    private fun expandAction(v: View): Animation {
+        v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        val targtetHeight = v.measuredHeight
+        v.layoutParams.height = 0
+        v.visibility = View.VISIBLE
+        val a = object : Animation() {
+            override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
+                v.layoutParams.height = if (interpolatedTime == 1f)
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                else
+                    (targtetHeight * interpolatedTime).toInt()
+                v.requestLayout()
+            }
+
+            override fun willChangeBounds(): Boolean {
+                return true
+            }
+        }
+
+        a.duration = (targtetHeight / v.context.resources.displayMetrics.density).toInt().toLong()
+        v.startAnimation(a)
+        return a
+    }
+    private fun collapseAction(v: View): Animation {
+        val initialHeight = v.measuredHeight
+        val a = object : Animation() {
+            override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
+                if (interpolatedTime == 1f) {
+                    v.visibility = View.GONE
+                } else {
+                    v.layoutParams.height = initialHeight - (initialHeight * interpolatedTime).toInt()
+                    v.requestLayout()
+                }
+            }
+
+            override fun willChangeBounds(): Boolean {
+                return true
+            }
+        }
+        a.duration = (initialHeight / v.context.resources.displayMetrics.density).toInt().toLong()
+        v.startAnimation(a)
+        return a
     }
 }

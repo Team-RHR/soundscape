@@ -20,7 +20,7 @@ class SearchItemAdapter(val ctx: Context,
     private var on_attach = true
 
     interface OnItemClickListener {
-        fun onItemClick(view: View, obj: SearchItemAdapter, position: Int)
+        fun onItemClick(view: View, obj: SearchApiModel, position: Int)
     }
 
     fun setOnItemClickListener(mItemClickListener: OnItemClickListener) {
@@ -49,7 +49,7 @@ class SearchItemAdapter(val ctx: Context,
             holder.name.text = items[position].title
             holder.lyt_parent.setOnClickListener { view ->
                 if (mOnItemClickListener != null) {
-                    //mOnItemClickListener!!.onItemClick(view, items[position], position)
+                    mOnItemClickListener!!.onItemClick(view, items[position], position)
                 }
             }
         }
