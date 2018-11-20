@@ -1,6 +1,5 @@
 package com.example.kkgroup.soundscape_v2.Tools
 
-import com.example.kkgroup.soundscape_v2.Model.SearchApiModel
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import retrofit2.Call

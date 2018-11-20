@@ -66,7 +66,9 @@ class SearchActivity : AppCompatActivity() {
                     /**
                      * here we create a array of SearchApiModels that we can better use for adapters etc.
                      */
-                    val gson = GsonBuilder().create()
+                    val gson = GsonBuilder()
+                            .setLenient()       // fix parse json failed on android 6.0 by setLenient()
+                            .create()
                     val model: Array<SearchApiModel> = gson.fromJson(res, Array<SearchApiModel>::class.java)
 
                     showSearchResults(model)
@@ -77,7 +79,7 @@ class SearchActivity : AppCompatActivity() {
             // this method gets called if the http call fails (no internet etc)
             override fun onFailure(call: retrofit2.Call<JsonArray>, t: Throwable) {
                 Tools.toastShow(this@SearchActivity, "Search failed, check your network")
-                Log.d("DBG", "Error: " + t.message)
+                Tools.log_e("${t.message}")
             }
         }
         call.enqueue(value) // asynchronous request
