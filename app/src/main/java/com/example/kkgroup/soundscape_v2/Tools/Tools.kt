@@ -35,7 +35,7 @@ object Tools {
 
     // return -> /storage/emulated/0/soundscape/
     fun getSoundScapePath(): String {
-        return Environment.getExternalStorageDirectory().absolutePath + File.separator + "soundscape" + File.separator
+        return Environment.getExternalStorageDirectory().absolutePath + File.separator + ConstantValue.destFolderStr + File.separator
     }
 
     // always use Log.e Not Log.d
