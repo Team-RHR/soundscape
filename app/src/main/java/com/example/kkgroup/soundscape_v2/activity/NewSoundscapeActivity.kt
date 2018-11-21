@@ -65,7 +65,6 @@ class MyLinearLayout4(val mContext: Context, attrs: AttributeSet?) : LinearLayou
              *         false -> Do not Capture this child view's event -> view can NOT be dragged
              */
             override fun tryCaptureView(child: View, pointerId: Int): Boolean {
-                Tools.log_e("tryCaptureView, 原始Left=" + child.left + "; 原始Top=" + child.top)
                 return true
             }
 
@@ -75,19 +74,19 @@ class MyLinearLayout4(val mContext: Context, attrs: AttributeSet?) : LinearLayou
              *
              * @param child
              * @param left  The value of the dragged view is theoretically to be slid to the horizontal direction
-             *              拖动的 View 理论上将要滑动到的水平方向上的值
              * @param dx    The speed of the slide, in px per second.
              * @return  The value of the actual x coordinate in the horizontal direction
              */
             override fun clampViewPositionHorizontal(child: View, left: Int, dx: Int): Int {
-                Tools.log_e( "clampViewPositionHorizontal: left=$left; dx=$dx")
-                Tools.log_e( "clampViewPositionHorizontal: width=$width; child.width=${child.width}; paddingRight: $paddingRight")
+
                 // The minimum x coordinate value cannot be less than leftBound
                 val leftBound = paddingLeft
                 // The maximum x coordinate value cannot be greater than rightBound
                 val rightBound = width - child.width - paddingRight
                 val newLeft = Math.min(Math.max(left, leftBound), rightBound)
                 mCurrentLeft = newLeft
+
+                Tools.log_e( "clampViewPositionHorizontal: left=$left --> leftBound: $leftBound --> rightBound: $rightBound --> newLeft: $newLeft")
                 return newLeft
             }
 
@@ -97,19 +96,19 @@ class MyLinearLayout4(val mContext: Context, attrs: AttributeSet?) : LinearLayou
              *
              * @param child
              * @param top  The value of the dragged view is theoretically to be slid to the vertical direction
-             *              拖动的 View 理论上将要滑动到的数值方向上的值
              * @param dy    The speed of the slide, in px per second.
              * @return  The value of the actual y coordinate in the vertical direction
              */
             override fun clampViewPositionVertical(child: View, top: Int, dy: Int): Int {
-                Tools.log_e( "clampViewPositionVertical: top=$top; dy=$dy")
-                Tools.log_e( "clampViewPositionVertical: height=$height; child.height=${child.height}; paddingRight: $paddingBottom")
+
                 // The minimum y coordinate value cannot be less than topBound
                 val topBound = paddingTop
                 // The maximum y coordinate value cannot be greater than bottomBound
                 val bottomBound = height - child.height - paddingBottom
                 val newTop = Math.min(Math.max(top, topBound), bottomBound)
                 mCurrentTop = newTop
+
+                Tools.log_e( "clampViewPositionVertical: top=$top --> topBound: $topBound --> bottomBound: $bottomBound --> newTop: $newTop")
                 return newTop
             }
 
@@ -118,25 +117,24 @@ class MyLinearLayout4(val mContext: Context, attrs: AttributeSet?) : LinearLayou
              * This method will be invoked when the View is no longer being dragged.
              *
              * @param releasedChild
-             * @param xvel
-             * @param yvel
+             * @param xvel velocity of x direction
+             * @param yvel velocity of y direction
              */
-//            override fun onViewReleased(releasedChild: View, xvel: Float, yvel: Float) {
-//                super.onViewReleased(releasedChild, xvel, yvel)
-//                Tools.log_e("onViewReleased, xvel=$xvel; yvel=$yvel")
-//                val childWidth = releasedChild.width
-//                val parentWidth = width
-//                val leftBound = paddingLeft// left edge
-//                val rightBound = width - releasedChild.width - paddingRight// right edge
-//                if (childWidth / 2 + mCurrentLeft < parentWidth / 2) {
-//                    viewDragHelper!!.settleCapturedViewAt(leftBound, mCurrentTop)
-//                } else {
-//                    viewDragHelper!!.settleCapturedViewAt(rightBound, mCurrentTop)
-//                }
-//                invalidate() // System method to refresh view position
-//            }
+            override fun onViewReleased(releasedChild: View, xvel: Float, yvel: Float) {
+                super.onViewReleased(releasedChild, xvel, yvel)
 
+                val childWidth = releasedChild.width
+                val parentWidth = width
+                val leftBound = paddingLeft// left edge
+                val rightBound = width - releasedChild.width - paddingRight// right edge
+                if (childWidth / 2 + mCurrentLeft < parentWidth / 2) {
+                    viewDragHelper?.settleCapturedViewAt(leftBound, mCurrentTop)
+                } else {
+                    viewDragHelper?.settleCapturedViewAt(rightBound, mCurrentTop)
+                }
 
+                invalidate() // System method to refresh view position
+            }
         }
 
         viewDragHelper = ViewDragHelper.create(this, 1.0f, dragCallback)
@@ -155,7 +153,6 @@ class MyLinearLayout4(val mContext: Context, attrs: AttributeSet?) : LinearLayou
      */
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
-            Tools.log_e("mVibrator: ${mVibrator == null}")
             mVibrator?.let {
                 /**
                  * The following method requires SDK >= 26, Our Target SDK is 21
