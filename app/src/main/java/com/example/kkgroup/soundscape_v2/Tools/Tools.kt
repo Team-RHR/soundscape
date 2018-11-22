@@ -16,8 +16,14 @@ import android.view.animation.Animation
 import android.view.animation.Transformation
 import android.widget.TextView
 import android.widget.Toast
+import com.example.kkgroup.soundscape_v2.Model.SearchApiModel
 import com.example.kkgroup.soundscape_v2.R
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
+import okhttp3.*
 import java.io.File
+import java.io.IOException
+import java.io.InputStream
 import java.lang.reflect.Array
 
 /**
@@ -29,7 +35,7 @@ object Tools {
 
     // In this project, we use the same TAG for debugging
     private val TAG = "hero"
-    private val audioFormat = ".3gp"
+    private val audioFormat = ".mp3"
     private var isShow = true
     private var toast: Toast? = null
 
@@ -149,5 +155,103 @@ object Tools {
         a.duration = (initialHeight / v.context.resources.displayMetrics.density).toInt().toLong()
         v.startAnimation(a)
         return a
+    }
+
+     fun updateAudioFiles() {
+
+         val wallpaperDirectoryNature = File(Tools.getSoundScapePath(), "Nature")
+         val wallpaperDirectoryHuman = File(Tools.getSoundScapePath(), "Human")
+         val wallpaperDirectoryMachine = File(Tools.getSoundScapePath(), "Machine")
+         wallpaperDirectoryNature.mkdirs()
+         wallpaperDirectoryHuman.mkdirs()
+         wallpaperDirectoryMachine.mkdirs()
+
+            val call = Networking.service.getAllMp3FilesWithLink(Networking.API_TOKEN, "true", "mp3")
+            val value = object : retrofit2.Callback<JsonArray> {
+                // this method gets called after a http call, no matter the http code
+                override fun onResponse(call: retrofit2.Call<JsonArray>,
+                                        response: retrofit2.Response<JsonArray>?) {
+                    response?.let {
+                        if (response.isSuccessful) {
+                            /** here we filter the response and alter the json so format is
+                             * [
+                             *  {},
+                             *  {}
+                             * ]
+                             *
+                             * instead of
+                             *
+                             * [
+                             *  [{}],
+                             *  [{}]
+                             * ]
+                             */
+                            val res = "[" + response.body().toString().filter { c: Char -> (c.toString() != "[" && c.toString() != "]") } + "]"
+
+                            /**
+                             * here we create a array of SearchApiModels that we can better use for adapters etc.
+                             */
+                            val gson = GsonBuilder()
+                                    .setLenient()       // fix parse json failed on android 6.0 by setLenient()
+                                    .create()
+                            val model: kotlin.Array<SearchApiModel> = gson.fromJson(res, kotlin.Array<SearchApiModel>::class.java)
+
+                            var size = model.size
+                            for (i in 0..size - 1) {
+                                if (model[i].category == "human" && !File(Tools.getSoundScapePath() + "Human" + File.separator + model[i].title + ".mp3").exists()) {
+                                    downloadAudio(model[i].downloadLink, model[i].title, Tools.getSoundScapePath() + "Human")
+                                } else if (model[i].category == "nature" && !File(Tools.getSoundScapePath() + "Nature" + File.separator + model[i].title + ".mp3").exists()) {
+                                    downloadAudio(model[i].downloadLink, model[i].title, Tools.getSoundScapePath() + "Nature")
+                                } else if (model[i].category == "machine" && !File(Tools.getSoundScapePath() + "Machine" + File.separator + model[i].title + ".mp3").exists()) {
+                                    downloadAudio(model[i].downloadLink, model[i].title, Tools.getSoundScapePath() + "Machine")
+                            }
+                            }
+                        }
+                    }
+                }
+
+                // this method gets called if the http call fails (no internet etc)
+                override fun onFailure(call: retrofit2.Call<JsonArray>, t: Throwable) {
+                    Tools.log_e("${t.message}")
+                }
+
+            }
+            call.enqueue(value) // asynchronous request
+        }
+    }
+
+    private fun downloadAudio (url: String, title: String, filePath: String) {
+
+        val okClient by lazy {
+            OkHttpClient()
+        }
+        val okRequest by lazy {
+            Request.Builder()
+                    .url(url)
+                    .build()
+        }
+
+        okClient.newCall(okRequest).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e?.printStackTrace()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val inputStream = response.body()?.byteStream()
+
+                if (inputStream != null) {
+                    File(filePath, title + ".mp3").copyInputStreamToFile(inputStream)
+                    println("File" + title + " written successfully!")
+                }
+            }
+        })
+    }
+
+//Write file to device
+fun File.copyInputStreamToFile(inputStream: InputStream) {
+    inputStream.use { input ->
+        this.outputStream().use { fileOut ->
+            input.copyTo(fileOut)
+        }
     }
 }

@@ -24,6 +24,13 @@ object Networking {
         fun searchAudioFiles(@Query("key") key: String,
                              @Query("collection") collection: String,
                              @Query("search") search: String): Call<JsonArray>
+
+        @GET ("plugins/api_audio_search/index.php/")
+        fun getAllMp3FilesWithLink(@Query("key") key: String,
+                                   @Query("link") link: String,
+                                   @Query("format") format: String): Call<JsonArray>
+
+
     }
 
     fun loginResponseValidation(apiKey: String): Boolean {
