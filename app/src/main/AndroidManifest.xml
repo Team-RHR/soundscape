@@ -10,6 +10,9 @@
     <!-- permission for internet usage -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- vibration for dragging items in creating new soundscape page -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -24,7 +27,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.RecordingActivity" />
         <activity android:name=".activity.LocalAudioFilesActivity" />
         <activity android:name=".activity.SelectAudioActivity" />
         <activity android:name=".activity.RemoteAudioFilesActivity" />
