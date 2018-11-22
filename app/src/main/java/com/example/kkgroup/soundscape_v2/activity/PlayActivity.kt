@@ -125,8 +125,8 @@ class PlayActivity : AppCompatActivity() {
         }
     }
     private fun initListeners() {
-        bt_repeat.setOnClickListener { Tools.toastShow(this, "repeat clicked") }
-        bt_shuffle.setOnClickListener { Tools.toastShow(this, "shuffle clicked") }
+        bt_repeat.setOnClickListener { Tools.toastShow(this, getString(R.string.toast_repeat_clicked)) }
+        bt_shuffle.setOnClickListener { Tools.toastShow(this, getString(R.string.toast_shuffle_clicked)) }
         bt_prev.setOnClickListener {
             if (mediaPlayer.isPlaying) {
                 mediaPlayer.pause()

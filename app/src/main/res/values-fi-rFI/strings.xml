@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_username">KÄYTTÄJÄNIMI</string>
+    <string name="login_password">SALASANA</string>
+    <string name="login_sign_in">KIRJAUDU SISÄÄN</string>
+    <string name="login_project">Metropolia AMK projekti</string>
+    <string name="toast_login_success">Kirjautuminen onnistui</string>
+    <string name="toast_login_fail">Kirjautuminen epäonnistui</string>
+    <string name="toast_login_connection_fail">Kirjautuminen epäonnistui, tarkista verkkoyhteys</string>
+    <string name="menu_settings">Asetukset</string>
+    <string name="menu_logout">Kirjaudu ulos</string>
+    <string name="search_general_keyword">Koita syöttää yleisempi hakusana</string>
+    <string name="search_no_result">Ei tuloksia</string>
+    <string name="create_new_soundscape">Luo uusi äänimaisema</string>
+    <string name="toast_press_again_exit">Paina uudestaan poistuaksesi</string>
+    <string name="toast_added_later">Lisätään myöhemmin</string>
+    <string name="menu_refresh">Päivitä</string>
+    <string name="search_hint">Hae</string>
+    <string name="fragment_recording_text">Nauhoituksen jälkeen mene takaisin päivittääksesi sivun</string>
+    <string name="toast_permission_denied">Lupaa ei myönnetty</string>
+    <string name="toast_repeat_clicked">Toisto klikattu</string>
+    <string name="toast_shuffle_clicked">Sekoitus klikattu</string>
+    <string name="your_soundscapes">Äänimaaisemasi</string>
+</resources>

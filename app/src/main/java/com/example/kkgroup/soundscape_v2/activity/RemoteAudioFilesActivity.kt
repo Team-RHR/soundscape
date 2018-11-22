@@ -90,7 +90,7 @@ class RemoteAudioFilesActivity : AppCompatActivity() {
         } else if (item.itemId == R.id.action_refresh) {
             loadingAndDisplayContent()
         } else {
-            Tools.toastShow(this,"Maybe will added later")
+            Tools.toastShow(this, getString(R.string.toast_added_later))
         }
         return super.onOptionsItemSelected(item)
     }

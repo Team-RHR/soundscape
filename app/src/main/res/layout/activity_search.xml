@@ -59,7 +59,7 @@
                         android:layout_weight="1"
                         android:text="naiset"
                         android:background="@android:color/transparent"
-                        android:hint="Search"
+                        android:hint="@string/search_hint"
                         android:imeOptions="actionSearch"
                         android:maxLines="1"
                         android:singleLine="true">
@@ -139,7 +139,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No result"
+                android:text="@string/search_no_result"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
                 android:textColor="@color/grey_40"
                 android:textStyle="bold" />
@@ -149,7 +149,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_medium"
                 android:gravity="center"
-                android:text="Try input more general keyword"
+                android:text="@string/search_general_keyword"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="@color/grey_40" />
 

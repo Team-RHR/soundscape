@@ -5,18 +5,18 @@
         android:id="@+id/action_refresh"
         android:icon="@drawable/ic_refresh"
         android:orderInCategory="100"
-        android:title="Refresh"
+        android:title="@string/menu_refresh"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:title="Settings"
+        android:title="@string/menu_settings"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_logout"
         android:orderInCategory="100"
-        android:title="Log out"
+        android:title="@string/menu_logout"
         app:showAsAction="never" />
 </menu>

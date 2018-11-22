@@ -115,7 +115,7 @@ class LocalAudioFilesActivity : AppCompatActivity() {
             prefManager.setApiKey(null)
             startActivity<LoginActivity>()
         } else {
-            Tools.toastShow(this,"Maybe will added later")
+            Tools.toastShow(this, getString(R.string.toast_added_later))
         }
         return super.onOptionsItemSelected(item)
     }
@@ -126,7 +126,7 @@ class LocalAudioFilesActivity : AppCompatActivity() {
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (System.currentTimeMillis() - mExitTime > 2000) {
-                Tools.toastShow(this@LocalAudioFilesActivity, "Press again to exit")
+                Tools.toastShow(this@LocalAudioFilesActivity, getString(R.string.toast_press_again_exit))
                 mExitTime = System.currentTimeMillis()
             } else {
                 Tools.toastCancel()
@@ -149,7 +149,7 @@ class LocalAudioFilesActivity : AppCompatActivity() {
 
                 } else {
                     // user denied the permission
-                    Tools.toastShow(this, " Permission Denied")
+                    Tools.toastShow(this, getString(R.string.toast_permission_denied))
                     finish()
                 }
                 return;

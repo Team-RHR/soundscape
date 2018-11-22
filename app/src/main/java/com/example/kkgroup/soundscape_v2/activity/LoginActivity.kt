@@ -53,7 +53,7 @@ class LoginActivity : AppCompatActivity() {
     // this is to prevent from going back in activity stack, so if user clicks logout and is redirected to login page they cant go back to soundscapes activity
     override fun onBackPressed() {
         if (System.currentTimeMillis() - mExitTime > 2000) {
-            Tools.toastShow(this, "Press again to exit")
+            Tools.toastShow(this, getString(R.string.toast_press_again_exit))
             mExitTime = System.currentTimeMillis()
         } else {
             Tools.toastCancel()
@@ -75,13 +75,13 @@ class LoginActivity : AppCompatActivity() {
                     val apiKey = res["api_key"].asString.filter { c:Char -> c.toString() != "\"" }
 
                     if (Networking.loginResponseValidation(apiKey)) {
-                        Tools.toastShow(this@LoginActivity, "Login successful!")
+                        Tools.toastShow(this@LoginActivity, getString(R.string.toast_login_success))
                         Networking.API_TOKEN = apiKey
                         prefManager.setApiKey(Networking.API_TOKEN)
                         // TODO: go to next screen, login succesfull
                         startActivity<LocalAudioFilesActivity>()
                     } else {
-                        Tools.toastShow(this@LoginActivity, "Login failed")
+                        Tools.toastShow(this@LoginActivity, getString(R.string.toast_login_fail))
                     }
                 }
             }
@@ -89,7 +89,7 @@ class LoginActivity : AppCompatActivity() {
             // this method gets called if the http call fails (no internet etc)
             override fun onFailure(call: Call<JsonObject>, t: Throwable) {
                 Tools.log_e("onFailure: " + t.toString())
-                Tools.toastShow(this@LoginActivity, "Login failed, check out your network")
+                Tools.toastShow(this@LoginActivity, getString(R.string.toast_login_connection_fail))
             }
         }
 
