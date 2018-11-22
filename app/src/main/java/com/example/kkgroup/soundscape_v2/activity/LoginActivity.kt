@@ -3,12 +3,17 @@ package com.example.kkgroup.soundscape_v2.activity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
+import com.example.kkgroup.soundscape_v2.Model.SearchApiModel
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.Tools.Networking
 import com.example.kkgroup.soundscape_v2.Tools.PrefManager
 import com.example.kkgroup.soundscape_v2.Tools.Tools
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_search.*
 import org.jetbrains.anko.startActivity
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,8 +28,9 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        prefManager = PrefManager(this)
+        Tools.updateAudioFiles()
 
+        prefManager = PrefManager(this)
         // check if user is already logged in and has API key in shared preferences
         if (prefManager.isApiKeySet()) {
             // set api token from sharedpreferences before continuing to another activity
@@ -49,7 +55,6 @@ class LoginActivity : AppCompatActivity() {
             callWebService(json)
         }
     }
-
     // this is to prevent from going back in activity stack, so if user clicks logout and is redirected to login page they cant go back to soundscapes activity
     override fun onBackPressed() {
         if (System.currentTimeMillis() - mExitTime > 2000) {
