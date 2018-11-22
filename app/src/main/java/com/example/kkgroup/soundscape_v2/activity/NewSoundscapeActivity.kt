@@ -120,21 +120,21 @@ class MyLinearLayout4(val mContext: Context, attrs: AttributeSet?) : LinearLayou
              * @param xvel velocity of x direction
              * @param yvel velocity of y direction
              */
-            override fun onViewReleased(releasedChild: View, xvel: Float, yvel: Float) {
-                super.onViewReleased(releasedChild, xvel, yvel)
-
-                val childWidth = releasedChild.width
-                val parentWidth = width
-                val leftBound = paddingLeft// left edge
-                val rightBound = width - releasedChild.width - paddingRight// right edge
-                if (childWidth / 2 + mCurrentLeft < parentWidth / 2) {
-                    viewDragHelper?.settleCapturedViewAt(leftBound, mCurrentTop)
-                } else {
-                    viewDragHelper?.settleCapturedViewAt(rightBound, mCurrentTop)
-                }
-
-                invalidate() // System method to refresh view position
-            }
+//            override fun onViewReleased(releasedChild: View, xvel: Float, yvel: Float) {
+//                super.onViewReleased(releasedChild, xvel, yvel)
+//
+//                val childWidth = releasedChild.width
+//                val parentWidth = width
+//                val leftBound = paddingLeft// left edge
+//                val rightBound = width - releasedChild.width - paddingRight// right edge
+//                if (childWidth / 2 + mCurrentLeft < parentWidth / 2) {
+//                    viewDragHelper?.settleCapturedViewAt(leftBound, mCurrentTop)
+//                } else {
+//                    viewDragHelper?.settleCapturedViewAt(rightBound, mCurrentTop)
+//                }
+//
+//                invalidate() // System method to refresh view position
+//            }
         }
 
         viewDragHelper = ViewDragHelper.create(this, 1.0f, dragCallback)
