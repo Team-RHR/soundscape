@@ -59,7 +59,7 @@ class RecordingFragment : Fragment() {
     }
 
     private fun startRecording() {
-        audioFile = File(Tools.getSoundScapePath() + "${Date().time}.3gp")
+        audioFile = File(Tools.getMyRecordingPath() + "${Date().time}.3gp")
 
         mRecorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)

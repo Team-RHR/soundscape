@@ -53,10 +53,9 @@ class CategoryListFragment : Fragment() {
 
         // TODO Replace with real category list
         val items = ArrayList<String>()
-        items.add("Nature")
         items.add("Human")
-        items.add("Bird")
-        items.add("Water")
+        items.add("Machine")
+        items.add("Nature")
         mAudioCategoryAdapter = AudioCategoryAdapter(context!!, items, ItemAnimation.FADE_IN)
         recyclerView.adapter = mAudioCategoryAdapter
         mAudioCategoryAdapter.notifyDataSetChanged()
@@ -67,7 +66,7 @@ class CategoryListFragment : Fragment() {
     private fun initListeners() {
         mAudioCategoryAdapter.setOnItemClickListener(object : AudioCategoryAdapter.OnItemClickListener {
             override fun onItemClick(view: View, categoryName: String, position: Int) {
-                startActivity<RemoteAudioFilesActivity>()
+                startActivity<RemoteAudioFilesActivity>("obj" to categoryName)
             }
         })
     }

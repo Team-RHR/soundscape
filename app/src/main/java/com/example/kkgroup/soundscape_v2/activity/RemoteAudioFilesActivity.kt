@@ -23,11 +23,13 @@ class RemoteAudioFilesActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var mAudioItemAdapter: AudioItemAdapter
+    private lateinit var categoryName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_preview)
 
+        categoryName = intent.extras["obj"] as String
         recyclerView = findViewById(R.id.recyclerView)
         initToolbar()
         initListeners()
@@ -64,10 +66,11 @@ class RemoteAudioFilesActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.setHasFixedSize(true)
 
-        val localAudioFiles = Tools.getLocalAudioFiles(Tools.getSoundScapePath())
+        val audioFilesByCategory = Tools.getRemoteAudioFiles(
+                Tools.getDownloadedAudioByCategoryPath(categoryName))
 
         //set data and list adapter
-        mAudioItemAdapter = AudioItemAdapter(this, localAudioFiles, ItemAnimation.FADE_IN)
+        mAudioItemAdapter = AudioItemAdapter(this, audioFilesByCategory, ItemAnimation.FADE_IN)
         recyclerView.adapter = mAudioItemAdapter
 
         // on item list clicked

@@ -86,7 +86,7 @@ class LocalAudioFilesActivity : AppCompatActivity() {
         recyclerView.visibility = View.VISIBLE
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.setHasFixedSize(true)
-        val localAudioFiles = Tools.getLocalAudioFiles(Tools.getSoundScapePath())
+        val localAudioFiles = Tools.getLocalAudioFiles(Tools.getMyRecordingPath())
 
         //set data and list adapter
         mAudioItemAdapter = AudioItemAdapter(this, localAudioFiles, ItemAnimation.FADE_IN)

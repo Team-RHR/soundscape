@@ -1,7 +1,5 @@
 package com.example.kkgroup.soundscape_v2.Tools
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.content.Context
 import android.os.Build
@@ -24,7 +22,6 @@ import okhttp3.*
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
-import java.lang.reflect.Array
 
 /**
  * @ Author     ：Hao Zhang.
@@ -39,9 +36,41 @@ object Tools {
     private var isShow = true
     private var toast: Toast? = null
 
+    /**
+     * Folder Structure:
+     *                                       1 --- Human
+     *                 1 --- downloads  -->  2 --- Machine
+     *                                       3 --- Nature
+     *                                       4 --- temp (for search result)
+     * soundscape -->  2 --- myRecording
+     *
+     *                 3 --- mySoundscape
+     */
+
+
     // return -> /storage/emulated/0/soundscape/
-    fun getSoundScapePath(): String {
+    private fun getRootPath(): String {
         return Environment.getExternalStorageDirectory().absolutePath + File.separator + "soundscape" + File.separator
+    }
+
+    // return -> /storage/emulated/0/soundscape/downloads
+    private fun getDownloadPath(): String {
+        return getRootPath() + "downloads" + File.separator
+    }
+
+    // return -> /storage/emulated/0/soundscape/downloads/Human
+    fun getDownloadedAudioByCategoryPath(categoryName: String): String {
+        return getDownloadPath() + categoryName + File.separator
+    }
+
+    // return -> /storage/emulated/0/soundscape/mySoundscape
+    fun getMySoundscapePath(): String {
+        return getRootPath() + "mySoundscape" + File.separator
+    }
+
+    // return -> /storage/emulated/0/soundscape/myRecording
+    fun getMyRecordingPath(): String {
+        return getRootPath() + "myRecording" + File.separator
     }
 
     // always use Log.e Not Log.d
@@ -86,7 +115,22 @@ object Tools {
     }
 
     // return list of audio file in a certain folder
-    fun getLocalAudioFiles(folderPath: String) : MutableList<File>{
+    fun getLocalAudioFiles(folderPath: String): MutableList<File> {
+
+        val folderPath = File(folderPath)
+        if (!folderPath.exists()) folderPath.mkdirs()
+
+        val listFiles = folderPath.listFiles().filter {
+            // using 3gp for test purpose
+            // it.name.endsWith(Tools.audioFormat)
+             it.name.endsWith(".3gp")
+
+        }
+        return listFiles.toMutableList()
+    }
+
+    // return list of audio file in a certain folder
+    fun getRemoteAudioFiles(folderPath: String): MutableList<File> {
 
         val folderPath = File(folderPath)
         if (!folderPath.exists()) folderPath.mkdirs()
@@ -136,6 +180,7 @@ object Tools {
         v.startAnimation(a)
         return a
     }
+
     private fun collapseAction(v: View): Animation {
         val initialHeight = v.measuredHeight
         val a = object : Animation() {
@@ -157,101 +202,133 @@ object Tools {
         return a
     }
 
-     fun updateAudioFiles() {
+    fun updateAudioFiles() {
 
-         val wallpaperDirectoryNature = File(Tools.getSoundScapePath(), "Nature")
-         val wallpaperDirectoryHuman = File(Tools.getSoundScapePath(), "Human")
-         val wallpaperDirectoryMachine = File(Tools.getSoundScapePath(), "Machine")
-         wallpaperDirectoryNature.mkdirs()
-         wallpaperDirectoryHuman.mkdirs()
-         wallpaperDirectoryMachine.mkdirs()
+        val wallpaperDirectoryNature = File(Tools.getDownloadPath(), "Nature")
+        val wallpaperDirectoryHuman = File(Tools.getDownloadPath(), "Human")
+        val wallpaperDirectoryMachine = File(Tools.getDownloadPath(), "Machine")
+        wallpaperDirectoryNature.mkdirs()
+        wallpaperDirectoryHuman.mkdirs()
+        wallpaperDirectoryMachine.mkdirs()
 
-            val call = Networking.service.getAllMp3FilesWithLink(Networking.API_TOKEN, "true", "mp3")
-            val value = object : retrofit2.Callback<JsonArray> {
-                // this method gets called after a http call, no matter the http code
-                override fun onResponse(call: retrofit2.Call<JsonArray>,
-                                        response: retrofit2.Response<JsonArray>?) {
-                    response?.let {
-                        if (response.isSuccessful) {
-                            /** here we filter the response and alter the json so format is
-                             * [
-                             *  {},
-                             *  {}
-                             * ]
-                             *
-                             * instead of
-                             *
-                             * [
-                             *  [{}],
-                             *  [{}]
-                             * ]
-                             */
-                            val res = "[" + response.body().toString().filter { c: Char -> (c.toString() != "[" && c.toString() != "]") } + "]"
+        val call = Networking.service.getAllMp3FilesWithLink(Networking.API_TOKEN, "true", "mp3")
+        val value = object : retrofit2.Callback<JsonArray> {
+            // this method gets called after a http call, no matter the http code
+            override fun onResponse(call: retrofit2.Call<JsonArray>,
+                                    response: retrofit2.Response<JsonArray>?) {
+                response?.let {
+                    if (response.isSuccessful) {
+                        /** here we filter the response and alter the json so format is
+                         * [
+                         *  {},
+                         *  {}
+                         * ]
+                         *
+                         * instead of
+                         *
+                         * [
+                         *  [{}],
+                         *  [{}]
+                         * ]
+                         */
+                        val res = "[" + response.body().toString().filter { c: Char -> (c.toString() != "[" && c.toString() != "]") } + "]"
 
-                            /**
-                             * here we create a array of SearchApiModels that we can better use for adapters etc.
-                             */
-                            val gson = GsonBuilder()
-                                    .setLenient()       // fix parse json failed on android 6.0 by setLenient()
-                                    .create()
-                            val model: kotlin.Array<SearchApiModel> = gson.fromJson(res, kotlin.Array<SearchApiModel>::class.java)
+                        /**
+                         * here we create a array of SearchApiModels that we can better use for adapters etc.
+                         */
+                        val gson = GsonBuilder()
+                                .setLenient()       // fix parse json failed on android 6.0 by setLenient()
+                                .create()
+                        val model: kotlin.Array<SearchApiModel> = gson.fromJson(res, kotlin.Array<SearchApiModel>::class.java)
 
-                            var size = model.size
-                            for (i in 0..size - 1) {
-                                if (model[i].category == "human" && !File(Tools.getSoundScapePath() + "Human" + File.separator + model[i].title + ".mp3").exists()) {
-                                    downloadAudio(model[i].downloadLink, model[i].title, Tools.getSoundScapePath() + "Human")
-                                } else if (model[i].category == "nature" && !File(Tools.getSoundScapePath() + "Nature" + File.separator + model[i].title + ".mp3").exists()) {
-                                    downloadAudio(model[i].downloadLink, model[i].title, Tools.getSoundScapePath() + "Nature")
-                                } else if (model[i].category == "machine" && !File(Tools.getSoundScapePath() + "Machine" + File.separator + model[i].title + ".mp3").exists()) {
-                                    downloadAudio(model[i].downloadLink, model[i].title, Tools.getSoundScapePath() + "Machine")
-                            }
+                        for(temp in model){
+                            if ( ! isAlreadyDownloaded(temp)) {
+                                downloadAudio(temp)
                             }
                         }
                     }
                 }
-
-                // this method gets called if the http call fails (no internet etc)
-                override fun onFailure(call: retrofit2.Call<JsonArray>, t: Throwable) {
-                    Tools.log_e("${t.message}")
-                }
-
             }
-            call.enqueue(value) // asynchronous request
+
+            // this method gets called if the http call fails (no internet etc)
+            override fun onFailure(call: retrofit2.Call<JsonArray>, t: Throwable) {
+                Tools.log_e("${t.message}")
+            }
         }
+        call.enqueue(value) // asynchronous request
     }
 
-    private fun downloadAudio (url: String, title: String, filePath: String) {
+    fun isAlreadyDownloaded(obj: SearchApiModel): Boolean{
+        var folderName = "temp"
+        when (obj.category){
+            "human" -> { folderName = "Human" }
+
+            "machine" -> { folderName = "Machine" }
+
+            "nature" -> { folderName = "Nature" }
+        }
+
+        return (File(Tools.getDownloadedAudioByCategoryPath(folderName) + obj.title + Tools.audioFormat).exists())
+    }
+
+    fun downloadAudio(obj: SearchApiModel) {
+
+        var downloadDest = Tools.getDownloadedAudioByCategoryPath("Temp")
+        when (obj.category){
+            "human" -> { downloadDest = Tools.getDownloadedAudioByCategoryPath("Human") }
+
+            "machine" -> { downloadDest = Tools.getDownloadedAudioByCategoryPath("Machine") }
+
+            "nature" -> { downloadDest = Tools.getDownloadedAudioByCategoryPath("Nature") }
+        }
 
         val okClient by lazy {
             OkHttpClient()
         }
         val okRequest by lazy {
             Request.Builder()
-                    .url(url)
+                    .url(obj.downloadLink)
                     .build()
         }
 
         okClient.newCall(okRequest).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                e?.printStackTrace()
+                e.printStackTrace()
             }
 
             override fun onResponse(call: Call, response: Response) {
                 val inputStream = response.body()?.byteStream()
 
                 if (inputStream != null) {
-                    File(filePath, title + ".mp3").copyInputStreamToFile(inputStream)
-                    println("File" + title + " written successfully!")
+                    File(downloadDest, "${obj.title}.mp3").copyInputStreamToFile(inputStream)
+                    Tools.log_e("File: ${obj.title} written successfully!")
                 }
             }
         })
     }
 
-//Write file to device
-fun File.copyInputStreamToFile(inputStream: InputStream) {
-    inputStream.use { input ->
-        this.outputStream().use { fileOut ->
-            input.copyTo(fileOut)
+    fun getAudioPathByObj(obj: SearchApiModel): String? {
+        var folderName = "Temp"
+        when (obj.category){
+            "human" -> { folderName = "Human" }
+
+            "machine" -> { folderName = "Machine" }
+
+            "nature" -> { folderName = "Nature" }
+        }
+        return if (isAlreadyDownloaded(obj)) {
+            Tools.getDownloadedAudioByCategoryPath(folderName) + obj.title + Tools.audioFormat
+        } else {
+            null
+        }
+    }
+
+    //Write file to device
+    private fun File.copyInputStreamToFile(inputStream: InputStream) {
+        inputStream.use { input ->
+            this.outputStream().use { fileOut ->
+                input.copyTo(fileOut)
+            }
         }
     }
 }

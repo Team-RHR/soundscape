@@ -23,6 +23,8 @@ import com.example.kkgroup.soundscape_v2.widget.ItemAnimation
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import kotlinx.android.synthetic.main.activity_search.*
+import org.jetbrains.anko.startActivity
+import java.io.File
 
 class SearchActivity : AppCompatActivity() {
 
@@ -131,7 +133,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun searchAudioFiles() {
-        val call = Networking.service.searchAudioFiles(Networking.API_TOKEN, "22", search_input.text.toString())
+        val call = Networking.service.searchAudioFiles(Networking.API_TOKEN, "22", "mp3", search_input.text.trim().toString())
 
         val value = object : retrofit2.Callback<JsonArray> {
             // this method gets called after a http call, no matter the http code
@@ -202,9 +204,11 @@ class SearchActivity : AppCompatActivity() {
         // on item list clicked
         mSearchItemAdapter.setOnItemClickListener(object : SearchItemAdapter.OnItemClickListener {
             override fun onItemClick(view: View, obj: SearchApiModel, position: Int) {
-                // TODO: make the item selected go to the "create soundscape" activity
-                Tools.toastShow(this@SearchActivity, "Try to play: ${obj.title}")
+                Tools.getAudioPathByObj(obj)?.let {
+                    startActivity<PlayActivity>("obj" to File(it))
+                }
             }
         })
     }
+
 }

@@ -14,4 +14,4 @@ data class SearchApiModel(@SerializedName("Title") val title: String,
                           @SerializedName("Created by") val createdBy: String,
                           @SerializedName("Collection name") val collectionName: String,
                           @SerializedName("Collection ID") val collectionID: String,
-                          @SerializedName("Download link") val downloadLink: String)
+                          @SerializedName("Download link") val downloadLink: String?)
