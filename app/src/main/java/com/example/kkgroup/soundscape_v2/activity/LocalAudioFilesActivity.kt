@@ -58,6 +58,11 @@ class LocalAudioFilesActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        Tools.updateAudioFiles()
+    }
+
     private fun initListeners() {
         fabInMyFilesPage.setOnClickListener { startActivity<NewSoundscapeActivity>() }
     }

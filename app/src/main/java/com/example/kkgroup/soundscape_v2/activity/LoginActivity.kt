@@ -28,8 +28,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        Tools.updateAudioFiles()
-
         prefManager = PrefManager(this)
         // check if user is already logged in and has API key in shared preferences
         if (prefManager.isApiKeySet()) {
