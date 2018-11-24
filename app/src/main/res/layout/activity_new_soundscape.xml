@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/grey_5"
     tools:context=".activity.NewSoundscapeActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -24,137 +25,108 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/actionBarSize"
-        android:layout_height="match_parent">
-
-
-
-        <!--<View-->
-            <!--android:id="@+id/view"-->
-            <!--android:layout_width="1dip"-->
-            <!--android:layout_height="fill_parent"-->
-            <!--android:layout_gravity="center_horizontal"-->
-            <!--android:layout_marginStart="8dp"-->
-            <!--android:layout_marginEnd="8dp"-->
-            <!--android:background="@color/colorPrimary"-->
-            <!--app:layout_constraintEnd_toEndOf="parent"-->
-            <!--app:layout_constraintStart_toEndOf="@+id/linearLayout" />-->
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/actionBarSize">
 
         <LinearLayout
             android:id="@+id/linearLayout"
-            android:layout_width="25dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:background="@color/red_800"
             android:orientation="vertical"
+            android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:tint="@color/grey_40"
+                app:srcCompat="@drawable/ic_play" />
+
+            <com.jaygoo.widget.VerticalRangeSeekBar
+                android:id="@+id/myVerticalSeekbar"
+                android:layout_width="40dp"
                 android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                app:rsb_mode="single"
+                app:rsb_orientation="right"
+                app:rsb_progress_color="@color/colorPrimary" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_centerHorizontal="true"
-                    android:background="@color/grey_10" />
-
-                <ImageView
-                    android:layout_width="@dimen/spacing_middle"
-                    android:layout_height="@dimen/spacing_middle"
-                    android:layout_marginTop="@dimen/spacing_large"
-                    android:tint="@color/colorAccent"
-                    app:srcCompat="@drawable/shape_round_solid" />
-
-            </RelativeLayout>
 
         </LinearLayout>
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/linearLayout2"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:background="@color/red_800"
             android:orientation="vertical"
+            android:background="@drawable/dashborder_outter"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/linearLayout"
             app:layout_constraintTop_toTopOf="parent">
 
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/audioTrack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/lineborder"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:id="@+id/textView"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:text="Audio Tracks"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                        android:textColor="@color/colorPrimary" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:tint="@color/grey_40"
+                        app:srcCompat="@drawable/ic_track_changes" />
+
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout3"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@color/green_500"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@+id/audioTrack">
 
-                <com.example.kkgroup.soundscape_v2.activity.MyLinearLayout4
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/actionBarSize"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@color/colorAccent"
-                android:gravity="center"/>
-
-                <TextView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@color/colorPrimaryDark"
-                android:gravity="center" />
-
-                <TextView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@color/colorPrimary"
-                android:gravity="center" />
-
-                </com.example.kkgroup.soundscape_v2.activity.MyLinearLayout4>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linearLayout4"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:background="@color/blue_500"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/linearLayout5"
-                app:layout_constraintStart_toEndOf="@+id/linearLayout3"
-                app:layout_constraintTop_toTopOf="parent">
-
-
-                <com.example.kkgroup.soundscape_v2.activity.MyLinearLayout4 xmlns:android="http://schemas.android.com/apk/res/android"
+                <com.example.kkgroup.soundscape_v2.widget.MyLinearLayout
+                    xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/actionBarSize"
                     android:orientation="vertical">
 
                     <TextView
@@ -181,7 +153,55 @@
                         android:background="@color/colorPrimary"
                         android:gravity="center" />
 
-                </com.example.kkgroup.soundscape_v2.activity.MyLinearLayout4>
+
+                </com.example.kkgroup.soundscape_v2.widget.MyLinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout4"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/linearLayout5"
+                app:layout_constraintStart_toEndOf="@+id/linearLayout3"
+                app:layout_constraintTop_toBottomOf="@+id/audioTrack">
+
+                <com.example.kkgroup.soundscape_v2.widget.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/dashborder"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dp"
+                        android:background="@color/colorAccent"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dp"
+                        android:background="@color/colorPrimaryDark"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dp"
+                        android:background="@color/colorPrimary"
+                        android:gravity="center" />
+
+                </com.example.kkgroup.soundscape_v2.widget.MyLinearLayout>
 
 
             </LinearLayout>
@@ -189,20 +209,18 @@
             <LinearLayout
                 android:id="@+id/linearLayout5"
                 android:layout_width="wrap_content"
-
-                android:layout_height="match_parent"
-                android:layout_marginEnd="8dp"
-                android:background="@color/red_500"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@+id/audioTrack">
 
 
-                <com.example.kkgroup.soundscape_v2.activity.MyLinearLayout4 xmlns:android="http://schemas.android.com/apk/res/android"
+                <com.example.kkgroup.soundscape_v2.widget.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/actionBarSize"
                     android:orientation="vertical">
 
                     <TextView
@@ -229,66 +247,14 @@
                         android:background="@color/colorPrimary"
                         android:gravity="center" />
 
-                </com.example.kkgroup.soundscape_v2.activity.MyLinearLayout4>
+                </com.example.kkgroup.soundscape_v2.widget.MyLinearLayout>
 
 
             </LinearLayout>
 
 
-
         </android.support.constraint.ConstraintLayout>
 
     </android.support.constraint.ConstraintLayout>
-
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabInNewSoundscapePage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_large"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:clickable="true"
-        android:tint="@android:color/white"
-        app:backgroundTint="@color/colorAccent"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:rippleColor="@android:color/white"
-        app:srcCompat="@drawable/ic_add" />
-
-
-    <!--<com.example.kkgroup.soundscape_v2.activity.MyLinearLayout4-->
-        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_marginTop="@dimen/actionBarSize"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:orientation="vertical">-->
-
-        <!--<TextView-->
-            <!--android:layout_width="100dp"-->
-            <!--android:layout_height="100dp"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:layout_margin="10dp"-->
-            <!--android:background="@color/colorAccent"-->
-            <!--android:gravity="center"/>-->
-
-        <!--<TextView-->
-            <!--android:layout_width="100dp"-->
-            <!--android:layout_height="100dp"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:layout_margin="10dp"-->
-            <!--android:background="@color/colorPrimaryDark"-->
-            <!--android:gravity="center" />-->
-
-        <!--<TextView-->
-            <!--android:layout_width="100dp"-->
-            <!--android:layout_height="100dp"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:layout_margin="10dp"-->
-            <!--android:background="@color/colorPrimary"-->
-            <!--android:gravity="center" />-->
-
-    <!--</com.example.kkgroup.soundscape_v2.activity.MyLinearLayout4>-->
 
 </android.support.constraint.ConstraintLayout>

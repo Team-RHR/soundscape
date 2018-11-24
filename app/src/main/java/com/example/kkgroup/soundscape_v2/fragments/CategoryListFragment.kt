@@ -56,11 +56,15 @@ class CategoryListFragment : Fragment() {
         items.add("Human")
         items.add("Machine")
         items.add("Nature")
-        mAudioCategoryAdapter = AudioCategoryAdapter(context!!, items, ItemAnimation.FADE_IN)
-        recyclerView.adapter = mAudioCategoryAdapter
-        mAudioCategoryAdapter.notifyDataSetChanged()
 
-        initListeners()
+        context?.let {
+            mAudioCategoryAdapter = AudioCategoryAdapter(it, items, ItemAnimation.FADE_IN)
+            recyclerView.adapter = mAudioCategoryAdapter
+            mAudioCategoryAdapter.notifyDataSetChanged()
+
+            initListeners()
+        }
+
     }
 
     private fun initListeners() {
