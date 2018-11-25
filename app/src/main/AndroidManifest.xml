@@ -31,7 +31,8 @@
         <activity android:name=".activity.SelectAudioActivity" />
         <activity android:name=".activity.RemoteAudioFilesActivity" />
         <activity android:name=".activity.PlayActivity" />
-        <activity android:name=".activity.NewSoundscapeActivity"/>
+        <activity android:name=".activity.NewSoundscapeActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".activity.SearchActivity"></activity>
     </application>
 

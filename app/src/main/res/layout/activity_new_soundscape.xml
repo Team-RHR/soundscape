@@ -127,31 +127,32 @@
                     xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:id="@+id/audio_track_one"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:background="@color/colorAccent"
-                        android:gravity="center" />
+                    <!--<TextView-->
+                        <!--android:layout_width="80dp"-->
+                        <!--android:layout_height="80dp"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:layout_margin="10dp"-->
+                        <!--android:background="@color/colorAccent"-->
+                        <!--android:gravity="center" />-->
 
-                    <TextView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:background="@color/colorPrimaryDark"
-                        android:gravity="center" />
+                    <!--<TextView-->
+                        <!--android:layout_width="80dp"-->
+                        <!--android:layout_height="80dp"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:layout_margin="10dp"-->
+                        <!--android:background="@color/colorPrimaryDark"-->
+                        <!--android:gravity="center" />-->
 
-                    <TextView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:background="@color/colorPrimary"
-                        android:gravity="center" />
+                    <!--<TextView-->
+                        <!--android:layout_width="80dp"-->
+                        <!--android:layout_height="80dp"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:layout_margin="10dp"-->
+                        <!--android:background="@color/colorPrimary"-->
+                        <!--android:gravity="center" />-->
 
 
                 </com.example.kkgroup.soundscape_v2.widget.MyLinearLayout>
@@ -175,31 +176,32 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/dashborder"
+                    android:id="@+id/audio_track_two"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:background="@color/colorAccent"
-                        android:gravity="center" />
+                    <!--<TextView-->
+                        <!--android:layout_width="80dp"-->
+                        <!--android:layout_height="80dp"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:layout_margin="10dp"-->
+                        <!--android:background="@color/colorAccent"-->
+                        <!--android:gravity="center" />-->
 
-                    <TextView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:background="@color/colorPrimaryDark"
-                        android:gravity="center" />
+                    <!--<TextView-->
+                        <!--android:layout_width="80dp"-->
+                        <!--android:layout_height="80dp"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:layout_margin="10dp"-->
+                        <!--android:background="@color/colorPrimaryDark"-->
+                        <!--android:gravity="center" />-->
 
-                    <TextView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:background="@color/colorPrimary"
-                        android:gravity="center" />
+                    <!--<TextView-->
+                        <!--android:layout_width="80dp"-->
+                        <!--android:layout_height="80dp"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:layout_margin="10dp"-->
+                        <!--android:background="@color/colorPrimary"-->
+                        <!--android:gravity="center" />-->
 
                 </com.example.kkgroup.soundscape_v2.widget.MyLinearLayout>
 
@@ -221,31 +223,32 @@
                 <com.example.kkgroup.soundscape_v2.widget.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:id="@+id/audio_track_three"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:background="@color/colorAccent"
-                        android:gravity="center" />
+                    <!--<TextView-->
+                        <!--android:layout_width="80dp"-->
+                        <!--android:layout_height="80dp"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:layout_margin="10dp"-->
+                        <!--android:background="@color/colorAccent"-->
+                        <!--android:gravity="center" />-->
 
-                    <TextView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:background="@color/colorPrimaryDark"
-                        android:gravity="center" />
+                    <!--<TextView-->
+                        <!--android:layout_width="80dp"-->
+                        <!--android:layout_height="80dp"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:layout_margin="10dp"-->
+                        <!--android:background="@color/colorPrimaryDark"-->
+                        <!--android:gravity="center" />-->
 
-                    <TextView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:background="@color/colorPrimary"
-                        android:gravity="center" />
+                    <!--<TextView-->
+                        <!--android:layout_width="80dp"-->
+                        <!--android:layout_height="80dp"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:layout_margin="10dp"-->
+                        <!--android:background="@color/colorPrimary"-->
+                        <!--android:gravity="center" />-->
 
                 </com.example.kkgroup.soundscape_v2.widget.MyLinearLayout>
 
