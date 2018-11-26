@@ -4,11 +4,14 @@ import android.content.Context
 import android.os.Vibrator
 import android.support.v4.widget.ViewDragHelper
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.Toast
 import com.example.kkgroup.soundscape_v2.Tools.ConstantValue
 import com.example.kkgroup.soundscape_v2.Tools.Tools
+import org.jetbrains.anko.sdk25.coroutines.onTouch
 
 /**
  * @ Author     ：Hao Zhang.
@@ -64,7 +67,7 @@ class MyLinearLayout(val mContext: Context, attrs: AttributeSet?) : LinearLayout
                 val newLeft = Math.min(Math.max(left, leftBound), rightBound)
                 mCurrentLeft = newLeft
 
-                Tools.log_e("clampViewPositionHorizontal: left=$left --> leftBound: $leftBound --> rightBound: $rightBound --> newLeft: $newLeft")
+                // Tools.log_e("clampViewPositionHorizontal: left=$left --> leftBound: $leftBound --> rightBound: $rightBound --> newLeft: $newLeft")
                 return newLeft
             }
 
@@ -86,7 +89,7 @@ class MyLinearLayout(val mContext: Context, attrs: AttributeSet?) : LinearLayout
                 val newTop = Math.min(Math.max(top, topBound), bottomBound)
                 mCurrentTop = newTop
 
-                Tools.log_e("clampViewPositionVertical: top=$top --> topBound: $topBound --> bottomBound: $bottomBound --> newTop: $newTop")
+                // Tools.log_e("clampViewPositionVertical: top=$top --> topBound: $topBound --> bottomBound: $bottomBound --> newTop: $newTop")
                 return newTop
             }
 
@@ -122,6 +125,14 @@ class MyLinearLayout(val mContext: Context, attrs: AttributeSet?) : LinearLayout
                 viewDragHelper?.settleCapturedViewAt(centerPoint, mCurrentTop)
                 invalidate() // System method to refresh view position
             }
+
+            override fun getViewHorizontalDragRange(child: View): Int {
+                return measuredWidth - child.measuredWidth
+            }
+
+            override fun getViewVerticalDragRange(child: View): Int {
+                return measuredHeight - child.measuredHeight
+            }
         }
 
         viewDragHelper = ViewDragHelper.create(this, 1.0f, dragCallback)
@@ -149,10 +160,78 @@ class MyLinearLayout(val mContext: Context, attrs: AttributeSet?) : LinearLayout
                 // if (it.hasVibrator()) it.vibrate(VibrationEffect.createOneShot(ConstantValue.vibrationTime, -1))
                 if (it.hasVibrator()) it.vibrate(ConstantValue.vibrationTime)
             }
+
         }
+
+        //当按下时处理
+//        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//            xDown = event.getX();
+//            yDown = event.getY();
+//            Log.v("OnTouchListener", "Down");
+//        } else if (event.getAction() == MotionEvent.ACTION_UP) {// 松开处理
+//            //获取松开时的x坐标
+//            if (isLongClickModule) {
+//                isLongClickModule = false;
+//                isLongClicking = false;
+//            }
+//            xUp = event.getX();
+//
+//            Tools.log_e("up")
+//            //按下和松开绝对值差当大于20时滑动，否则不显示
+//            if ((xUp - xDown) > 20) {
+//
+//            } else if ((xUp - xDown) < -20) {
+//                //添加要处理的内容
+//            } else if (0.0f == (xDown - xUp)) {
+//                Tools.log_e( "Up == 0 点击了")
+//            }
+//        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+//            //当滑动时背景为选中状态 //检测是否长按,在非长按时检测
+//            if (!isLongClickModule) {
+//                isLongClickModule = isLongPressed(xDown, yDown, event.getX(),
+//                        event.getY(), event.getDownTime(), event.getEventTime(), 300);
+//            }
+//            if (isLongClickModule && !isLongClicking) {
+//                //处理长按事件
+//
+//
+//
+//                isLongClicking = true; }
+//        } else {
+//            //其他模式
+//            return false;
+//        }
 
         viewDragHelper?.processTouchEvent(event)
         return true
+    }
+
+    private var xDown: Float = 0.0f
+    private var yDown: Float = 0.0f
+    private var xUp: Float = 0.0f
+
+    private var isLongClickModule = false
+    private var isLongClicking = false
+
+    /* 判断是否有长按动作发生
+	   * @param lastX 按下时X坐标
+	   * @param lastY 按下时Y坐标
+	   * @param thisX 移动时X坐标
+	   * @param thisY 移动时Y坐标
+	   * @param lastDownTime 按下时间
+	   * @param thisEventTime 移动时间
+	   * @param longPressTime 判断长按时间的阀值
+	   */
+    private fun isLongPressed(lastX: Float, lastY: Float,
+                              thisX: Float, thisY: Float,
+                              lastDownTime: Long, thisEventTime: Long,
+                              longPressTime: Long): Boolean {
+        val offsetX = Math.abs(thisX - lastX)
+        val offsetY = Math.abs(thisY - lastY)
+        val intervalTime = thisEventTime - lastDownTime
+        return if (offsetX <= 10 && offsetY <= 10 && intervalTime >= longPressTime) {
+            true
+        } else false
     }
 
 
