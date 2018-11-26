@@ -7,7 +7,7 @@ package com.example.kkgroup.soundscape_v2.Tools
  */
 object ConstantValue {
 
-    val vibrationTime = 30L     // After testing, 30ms with the best user experience :)
+    val vibrationTime = 50L     // After testing, 50ms with the best user experience :)
     val destFolderStr = "soundscape"
 
 }

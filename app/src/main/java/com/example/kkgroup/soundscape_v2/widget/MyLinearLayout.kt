@@ -96,6 +96,7 @@ class MyLinearLayout(val mContext: Context, attrs: AttributeSet?) : LinearLayout
 
             /**
              * This method will be invoked when the View is no longer being dragged.
+             * go to the center of the screen
              *
              * @param releasedChild
              * @param xvel velocity of x direction
@@ -104,23 +105,6 @@ class MyLinearLayout(val mContext: Context, attrs: AttributeSet?) : LinearLayout
             override fun onViewReleased(releasedChild: View, xvel: Float, yvel: Float) {
                 super.onViewReleased(releasedChild, xvel, yvel)
 
-                /**
-                 * go to the edge of the screen
-                 */
-//                val childWidth = releasedChild.width
-//                val parentWidth = width
-//                val leftBound = paddingLeft// left edge
-//                val rightBound = width - releasedChild.width - paddingRight// right edge
-//                if (childWidth / 2 + mCurrentLeft < parentWidth / 2) {
-//                    viewDragHelper?.settleCapturedViewAt(leftBound, mCurrentTop)
-//                } else {
-//                    viewDragHelper?.settleCapturedViewAt(rightBound, mCurrentTop)
-//                }
-//                invalidate() // System method to refresh view position
-
-                /**
-                 * go to the center of the screen
-                 */
                 val centerPoint = width / 2 - releasedChild.width / 2
                 viewDragHelper?.settleCapturedViewAt(centerPoint, mCurrentTop)
                 invalidate() // System method to refresh view position
@@ -150,90 +134,9 @@ class MyLinearLayout(val mContext: Context, attrs: AttributeSet?) : LinearLayout
      * handle touch event
      */
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            mVibrator?.let {
-                /**
-                 * The following method requires SDK >= 26, Our Target SDK is 21
-                 * We are lazy to do SDK check, so we just use deprecated method , let me go this time :)
-                 */
-
-                // if (it.hasVibrator()) it.vibrate(VibrationEffect.createOneShot(ConstantValue.vibrationTime, -1))
-                if (it.hasVibrator()) it.vibrate(ConstantValue.vibrationTime)
-            }
-
-        }
-
-        //当按下时处理
-//        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//            xDown = event.getX();
-//            yDown = event.getY();
-//            Log.v("OnTouchListener", "Down");
-//        } else if (event.getAction() == MotionEvent.ACTION_UP) {// 松开处理
-//            //获取松开时的x坐标
-//            if (isLongClickModule) {
-//                isLongClickModule = false;
-//                isLongClicking = false;
-//            }
-//            xUp = event.getX();
-//
-//            Tools.log_e("up")
-//            //按下和松开绝对值差当大于20时滑动，否则不显示
-//            if ((xUp - xDown) > 20) {
-//
-//            } else if ((xUp - xDown) < -20) {
-//                //添加要处理的内容
-//            } else if (0.0f == (xDown - xUp)) {
-//                Tools.log_e( "Up == 0 点击了")
-//            }
-//        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-//            //当滑动时背景为选中状态 //检测是否长按,在非长按时检测
-//            if (!isLongClickModule) {
-//                isLongClickModule = isLongPressed(xDown, yDown, event.getX(),
-//                        event.getY(), event.getDownTime(), event.getEventTime(), 300);
-//            }
-//            if (isLongClickModule && !isLongClicking) {
-//                //处理长按事件
-//
-//
-//
-//                isLongClicking = true; }
-//        } else {
-//            //其他模式
-//            return false;
-//        }
-
         viewDragHelper?.processTouchEvent(event)
         return true
     }
-
-    private var xDown: Float = 0.0f
-    private var yDown: Float = 0.0f
-    private var xUp: Float = 0.0f
-
-    private var isLongClickModule = false
-    private var isLongClicking = false
-
-    /* 判断是否有长按动作发生
-	   * @param lastX 按下时X坐标
-	   * @param lastY 按下时Y坐标
-	   * @param thisX 移动时X坐标
-	   * @param thisY 移动时Y坐标
-	   * @param lastDownTime 按下时间
-	   * @param thisEventTime 移动时间
-	   * @param longPressTime 判断长按时间的阀值
-	   */
-    private fun isLongPressed(lastX: Float, lastY: Float,
-                              thisX: Float, thisY: Float,
-                              lastDownTime: Long, thisEventTime: Long,
-                              longPressTime: Long): Boolean {
-        val offsetX = Math.abs(thisX - lastX)
-        val offsetY = Math.abs(thisY - lastY)
-        val intervalTime = thisEventTime - lastDownTime
-        return if (offsetX <= 10 && offsetY <= 10 && intervalTime >= longPressTime) {
-            true
-        } else false
-    }
-
 
     /**
      * To farce a view to draw, in other words, redraw the view tree

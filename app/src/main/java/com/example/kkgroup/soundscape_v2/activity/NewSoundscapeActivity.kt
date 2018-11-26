@@ -1,17 +1,20 @@
 package com.example.kkgroup.soundscape_v2.activity
 
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.os.Vibrator
+import android.support.design.widget.BottomSheetBehavior
+import android.support.design.widget.BottomSheetDialog
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.Toolbar
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.animation.Animation
-import android.view.animation.TranslateAnimation
+import android.view.*
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import com.example.kkgroup.soundscape_v2.R
+import com.example.kkgroup.soundscape_v2.Tools.ConstantValue
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.widget.MyLinearLayout
 import com.jaygoo.widget.OnRangeChangedListener
@@ -19,12 +22,13 @@ import com.jaygoo.widget.RangeSeekBar
 import com.jaygoo.widget.VerticalRangeSeekBar
 import org.jetbrains.anko.startActivity
 
-class NewSoundscapeActivity : AppCompatActivity(), View.OnClickListener {
-
+class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener {
     private lateinit var seekBar: VerticalRangeSeekBar
     private lateinit var audioTrack01: MyLinearLayout
     private lateinit var audioTrack02: MyLinearLayout
     private var buttonsArr: MutableList<TextView> = mutableListOf()
+    private var mVibrator: Vibrator? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,81 +38,50 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnClickListener {
         initComponents()
         initListeners()
 
-        addButtonView()
+        generateAudioCard(1)
+        generateAudioCard(1)
+        generateAudioCard(2)
     }
 
-    private fun addButtonView() {
 
-        val childView1 = LayoutInflater.from(this)
-                .inflate(R.layout.audio_file_small_item, audioTrack01, false)
-//        val textView1 = childView1.findViewById<TextView>(R.id.text_view)
-//        textView1.setId(View.generateViewId())
-//
-//        textView1.text = "第 " + 1 + " 个view"
-//        initAnimation(textView1, 1)
-        audioTrack01.addView(childView1)
+    /**
+     * flag -> 1 : add audio card to track 01
+     *         2 : add audio card to track 02
+     */
+    private fun generateAudioCard(flag: Int) {
 
-        val childView2 = LayoutInflater.from(this)
-                .inflate(R.layout.audio_file_small_item, audioTrack02, false)
+        if (flag == 1) {
+            val audioCard = LayoutInflater.from(this)
+                    .inflate(R.layout.audio_file_small_item, audioTrack01, false)
+            audioTrack01.addView(audioCard)
+            audioCard.setOnClickListener {
+                showBottomSheetDialog("childView 1")
+            }
+            audioCard.setOnLongClickListener(this)
+        } else {
+            val audioCard = LayoutInflater.from(this)
+                    .inflate(R.layout.audio_file_small_item, audioTrack02, false)
+            audioTrack02.addView(audioCard)
 
-//        val textView1 = childView1.findViewById<TextView>(R.id.text_view)
-//        textView1.setId(View.generateViewId())
-//
-//        textView1.text = "第 " + 1 + " 个view"
-//        initAnimation(textView1, 1)
-        audioTrack02.addView(childView2)
-
-        childView2.setOnClickListener {
-            Toast.makeText(this, "cliclk childView2", Toast.LENGTH_SHORT).show()
-        }
-
-        val childView3 = LayoutInflater.from(this)
-                .inflate(R.layout.audio_file_small_item, audioTrack02, false)
-//        val textView1 = childView1.findViewById<TextView>(R.id.text_view)
-//        textView1.setId(View.generateViewId())
-//
-//        textView1.text = "第 " + 1 + " 个view"
-//        initAnimation(textView1, 1)
-        audioTrack02.addView(childView3)
-
-        childView3.setOnClickListener {
-            Toast.makeText(this, "cliclk childView3", Toast.LENGTH_SHORT).show()
+            audioCard.setOnClickListener {
+                showBottomSheetDialog("childView 2")
+            }
+            audioCard.setOnLongClickListener(this)
         }
 
     }
 
-    private fun initAnimation(textView: TextView, position: Int) {
-        when (position) {
-            1 -> {
-                val mLeftAnimation1 = TranslateAnimation(Animation.RELATIVE_TO_SELF, -1.0f,
-                        Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                        0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-                mLeftAnimation1.duration = 500;
-                textView.startAnimation(mLeftAnimation1);
-                textView.animate().alpha(1f);
-            }
-
-            2 -> {
-                val mLeftAnimation2 = TranslateAnimation(Animation.RELATIVE_TO_SELF, 1.0f,
-                        Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                        0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-                mLeftAnimation2.setDuration(500);
-                textView.startAnimation(mLeftAnimation2);
-                textView.animate().alpha(1f);
-            }
+    /**
+     * The following method requires SDK >= 26, Our Target SDK is 21
+     * We are lazy to do SDK check, so we just use deprecated method , let me go this time :)
+     */
+    override fun onLongClick(view: View?): Boolean {
+        mVibrator?.let {
+            // if (it.hasVibrator()) it.vibrate(VibrationEffect.createOneShot(ConstantValue.vibrationTime, -1))
+            if (it.hasVibrator()) it.vibrate(ConstantValue.vibrationTime)
+            return true
         }
-
-    }
-
-    override fun onClick(view: View) {
-        Tools.toastShow(this, view?.id.toString())
-
-
-        for (temp in buttonsArr) {
-            if (view.id == temp.id) {
-                Tools.toastShow(this, temp.text.toString())
-            }
-        }
+        return true
     }
 
     private fun initComponents() {
@@ -120,6 +93,9 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnClickListener {
 
         audioTrack01 = findViewById(R.id.audio_track_one)
         audioTrack02 = findViewById(R.id.audio_track_two)
+        mVibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        bottom_sheet = findViewById(R.id.bottom_sheet)
+        mBehavior = BottomSheetBehavior.from(bottom_sheet)
     }
 
     private fun initToolbar() {
@@ -149,6 +125,45 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnClickListener {
 
         // make it work!
         seekBar.invalidate()
+    }
+
+    private lateinit var mBehavior: BottomSheetBehavior<View>
+    private var mBottomSheetDialog: BottomSheetDialog? = null
+    private var bottom_sheet: View? = null
+    private fun showBottomSheetDialog(message: String) {
+        if (mBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+            mBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        val view = layoutInflater.inflate(R.layout.sheet_audio_card_floating, null)
+        (view.findViewById(R.id.name) as TextView).text = message
+        (view.findViewById(R.id.brief) as TextView).text = "From human category"
+        view.findViewById<ImageButton>(R.id.bt_close).setOnClickListener {
+            mBottomSheetDialog?.hide()
+        }
+
+        view.findViewById<AppCompatButton>(R.id.deleteFromTrack).setOnClickListener {
+            Toast.makeText(applicationContext, "Delete From Track", Toast.LENGTH_SHORT).show()
+        }
+
+        view.findViewById<AppCompatButton>(R.id.previewAudioCard).setOnClickListener {
+            Toast.makeText(applicationContext, "Preview Audio Card", Toast.LENGTH_SHORT).show()
+        }
+
+        mBottomSheetDialog = BottomSheetDialog(this)
+        mBottomSheetDialog?.setContentView(view)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mBottomSheetDialog?.getWindow()!!.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        }
+
+        // set background transparent
+        (view.parent as View).setBackgroundColor(resources.getColor(android.R.color.transparent))
+
+        mBottomSheetDialog?.show()
+        mBottomSheetDialog?.setOnDismissListener {
+            mBottomSheetDialog = null
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
