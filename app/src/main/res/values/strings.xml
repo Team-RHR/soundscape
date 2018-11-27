@@ -21,4 +21,6 @@
     <string name="toast_repeat_clicked">Repeat clicked</string>
     <string name="toast_shuffle_clicked">Shuffle clicked</string>
     <string name="your_soundscapes">Your soundscapes</string>
+    <string name="change_lang">Change language</string>
+    <string name="change_lang_tag">fi</string>
 </resources>

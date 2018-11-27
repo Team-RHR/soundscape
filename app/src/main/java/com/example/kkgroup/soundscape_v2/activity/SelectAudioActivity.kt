@@ -1,5 +1,6 @@
 package com.example.kkgroup.soundscape_v2.activity
 
+import android.content.res.Configuration
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -9,6 +10,7 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import com.example.kkgroup.soundscape_v2.R
+import com.example.kkgroup.soundscape_v2.Tools.LocaleManager
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.fragments.CategoryListFragment
 import com.example.kkgroup.soundscape_v2.fragments.RecordingFragment
@@ -30,6 +32,13 @@ class SelectAudioActivity : AppCompatActivity() {
         tabs.setupWithViewPager(viewPager)
         tabs.getTabAt(0)?.setIcon(R.drawable.ic_cloud_download)
         tabs.getTabAt(1)?.setIcon(R.drawable.ic_mic)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+
+        LocaleManager(this).getLocale()
+        this.recreate()
     }
 
     private fun initToolbar() {

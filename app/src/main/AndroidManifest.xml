@@ -20,19 +20,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.LoginActivity">
+        <activity android:name=".activity.LoginActivity"
+            android:configChanges="orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LocalAudioFilesActivity" />
-        <activity android:name=".activity.SelectAudioActivity" />
-        <activity android:name=".activity.RemoteAudioFilesActivity" />
-        <activity android:name=".activity.PlayActivity" />
-        <activity android:name=".activity.NewSoundscapeActivity" />
-        <activity android:name=".activity.SearchActivity"></activity>
+        <activity android:name=".activity.LocalAudioFilesActivity"
+            android:configChanges="orientation"/>
+        <activity android:name=".activity.SelectAudioActivity"
+            android:configChanges="orientation"/>
+        <activity android:name=".activity.RemoteAudioFilesActivity"
+            android:configChanges="orientation"/>
+        <activity android:name=".activity.PlayActivity"
+            android:configChanges="orientation"/>
+        <activity android:name=".activity.NewSoundscapeActivity"
+            android:configChanges="orientation"/>
+        <activity android:name=".activity.SearchActivity"
+            android:configChanges="orientation"/>
     </application>
 
 </manifest>

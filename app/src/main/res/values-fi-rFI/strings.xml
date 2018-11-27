@@ -21,4 +21,6 @@
     <string name="toast_repeat_clicked">Toisto klikattu</string>
     <string name="toast_shuffle_clicked">Sekoitus klikattu</string>
     <string name="your_soundscapes">Äänimaaisemasi</string>
+    <string name="change_lang">Vaihda kieltä</string>
+    <string name="change_lang_tag">us</string>
 </resources>

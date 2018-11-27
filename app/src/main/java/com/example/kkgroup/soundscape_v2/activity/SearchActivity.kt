@@ -1,6 +1,7 @@
 package com.example.kkgroup.soundscape_v2.activity
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
@@ -15,6 +16,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import com.example.kkgroup.soundscape_v2.Model.SearchApiModel
 import com.example.kkgroup.soundscape_v2.R
+import com.example.kkgroup.soundscape_v2.Tools.LocaleManager
 import com.example.kkgroup.soundscape_v2.Tools.Networking
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.adapter.SearchItemAdapter
@@ -42,6 +44,13 @@ class SearchActivity : AppCompatActivity() {
         Tools.updateAudioFiles()
         initComponent()
         initListeners()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+
+        LocaleManager(this).getLocale()
+        this.recreate()
     }
 
     private fun initComponent() {

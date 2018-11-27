@@ -1,23 +1,23 @@
 package com.example.kkgroup.soundscape_v2.activity
 
+import android.content.Context
+import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
-import android.view.View
-import com.example.kkgroup.soundscape_v2.Model.SearchApiModel
 import com.example.kkgroup.soundscape_v2.R
+import com.example.kkgroup.soundscape_v2.Tools.LocaleManager
 import com.example.kkgroup.soundscape_v2.Tools.Networking
 import com.example.kkgroup.soundscape_v2.Tools.PrefManager
 import com.example.kkgroup.soundscape_v2.Tools.Tools
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_search.*
 import org.jetbrains.anko.startActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -29,6 +29,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         prefManager = PrefManager(this)
+
         // check if user is already logged in and has API key in shared preferences
         if (prefManager.isApiKeySet()) {
             // set api token from sharedpreferences before continuing to another activity
@@ -41,6 +42,7 @@ class LoginActivity : AppCompatActivity() {
             Tools.log_e("Need to log in")
         }
 
+        // login button listener
         submitLoginBtn.setOnClickListener {
             val usernameInput = usrInput.text.toString()
             val passwordInput = passInput.text.toString()
@@ -52,7 +54,19 @@ class LoginActivity : AppCompatActivity() {
 
             callWebService(json)
         }
+
+        // language change button listener
+        languageBtn.setOnClickListener{
+            Tools.log_e("clicked languageBtn")
+            val lang = languageBtn.tag.toString()
+
+            LocaleManager(this).changeLocale(lang)
+            this.recreate()
+        }
+
+        LocaleManager(this).getLocale()
     }
+
     // this is to prevent from going back in activity stack, so if user clicks logout and is redirected to login page they cant go back to soundscapes activity
     override fun onBackPressed() {
         if (System.currentTimeMillis() - mExitTime > 2000) {
@@ -63,6 +77,13 @@ class LoginActivity : AppCompatActivity() {
             moveTaskToBack(true)
             // finish()
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+
+        LocaleManager(this).getLocale()
+        this.recreate()
     }
 
     private fun callWebService(json: JsonObject) {
