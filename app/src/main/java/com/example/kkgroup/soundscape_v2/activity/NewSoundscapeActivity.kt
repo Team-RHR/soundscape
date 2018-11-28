@@ -39,6 +39,8 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener {
 
         generateAudioCard(1)
         generateAudioCard(1)
+        generateAudioCard(1)
+        generateAudioCard(2)
         generateAudioCard(2)
     }
 
