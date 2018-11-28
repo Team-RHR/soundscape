@@ -26,6 +26,7 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LocaleManager(this).getLocale()
         setContentView(R.layout.activity_login)
 
         prefManager = PrefManager(this)
@@ -77,13 +78,6 @@ class LoginActivity : AppCompatActivity() {
             moveTaskToBack(true)
             // finish()
         }
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-
-        LocaleManager(this).getLocale()
-        this.recreate()
     }
 
     private fun callWebService(json: JsonObject) {

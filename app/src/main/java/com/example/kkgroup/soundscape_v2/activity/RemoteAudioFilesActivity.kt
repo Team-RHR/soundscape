@@ -29,19 +29,13 @@ class RemoteAudioFilesActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LocaleManager(this).getLocale()
         setContentView(R.layout.activity_preview)
 
         categoryName = intent.extras["obj"] as String
         recyclerView = findViewById(R.id.recyclerView)
         initToolbar()
         initListeners()
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-
-        LocaleManager(this).getLocale()
-        this.recreate()
     }
 
     private fun initListeners() {
