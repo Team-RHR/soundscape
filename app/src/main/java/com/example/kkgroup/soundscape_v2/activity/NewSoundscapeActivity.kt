@@ -2,11 +2,13 @@ package com.example.kkgroup.soundscape_v2.activity
 
 import android.content.Context
 import android.os.Build
+import android.content.res.Configuration
+import android.support.v7.app.AppCompatActivity
+
 import android.os.Bundle
 import android.os.Vibrator
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialog
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.Toolbar
 import android.view.*
@@ -15,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.Tools.ConstantValue
+import com.example.kkgroup.soundscape_v2.Tools.LocaleManager
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.widget.MyLinearLayout
 import com.jaygoo.widget.OnRangeChangedListener
@@ -97,6 +100,13 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener {
         mVibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         bottom_sheet = findViewById(R.id.bottom_sheet)
         mBehavior = BottomSheetBehavior.from(bottom_sheet)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+
+        LocaleManager(this).getLocale()
+        this.recreate()
     }
 
     private fun initToolbar() {

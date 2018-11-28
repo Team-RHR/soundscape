@@ -1,5 +1,6 @@
 package com.example.kkgroup.soundscape_v2.activity
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
@@ -11,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import com.example.kkgroup.soundscape_v2.R
+import com.example.kkgroup.soundscape_v2.Tools.LocaleManager
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.adapter.AudioItemAdapter
 import com.example.kkgroup.soundscape_v2.widget.ItemAnimation
@@ -33,6 +35,13 @@ class RemoteAudioFilesActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         initToolbar()
         initListeners()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+
+        LocaleManager(this).getLocale()
+        this.recreate()
     }
 
     private fun initListeners() {

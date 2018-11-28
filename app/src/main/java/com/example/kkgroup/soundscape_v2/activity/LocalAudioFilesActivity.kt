@@ -2,6 +2,7 @@ package com.example.kkgroup.soundscape_v2.activity
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.ActivityCompat
@@ -14,13 +15,17 @@ import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ActionMenuView
 import android.widget.LinearLayout
 import com.example.kkgroup.soundscape_v2.R
+import com.example.kkgroup.soundscape_v2.Tools.LocaleManager
 import com.example.kkgroup.soundscape_v2.Tools.PrefManager
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.adapter.AudioItemAdapter
 import com.example.kkgroup.soundscape_v2.widget.ItemAnimation
 import kotlinx.android.synthetic.main.activity_audio_files_of_local.*
+import kotlinx.android.synthetic.main.activity_login.*
+import org.jetbrains.anko.actionMenuView
 import org.jetbrains.anko.startActivity
 import java.io.File
 
@@ -43,6 +48,13 @@ class LocalAudioFilesActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         initToolbar()
         initListeners()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+
+        LocaleManager(this).getLocale()
+        this.recreate()
     }
 
     private fun requestPermission() {
@@ -119,6 +131,14 @@ class LocalAudioFilesActivity : AppCompatActivity() {
 
             prefManager.setApiKey(null)
             startActivity<LoginActivity>()
+        } else if(item.itemId == R.id.change_lang) {
+            if (PrefManager(this).getLocale() == "us") {
+                LocaleManager(this).changeLocale("fi")
+                this.recreate()
+            } else {
+                LocaleManager(this).changeLocale("us")
+                this.recreate()
+            }
         } else {
             Tools.toastShow(this, getString(R.string.toast_added_later))
         }

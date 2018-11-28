@@ -17,6 +17,13 @@
         android:orientation="vertical"
         android:padding="@dimen/spacing_mlarge">
 
+        <Button
+            android:id="@+id/languageBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/change_lang"
+            android:tag="@string/change_lang_tag" />
+
         <com.mikhaellopez.circularimageview.CircularImageView
             android:layout_width="90dp"
             android:layout_height="90dp"

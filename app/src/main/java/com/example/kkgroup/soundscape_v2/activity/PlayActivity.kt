@@ -2,6 +2,7 @@ package com.example.kkgroup.soundscape_v2.activity
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.res.Configuration
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
@@ -17,6 +18,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.Tools.AudioUtils
+import com.example.kkgroup.soundscape_v2.Tools.LocaleManager
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.mikhaellopez.circularimageview.CircularImageView
 import kotlinx.android.synthetic.main.activity_play.*
@@ -47,6 +49,14 @@ class PlayActivity : AppCompatActivity() {
         initComponents()
         initListeners()
     }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+
+        LocaleManager(this).getLocale()
+        this.recreate()
+    }
+
     private fun initComponents() {
         parent_view = findViewById(R.id.parent_view)
         seek_song_progressbar = findViewById(R.id.seek_song_progressbar)
