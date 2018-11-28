@@ -26,7 +26,6 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener {
     private lateinit var seekBar: VerticalRangeSeekBar
     private lateinit var audioTrack01: MyLinearLayout
     private lateinit var audioTrack02: MyLinearLayout
-    private var buttonsArr: MutableList<TextView> = mutableListOf()
     private var mVibrator: Vibrator? = null
 
 
