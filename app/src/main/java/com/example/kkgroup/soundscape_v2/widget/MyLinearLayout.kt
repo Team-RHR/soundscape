@@ -4,14 +4,10 @@ import android.content.Context
 import android.os.Vibrator
 import android.support.v4.widget.ViewDragHelper
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.Toast
-import com.example.kkgroup.soundscape_v2.Tools.ConstantValue
-import com.example.kkgroup.soundscape_v2.Tools.Tools
-import org.jetbrains.anko.sdk25.coroutines.onTouch
+import com.example.kkgroup.soundscape_v2.Model.AudioCardModel
 
 /**
  * @ Author     ：Hao Zhang.
@@ -28,10 +24,25 @@ class MyLinearLayout(val mContext: Context, attrs: AttributeSet?) : LinearLayout
     private var mVibrator: Vibrator? = null
     private var mCurrentTop: Int = 0
     private var mCurrentLeft: Int = 0
+    // private var audioCardList = mutableListOf<AudioCardModel>()
 
     init {
         initViewDragHelper()
     }
+
+//    fun insertAudioCard(audioCardModel: AudioCardModel){
+//        audioCardList.add(audioCardModel)
+//    }
+//
+//    fun removeAudioCard(audioCardModel: AudioCardModel){
+//        if (audioCardList.contains(audioCardModel)) {
+//            audioCardList.remove(audioCardModel)
+//        }
+//    }
+//
+//    fun getAudioCardList(): MutableList<AudioCardModel> {
+//        return this.audioCardList
+//    }
 
     private fun initViewDragHelper() {
         mVibrator = mContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
@@ -75,21 +86,20 @@ class MyLinearLayout(val mContext: Context, attrs: AttributeSet?) : LinearLayout
              * This method will restrict the **Vertical** distance that the dragged view can be moved
              * We have to setup the max value that view can be moved, Otherwise it will exceed the edge of the screen
              *
-             * @param child
+             * @param view
              * @param top  The value of the dragged view is theoretically to be slid to the vertical direction
              * @param dy    The speed of the slide, in px per second.
              * @return  The value of the actual y coordinate in the vertical direction
              */
-            override fun clampViewPositionVertical(child: View, top: Int, dy: Int): Int {
+            override fun clampViewPositionVertical(view: View, top: Int, dy: Int): Int {
 
                 // The minimum y coordinate value cannot be less than topBound
                 val topBound = paddingTop
                 // The maximum y coordinate value cannot be greater than bottomBound
-                val bottomBound = height - child.height - paddingBottom
+                val bottomBound = height - view.height - paddingBottom
                 val newTop = Math.min(Math.max(top, topBound), bottomBound)
                 mCurrentTop = newTop
 
-                // Tools.log_e("clampViewPositionVertical: top=$top --> topBound: $topBound --> bottomBound: $bottomBound --> newTop: $newTop")
                 return newTop
             }
 
@@ -108,6 +118,8 @@ class MyLinearLayout(val mContext: Context, attrs: AttributeSet?) : LinearLayout
                 val centerPoint = width / 2 - releasedChild.width / 2
                 viewDragHelper?.settleCapturedViewAt(centerPoint, mCurrentTop)
                 invalidate() // System method to refresh view position
+
+                myVerticalPositionDetectListener?.handleViewVerticalPostion(releasedChild)
             }
 
             override fun getViewHorizontalDragRange(child: View): Int {
@@ -122,6 +134,15 @@ class MyLinearLayout(val mContext: Context, attrs: AttributeSet?) : LinearLayout
         viewDragHelper = ViewDragHelper.create(this, 1.0f, dragCallback)
     }
 
+
+    interface VerticalPositionDetectListener {
+        fun handleViewVerticalPostion(view: View)
+    }
+
+    private var myVerticalPositionDetectListener: VerticalPositionDetectListener? = null
+    fun setMyVerticalPositionDetectListener(myVerticalPositionDetectListener: VerticalPositionDetectListener){
+        this.myVerticalPositionDetectListener = myVerticalPositionDetectListener
+    }
 
     /**
      * Touch Event is intercepted and pass it to our viewDragHelper to handle

@@ -40,12 +40,13 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageButton
+                android:id="@+id/ib_play"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginBottom="8dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:tint="@color/colorAccent"
-                app:srcCompat="@drawable/ic_play" />
+                app:srcCompat="@drawable/ic_play_arrow" />
 
             <com.jaygoo.widget.VerticalRangeSeekBar
                 android:id="@+id/myVerticalSeekbar"

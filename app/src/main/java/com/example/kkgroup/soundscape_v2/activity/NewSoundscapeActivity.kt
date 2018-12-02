@@ -9,12 +9,16 @@ import android.os.Bundle
 import android.os.Vibrator
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialog
+import android.support.v4.content.ContextCompat.getSystemService
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.Toolbar
 import android.view.*
 import android.widget.ImageButton
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import com.example.kkgroup.soundscape_v2.Model.AudioCardModel
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.Tools.ConstantValue
 import com.example.kkgroup.soundscape_v2.Tools.LocaleManager
@@ -23,13 +27,36 @@ import com.example.kkgroup.soundscape_v2.widget.MyLinearLayout
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import com.jaygoo.widget.VerticalRangeSeekBar
+import kotlinx.android.synthetic.main.activity_new_soundscape.*
 import org.jetbrains.anko.startActivity
 
-class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener {
+private const val AUDIO_CARD_HEIGHT = 360
+class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener, MyLinearLayout.VerticalPositionDetectListener {
+
+    override fun handleViewVerticalPostion(view: View) {
+       // Tools.log_e("view.tag: ${view.tag} --> yPosition: $yPosition")
+       Tools.log_e("view.tag: ${view.tag} --> top: ${view.top} --> bottom: ${view.bottom}")
+
+        val audioCardModel = view.tag as AudioCardModel
+
+        Tools.log_e("contains: ${audioCardModelList.contains(audioCardModel)}")
+        if (audioCardModelList.contains(audioCardModel)) {
+            audioCardModel.topPosition = view.top
+            audioCardModel.bottomPosition = view.bottom
+            getOrderOfAudioCards()
+        }
+    }
+
     private lateinit var seekBar: VerticalRangeSeekBar
     private lateinit var audioTrack01: MyLinearLayout
     private lateinit var audioTrack02: MyLinearLayout
+    private var audioCardViewListForTrack01 = mutableListOf<View>()
+    private var audioCardViewListForTrack02 = mutableListOf<View>()
+    private var audioCardViewList = mutableListOf<View>()
+
+    val audioCardModelList = mutableListOf<AudioCardModel>()
     private var mVibrator: Vibrator? = null
+    private var isPlaying = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +73,34 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener {
         generateAudioCard(2)
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+
+            for (audioCardView in audioCardViewListForTrack01) {
+                val audioCardModel = AudioCardModel(1, audioCardView.top, audioCardView.bottom)
+                audioCardView.tag = audioCardModel
+                audioCardModelList.add(audioCardModel)
+                // Tools.log_e("audioCardView Track 01: ${audioCardView.top} --- ${audioCardView.bottom}")
+            }
+
+            for (audioCardView in audioCardViewListForTrack02) {
+                val audioCardModel = AudioCardModel(2, audioCardView.top, audioCardView.bottom)
+                audioCardView.tag = audioCardModel
+                audioCardModelList.add(audioCardModel)
+                // Tools.log_e("audioCardView Track 02: ${audioCardView.top} --- ${audioCardView.bottom}")
+            }
+        }
+    }
+
+    private fun getOrderOfAudioCards() {
+
+        audioCardModelList.sortBy { it.topPosition }
+        audioCardModelList.forEach {
+            Tools.log_e(it.toString())
+        }
+    }
+
 
     /**
      * flag -> 1 : add audio card to track 01
@@ -56,15 +111,24 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener {
         if (flag == 1) {
             val audioCard = LayoutInflater.from(this)
                     .inflate(R.layout.audio_file_small_item, audioTrack01, false)
+
             audioTrack01.addView(audioCard)
+            audioCardViewListForTrack01.add(audioCard)
+            audioCardViewList.add(audioCard)
+
             audioCard.setOnClickListener {
                 showBottomSheetDialog("childView 1")
             }
             audioCard.setOnLongClickListener(this)
+
+
         } else {
             val audioCard = LayoutInflater.from(this)
                     .inflate(R.layout.audio_file_small_item, audioTrack02, false)
+
             audioTrack02.addView(audioCard)
+            audioCardViewListForTrack02.add(audioCard)
+            audioCardViewList.add(audioCard)
 
             audioCard.setOnClickListener {
                 showBottomSheetDialog("childView 2")
@@ -110,6 +174,21 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener {
 
     private fun initListeners() {
 
+        audioTrack01.setMyVerticalPositionDetectListener(this)
+        audioTrack02.setMyVerticalPositionDetectListener(this)
+
+        ib_play.setOnClickListener {
+
+            getOrderOfAudioCards()
+
+            if (isPlaying) {
+                ib_play.setImageResource(R.drawable.ic_play_arrow)
+            } else {
+                ib_play.setImageResource(R.drawable.ic_pause)
+            }
+            isPlaying = !isPlaying
+        }
+
         seekBar.setOnRangeChangedListener(object : OnRangeChangedListener {
             override fun onStartTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {
 
@@ -117,7 +196,7 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener {
 
             override fun onRangeChanged(view: RangeSeekBar?, leftValue: Float, rightValue: Float, isFromUser: Boolean) {
 
-                Tools.log_e("leftValue: $leftValue --> rightValue: $rightValue")
+                // Tools.log_e("leftValue: $leftValue --> rightValue: $rightValue")
             }
 
             override fun onStopTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {
