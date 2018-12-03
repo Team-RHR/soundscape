@@ -41,6 +41,9 @@
 
         <activity android:name=".activity.SearchActivity"
             android:configChanges="orientation"/>
+
+        <activity android:name=".activity.SettingsActivity"
+            android:configChanges="orientation"/>
     </application>
 
 </manifest>

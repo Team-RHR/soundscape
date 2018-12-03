@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:title="Settings">
+
+
+
+    </android.support.v7.widget.Toolbar>
+
+
+    <TextView
+        android:textColor="#000"
+        android:text="@string/general_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingTop="15dp"
+        android:textSize="22sp"/>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    tools:context=".activity.SettingsActivity">
+
+    <android.support.v7.widget.SwitchCompat
+        android:drawableStart="@drawable/ic_night_mode"
+        android:drawablePadding="10dp"
+        android:id="@+id/modeSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Night mode"
+        android:textSize="18sp"/>
+</LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        tools:context=".activity.SettingsActivity">
+
+        <TextView
+            android:text="Language"
+            android:textSize="18sp"
+            android:textColor="#000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_language_black_24dp"
+            android:drawablePadding="10dp"/>
+
+        <TextView
+            android:id="@+id/select_language"
+            android:text="English"
+            android:textSize="14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"/>
+</RelativeLayout>
+
+    <TextView
+        android:textColor="#000"
+        android:text="@string/delete_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingTop="15dp"
+        android:textSize="22sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginTop="5dp"
+        tools:context=".activity.SettingsActivity">
+
+        <TextView
+            android:id="@+id/delete_soundscapes"
+            android:text="Delete files"
+            android:textSize="18sp"
+            android:textColor="#000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_delete_black_24dp"
+            android:drawablePadding="10dp"/>/>
+
+    </LinearLayout>
+
+    <TextView
+        android:textColor="#000"
+        android:text="@string/log_out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingTop="15dp"
+        android:textSize="22sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginTop="5dp"
+        tools:context=".activity.SettingsActivity">
+
+        <TextView
+            android:id="@+id/logout_button"
+            android:text="Click here to logout"
+            android:textSize="18sp"
+            android:textColor="@color/red_600"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_exit_to_app_black_24dp"
+            android:drawablePadding="10dp"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

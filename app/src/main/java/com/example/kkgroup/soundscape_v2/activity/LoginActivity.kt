@@ -44,6 +44,7 @@ class LoginActivity : AppCompatActivity() {
 
         // login button listener
         submitLoginBtn.setOnClickListener {
+            Tools.updateAudioFiles()
             val usernameInput = usrInput.text.toString()
             val passwordInput = passInput.text.toString()
 

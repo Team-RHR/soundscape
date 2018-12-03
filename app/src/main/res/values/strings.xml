@@ -23,4 +23,7 @@
     <string name="your_soundscapes">Your soundscapes</string>
     <string name="change_lang">Change language</string>
     <string name="change_lang_tag">fi</string>
+    <string name="general_settings"><u>General settings</u></string>
+    <string name="delete_settings"><u>File settings</u></string>
+    <string name="log_out"><u>Log out</u></string>
 </resources>

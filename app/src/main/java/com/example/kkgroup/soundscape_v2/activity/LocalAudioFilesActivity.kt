@@ -1,6 +1,7 @@
 package com.example.kkgroup.soundscape_v2.activity
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
@@ -72,7 +73,7 @@ class LocalAudioFilesActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        Tools.updateAudioFiles()
+       // Tools.updateAudioFiles()
     }
 
     private fun initListeners() {
@@ -126,21 +127,10 @@ class LocalAudioFilesActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_refresh) {
             loadingAndDisplayContent()
-        } else if(item.itemId == R.id.action_logout) {
-            val prefManager = PrefManager(this)
-
-            prefManager.setApiKey(null)
-            startActivity<LoginActivity>()
-        } else if(item.itemId == R.id.change_lang) {
-            if (PrefManager(this).getLocale() == "us") {
-                LocaleManager(this).changeLocale("fi")
-                this.recreate()
-            } else {
-                LocaleManager(this).changeLocale("us")
-                this.recreate()
-            }
-        } else {
-            Tools.toastShow(this, getString(R.string.toast_added_later))
+        } else if(item.itemId == R.id.action_settings) {
+            val intent = Intent(this, SettingsActivity::class.java)
+            //intent.putExtra("keyIdentifier", value)
+            startActivity(intent)
         }
         return super.onOptionsItemSelected(item)
     }
@@ -177,7 +167,7 @@ class LocalAudioFilesActivity : AppCompatActivity() {
                     Tools.toastShow(this, getString(R.string.toast_permission_denied))
                     finish()
                 }
-                return;
+                return
             }
         }
     }

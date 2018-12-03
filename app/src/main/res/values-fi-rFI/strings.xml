@@ -23,4 +23,7 @@
     <string name="your_soundscapes">Äänimaaisemasi</string>
     <string name="change_lang">Vaihda kieltä</string>
     <string name="change_lang_tag">us</string>
+    <string name="general_settings"><u>Yleiset asetukset</u></string>
+    <string name="delete_settings"><u>Tiedostojen hallinta</u></string>
+    <string name="log_out"><u>Kirjaudu ulos</u></string>
 </resources>

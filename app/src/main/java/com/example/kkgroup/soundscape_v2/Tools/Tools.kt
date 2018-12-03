@@ -207,12 +207,12 @@ object Tools {
 
     fun updateAudioFiles() {
 
-        val wallpaperDirectoryNature = File(Tools.getDownloadPath(), "Nature")
-        val wallpaperDirectoryHuman = File(Tools.getDownloadPath(), "Human")
-        val wallpaperDirectoryMachine = File(Tools.getDownloadPath(), "Machine")
-        wallpaperDirectoryNature.mkdirs()
-        wallpaperDirectoryHuman.mkdirs()
-        wallpaperDirectoryMachine.mkdirs()
+        val directoryNature = File(Tools.getDownloadPath(), "Nature")
+        val directoryHuman = File(Tools.getDownloadPath(), "Human")
+        val directoryMachine = File(Tools.getDownloadPath(), "Machine")
+        directoryNature.mkdirs()
+        directoryHuman.mkdirs()
+        directoryMachine.mkdirs()
 
         val call = Networking.service.getAllMp3FilesWithLink(Networking.API_TOKEN, "true", "mp3")
         val value = object : retrofit2.Callback<JsonArray> {
@@ -221,24 +221,7 @@ object Tools {
                                     response: retrofit2.Response<JsonArray>?) {
                 response?.let {
                     if (response.isSuccessful) {
-                        /** here we filter the response and alter the json so format is
-                         * [
-                         *  {},
-                         *  {}
-                         * ]
-                         *
-                         * instead of
-                         *
-                         * [
-                         *  [{}],
-                         *  [{}]
-                         * ]
-                         */
                         val res = "[" + response.body().toString().filter { c: Char -> (c.toString() != "[" && c.toString() != "]") } + "]"
-
-                        /**
-                         * here we create a array of SearchApiModels that we can better use for adapters etc.
-                         */
                         val gson = GsonBuilder()
                                 .setLenient()       // fix parse json failed on android 6.0 by setLenient()
                                 .create()
@@ -334,4 +317,29 @@ object Tools {
             }
         }
     }
+
+    fun deleteFiles() {
+        val folderDir = File(getRootPath())
+        val pathHuman = getDownloadedAudioByCategoryPath("Human")
+        val pathMachine = getDownloadedAudioByCategoryPath("Machine")
+
+        folderDir.deleteRecursively()
+    }
+
+    fun deleteAudios() {
+        val folderDir = File(getDownloadPath())
+        folderDir.deleteRecursively()
+    }
+
+    fun deleteSoundScapes() {
+        val folderDir = File(getMySoundscapePath())
+        folderDir.deleteRecursively()
+    }
+
+    fun deleteRecordings() {
+        val folderDir = File(getMyRecordingPath())
+        folderDir.deleteRecursively()
+    }
+
+
 }
