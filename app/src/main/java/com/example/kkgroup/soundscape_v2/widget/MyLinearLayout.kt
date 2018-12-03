@@ -8,6 +8,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
 import com.example.kkgroup.soundscape_v2.Model.AudioCardModel
+import com.example.kkgroup.soundscape_v2.Tools.Tools
 
 /**
  * @ Author     ：Hao Zhang.
@@ -57,7 +58,12 @@ class MyLinearLayout(val mContext: Context, attrs: AttributeSet?) : LinearLayout
              *         false -> Do not Capture this child view's event -> view can NOT be dragged
              */
             override fun tryCaptureView(child: View, pointerId: Int): Boolean {
-                return true
+                val audioCardModel = child.tag as AudioCardModel
+                Tools.log_e("topPosition: ${audioCardModel.topPosition} --> bottomPosition: ${audioCardModel.bottomPosition}" +
+                        " --> isDraggable: ${audioCardModel.isDraggable}")
+
+
+                return audioCardModel.isDraggable
             }
 
             /**

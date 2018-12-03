@@ -2,20 +2,16 @@ package com.example.kkgroup.soundscape_v2.activity
 
 import android.content.Context
 import android.os.Build
-import android.content.res.Configuration
 import android.support.v7.app.AppCompatActivity
 
 import android.os.Bundle
 import android.os.Vibrator
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialog
-import android.support.v4.content.ContextCompat.getSystemService
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.Toolbar
 import android.view.*
 import android.widget.ImageButton
-import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.example.kkgroup.soundscape_v2.Model.AudioCardModel
@@ -35,11 +31,9 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener, MyL
 
     override fun handleViewVerticalPostion(view: View) {
        // Tools.log_e("view.tag: ${view.tag} --> yPosition: $yPosition")
-       Tools.log_e("view.tag: ${view.tag} --> top: ${view.top} --> bottom: ${view.bottom}")
 
         val audioCardModel = view.tag as AudioCardModel
 
-        Tools.log_e("contains: ${audioCardModelList.contains(audioCardModel)}")
         if (audioCardModelList.contains(audioCardModel)) {
             audioCardModel.topPosition = view.top
             audioCardModel.bottomPosition = view.bottom
@@ -73,23 +67,30 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener, MyL
         generateAudioCard(2)
     }
 
+    private var isFirst = true
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) {
+        if (hasFocus && isFirst) {
+
+            Tools.log_e("onWindowFocusChanged执行")
 
             for (audioCardView in audioCardViewListForTrack01) {
-                val audioCardModel = AudioCardModel(1, audioCardView.top, audioCardView.bottom)
+                val audioCardModel = AudioCardModel(1, audioCardView.top,
+                        audioCardView.bottom, true)
                 audioCardView.tag = audioCardModel
                 audioCardModelList.add(audioCardModel)
                 // Tools.log_e("audioCardView Track 01: ${audioCardView.top} --- ${audioCardView.bottom}")
             }
 
             for (audioCardView in audioCardViewListForTrack02) {
-                val audioCardModel = AudioCardModel(2, audioCardView.top, audioCardView.bottom)
+                val audioCardModel = AudioCardModel(2, audioCardView.top,
+                        audioCardView.bottom, true)
                 audioCardView.tag = audioCardModel
                 audioCardModelList.add(audioCardModel)
                 // Tools.log_e("audioCardView Track 02: ${audioCardView.top} --- ${audioCardView.bottom}")
             }
+
+            isFirst = false
         }
     }
 
@@ -97,7 +98,7 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener, MyL
 
         audioCardModelList.sortBy { it.topPosition }
         audioCardModelList.forEach {
-            Tools.log_e(it.toString())
+            // Tools.log_e(it.toString())
         }
     }
 
@@ -183,8 +184,10 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener, MyL
 
             if (isPlaying) {
                 ib_play.setImageResource(R.drawable.ic_play_arrow)
+                switchDraggable(true)
             } else {
                 ib_play.setImageResource(R.drawable.ic_pause)
+                switchDraggable(false)
             }
             isPlaying = !isPlaying
         }
@@ -207,6 +210,24 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener, MyL
 
         // make it work!
         seekBar.invalidate()
+    }
+
+    private fun switchDraggable(isDraggable: Boolean) {
+
+        for (audioCardView in audioCardViewListForTrack01) {
+
+            val audioCardModel = audioCardView.tag as AudioCardModel
+            audioCardModel.isDraggable = isDraggable
+
+            audioCardView.tag = audioCardModel
+        }
+
+        for (audioCardView in audioCardViewListForTrack02) {
+            val audioCardModel = audioCardView.tag as AudioCardModel
+            audioCardModel.isDraggable = isDraggable
+
+            audioCardView.tag = audioCardModel
+        }
     }
 
     private lateinit var mBehavior: BottomSheetBehavior<View>

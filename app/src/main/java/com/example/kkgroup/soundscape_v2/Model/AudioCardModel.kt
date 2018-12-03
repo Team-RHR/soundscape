@@ -8,4 +8,5 @@ package com.example.kkgroup.soundscape_v2.Model
 data class AudioCardModel(
         val trackNum: Int,
         var topPosition: Int,
-        var bottomPosition: Int)
+        var bottomPosition: Int,
+        var isDraggable: Boolean)
