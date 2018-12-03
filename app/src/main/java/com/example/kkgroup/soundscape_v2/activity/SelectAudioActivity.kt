@@ -21,6 +21,7 @@ class SelectAudioActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LocaleManager(this).getLocale()
         setContentView(R.layout.select_audio_file)
 
         initToolbar()
@@ -32,13 +33,6 @@ class SelectAudioActivity : AppCompatActivity() {
         tabs.setupWithViewPager(viewPager)
         tabs.getTabAt(0)?.setIcon(R.drawable.ic_cloud_download)
         tabs.getTabAt(1)?.setIcon(R.drawable.ic_mic)
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-
-        LocaleManager(this).getLocale()
-        this.recreate()
     }
 
     private fun initToolbar() {

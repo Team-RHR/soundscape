@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class SearchApiModel(@SerializedName("Title") val title: String,
                           @SerializedName("Original filename") val originalFilename: String,
                           @SerializedName("Description") val description: String,
-                          @SerializedName("Category") val category: String,
+                          @SerializedName("Category") val category: String? = null,
                           @SerializedName("Sound Type") val soundType: String,
                           @SerializedName("Length (sec)") val lengthSec: String,
                           @SerializedName("Creation date") val creationDate: String,

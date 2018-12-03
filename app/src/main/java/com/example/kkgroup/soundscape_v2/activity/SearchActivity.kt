@@ -39,18 +39,12 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LocaleManager(this).getLocale()
         setContentView(R.layout.activity_search)
 
         Tools.updateAudioFiles()
         initComponent()
         initListeners()
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-
-        LocaleManager(this).getLocale()
-        this.recreate()
     }
 
     private fun initComponent() {
@@ -142,7 +136,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun searchAudioFiles() {
-        val call = Networking.service.searchAudioFiles(Networking.API_TOKEN, "22", "mp3", search_input.text.trim().toString())
+        val call = Networking.service.searchAudioFiles(Networking.API_TOKEN, "29", "mp3", search_input.text.trim().toString())
 
         val value = object : retrofit2.Callback<JsonArray> {
             // this method gets called after a http call, no matter the http code

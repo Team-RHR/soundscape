@@ -31,7 +31,7 @@ import org.jetbrains.anko.startActivity
 import java.io.File
 
 
-private val REQUEST_READ_AUDIO_PERMISSION = 200
+private val REQUEST_WRITE_EXTERNAL_PERMISSION = 200
 class LocalAudioFilesActivity : AppCompatActivity() {
 
     private val LOADING_DURATION = 2000
@@ -39,9 +39,11 @@ class LocalAudioFilesActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var mAudioItemAdapter: AudioItemAdapter
+    private var localAudioFiles: MutableList<File>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LocaleManager(this).getLocale()
         setContentView(R.layout.activity_audio_files_of_local)
 
         requestPermission()
@@ -51,21 +53,14 @@ class LocalAudioFilesActivity : AppCompatActivity() {
         initListeners()
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-
-        LocaleManager(this).getLocale()
-        this.recreate()
-    }
-
     private fun requestPermission() {
 
         if(ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED){
             // No permission
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    ,REQUEST_READ_AUDIO_PERMISSION);
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    ,REQUEST_WRITE_EXTERNAL_PERMISSION)
         }else{
             // have permission
         }
@@ -104,19 +99,14 @@ class LocalAudioFilesActivity : AppCompatActivity() {
         recyclerView.visibility = View.VISIBLE
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.setHasFixedSize(true)
-        val localAudioFiles = Tools.getLocalAudioFiles(Tools.getMyRecordingPath())
 
-        //set data and list adapter
-        mAudioItemAdapter = AudioItemAdapter(this, localAudioFiles, ItemAnimation.FADE_IN)
-        recyclerView.adapter = mAudioItemAdapter
+        if (localAudioFiles != null) {
+            localAudioFiles = Tools.getLocalAudioFiles(Tools.getMyRecordingPath())
 
-        // on item list clicked
-        mAudioItemAdapter.setOnItemClickListener(object : AudioItemAdapter.OnItemClickListener {
-            override fun onItemClick(view: View, file: File, position: Int) {
-                startActivity<PlayActivity>("obj" to file)
-            }
-
-        })
+            //set data and list adapter
+            // mAudioItemAdapter = AudioItemAdapter(this, localAudioFiles!!, ItemAnimation.FADE_IN)
+            recyclerView.adapter?.notifyDataSetChanged()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -157,10 +147,24 @@ class LocalAudioFilesActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         when (requestCode) {
-            REQUEST_READ_AUDIO_PERMISSION -> {
+            REQUEST_WRITE_EXTERNAL_PERMISSION -> {
                 if (grantResults.isNotEmpty()
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // user granted the permission
+
+                    localAudioFiles = Tools.getLocalAudioFiles(Tools.getMyRecordingPath())
+
+                    //set data and list adapter
+                    mAudioItemAdapter = AudioItemAdapter(this, localAudioFiles!!, ItemAnimation.FADE_IN)
+                    recyclerView.adapter = mAudioItemAdapter
+
+                    // on item list clicked
+                    mAudioItemAdapter.setOnItemClickListener(object : AudioItemAdapter.OnItemClickListener {
+                        override fun onItemClick(view: View, file: File, position: Int) {
+                            startActivity<PlayActivity>("obj" to file)
+                        }
+                    })
+
 
                 } else {
                     // user denied the permission

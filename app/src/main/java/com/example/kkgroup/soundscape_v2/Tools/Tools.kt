@@ -121,7 +121,9 @@ object Tools {
     fun getLocalAudioFiles(folderPath: String): MutableList<File> {
 
         val folderPath = File(folderPath)
-        if (!folderPath.exists()) folderPath.mkdirs()
+        if (!folderPath.exists()) {
+            val mkdirs = folderPath.mkdirs()
+        }
 
         val listFiles = folderPath.listFiles().filter {
             // using 3gp for test purpose
@@ -227,8 +229,9 @@ object Tools {
                                 .create()
                         val model: kotlin.Array<SearchApiModel> = gson.fromJson(res, kotlin.Array<SearchApiModel>::class.java)
 
-                        for(temp in model){
-                            if ( ! isAlreadyDownloaded(temp)) {
+                        Tools.log_e("size: ${model.size}")
+                        for (temp in model) {
+                            if (!isAlreadyDownloaded(temp)) {
                                 downloadAudio(temp)
                             }
                         }
@@ -244,28 +247,41 @@ object Tools {
         call.enqueue(value) // asynchronous request
     }
 
-    fun isAlreadyDownloaded(obj: SearchApiModel): Boolean{
+    fun isAlreadyDownloaded(obj: SearchApiModel): Boolean {
         var folderName = "temp"
-        when (obj.category){
-            "human" -> { folderName = "Human" }
+        // Tools.log_e(obj.category.toString())
+        Tools.log_e(obj.toString())
 
-            "machine" -> { folderName = "Machine" }
+        if (obj.category != null) {
+            when (obj.category){
+                "human" -> { folderName = "Human" }
 
-            "nature" -> { folderName = "Nature" }
+                "machine" -> { folderName = "Machine" }
+
+                "nature" -> { folderName = "Nature" }
+            }
         }
 
-        return (File(Tools.getDownloadedAudioByCategoryPath(folderName) + obj.title + Tools.audioFormat).exists())
+        return (File(Tools.getDownloadedAudioByCategoryPath(folderName) + obj.title + Tools.audioFormat)
+                .exists())
+
     }
 
     fun downloadAudio(obj: SearchApiModel) {
 
         var downloadDest = Tools.getDownloadedAudioByCategoryPath("Temp")
-        when (obj.category){
-            "human" -> { downloadDest = Tools.getDownloadedAudioByCategoryPath("Human") }
+        when (obj.category) {
+            "human" -> {
+                downloadDest = Tools.getDownloadedAudioByCategoryPath("Human")
+            }
 
-            "machine" -> { downloadDest = Tools.getDownloadedAudioByCategoryPath("Machine") }
+            "machine" -> {
+                downloadDest = Tools.getDownloadedAudioByCategoryPath("Machine")
+            }
 
-            "nature" -> { downloadDest = Tools.getDownloadedAudioByCategoryPath("Nature") }
+            "nature" -> {
+                downloadDest = Tools.getDownloadedAudioByCategoryPath("Nature")
+            }
         }
 
         val okClient by lazy {
@@ -295,12 +311,18 @@ object Tools {
 
     fun getAudioPathByObj(obj: SearchApiModel): String? {
         var folderName = "Temp"
-        when (obj.category){
-            "human" -> { folderName = "Human" }
+        when (obj.category) {
+            "human" -> {
+                folderName = "Human"
+            }
 
-            "machine" -> { folderName = "Machine" }
+            "machine" -> {
+                folderName = "Machine"
+            }
 
-            "nature" -> { folderName = "Nature" }
+            "nature" -> {
+                folderName = "Nature"
+            }
         }
         return if (isAlreadyDownloaded(obj)) {
             Tools.getDownloadedAudioByCategoryPath(folderName) + obj.title + Tools.audioFormat
