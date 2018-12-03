@@ -59,10 +59,6 @@ class MyLinearLayout(val mContext: Context, attrs: AttributeSet?) : LinearLayout
              */
             override fun tryCaptureView(child: View, pointerId: Int): Boolean {
                 val audioCardModel = child.tag as AudioCardModel
-                Tools.log_e("topPosition: ${audioCardModel.topPosition} --> bottomPosition: ${audioCardModel.bottomPosition}" +
-                        " --> isDraggable: ${audioCardModel.isDraggable}")
-
-
                 return audioCardModel.isDraggable
             }
 

@@ -1,6 +1,7 @@
 package com.example.kkgroup.soundscape_v2.activity
 
 import android.content.Context
+import android.graphics.Rect
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 
@@ -27,15 +28,20 @@ import kotlinx.android.synthetic.main.activity_new_soundscape.*
 import org.jetbrains.anko.startActivity
 
 private const val AUDIO_CARD_HEIGHT = 360
+
 class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener, MyLinearLayout.VerticalPositionDetectListener {
 
     override fun handleViewVerticalPostion(view: View) {
-       // Tools.log_e("view.tag: ${view.tag} --> yPosition: $yPosition")
 
         val audioCardModel = view.tag as AudioCardModel
+//
+//        Tools.log_e("view.tag: ${view.tag} --> topPosition: ${audioCardModel.topPosition} " +
+//                "--> bottomPosition: ${audioCardModel.bottomPosition}")
 
         if (audioCardModelList.contains(audioCardModel)) {
+            audioCardModel.leftPosition = view.left
             audioCardModel.topPosition = view.top
+            audioCardModel.rightPosition = view.right
             audioCardModel.bottomPosition = view.bottom
             getOrderOfAudioCards()
         }
@@ -72,19 +78,19 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener, MyL
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus && isFirst) {
 
-            Tools.log_e("onWindowFocusChanged执行")
-
             for (audioCardView in audioCardViewListForTrack01) {
-                val audioCardModel = AudioCardModel(1, audioCardView.top,
-                        audioCardView.bottom, true)
+                val audioCardModel = AudioCardModel(trackNum = 1, leftPosition = audioCardView.left,
+                        topPosition =  audioCardView.top, bottomPosition = audioCardView.bottom,
+                        rightPosition = audioCardView.right, isDraggable = true)
                 audioCardView.tag = audioCardModel
                 audioCardModelList.add(audioCardModel)
                 // Tools.log_e("audioCardView Track 01: ${audioCardView.top} --- ${audioCardView.bottom}")
             }
 
             for (audioCardView in audioCardViewListForTrack02) {
-                val audioCardModel = AudioCardModel(2, audioCardView.top,
-                        audioCardView.bottom, true)
+                val audioCardModel = AudioCardModel(trackNum = 2, leftPosition = audioCardView.left,
+                        topPosition =  audioCardView.top, bottomPosition = audioCardView.bottom,
+                        rightPosition = audioCardView.right, isDraggable = true)
                 audioCardView.tag = audioCardModel
                 audioCardModelList.add(audioCardModel)
                 // Tools.log_e("audioCardView Track 02: ${audioCardView.top} --- ${audioCardView.bottom}")
@@ -96,18 +102,64 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener, MyL
 
     private fun getOrderOfAudioCards() {
 
+        val isOverlapping = isViewOverlapping(audioCardViewListForTrack01[0], audioCardViewListForTrack01[1])
+        Tools.log_e("isOverlapping: $isOverlapping")
+
         audioCardModelList.sortBy { it.topPosition }
         audioCardModelList.forEach {
             // Tools.log_e(it.toString())
         }
     }
 
+    private fun isViewOverlapping(firstView: View, secondView: View): Int {
+
+        val rectFirstView = getRectOfAudioCard(firstView)
+        val rectSecondView = getRectOfAudioCard(secondView)
+
+        val rectFirstViewTop = rectFirstView.top
+        val rectSecondViewTop = rectSecondView.top
+         Tools.log_e("first: ${rectFirstViewTop}")
+         Tools.log_e("second: ${rectSecondViewTop}")
+
+        if (rectFirstView.intersect(rectSecondView)) {
+
+            val dy = (rectFirstViewTop - rectSecondViewTop).toDouble()
+
+            val overlapRatio = 1 - Math.abs(( dy / firstView.measuredHeight ))
+
+            if ( dy < 0 ) {
+                Tools.log_e("01 在前面, 重叠的比例: $overlapRatio, 01.top: ${rectFirstView.top}, 02.top : ${rectSecondView.top}" +
+                        " dy: $dy")
+            } else {
+                Tools.log_e("02 在前面, 重叠的比例: $overlapRatio, 01.top: ${rectFirstView.top}, 02.top : ${rectSecondView.top}" +
+                        "height: ${firstView.measuredHeight} dy: $dy")
+            }
+
+            return 1
+        } else {
+            return 0
+        }
+    }
 
     /**
-     * flag -> 1 : add audio card to track 01
-     *         2 : add audio card to track 02
+     * Rect constructor parameters: left, top, right, bottom
      */
-    private fun generateAudioCard(flag: Int) {
+    private fun getRectOfAudioCard(view: View): Rect {
+
+        val audioCardModel = view.tag as AudioCardModel
+
+        return Rect(audioCardModel.leftPosition, audioCardModel.topPosition,
+                audioCardModel.rightPosition, audioCardModel.bottomPosition)
+    }
+
+
+            /**
+             * flag -> 1 : add audio card to track 01
+             *         2 : add audio card to track 02
+             */
+            private
+
+    fun generateAudioCard(flag: Int) {
 
         if (flag == 1) {
             val audioCard = LayoutInflater.from(this)
