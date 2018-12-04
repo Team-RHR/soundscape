@@ -3,12 +3,11 @@ package com.example.kkgroup.soundscape_v2.activity
 import android.content.Context
 import android.graphics.Rect
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
-
 import android.os.Bundle
 import android.os.Vibrator
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialog
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.Toolbar
 import android.view.*
@@ -26,18 +25,14 @@ import com.jaygoo.widget.RangeSeekBar
 import com.jaygoo.widget.VerticalRangeSeekBar
 import kotlinx.android.synthetic.main.activity_new_soundscape.*
 import org.jetbrains.anko.startActivity
+import java.io.File
 
-private const val AUDIO_CARD_HEIGHT = 360
-
-class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener, MyLinearLayout.VerticalPositionDetectListener {
+class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener,
+        MyLinearLayout.VerticalPositionDetectListener{
 
     override fun handleViewVerticalPostion(view: View) {
 
         val audioCardModel = view.tag as AudioCardModel
-//
-//        Tools.log_e("view.tag: ${view.tag} --> topPosition: ${audioCardModel.topPosition} " +
-//                "--> bottomPosition: ${audioCardModel.bottomPosition}")
-
         if (audioCardModelList.contains(audioCardModel)) {
             audioCardModel.leftPosition = view.left
             audioCardModel.topPosition = view.top
@@ -57,6 +52,7 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener, MyL
     val audioCardModelList = mutableListOf<AudioCardModel>()
     private var mVibrator: Vibrator? = null
     private var isPlaying = false
+    private var selectedFile: File? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -126,6 +122,8 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener, MyL
             val dy = (rectFirstViewTop - rectSecondViewTop).toDouble()
 
             val overlapRatio = 1 - Math.abs(( dy / firstView.measuredHeight ))
+
+            Tools.toastShow(this, "Overlap Ratio: ${overlapRatio}")
 
             if ( dy < 0 ) {
                 Tools.log_e("01 在前面, 重叠的比例: $overlapRatio, 01.top: ${rectFirstView.top}, 02.top : ${rectSecondView.top}" +

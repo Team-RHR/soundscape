@@ -1,8 +1,10 @@
 package com.example.kkgroup.soundscape_v2.adapter
 
 import android.content.Context
+import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -12,7 +14,6 @@ import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.widget.ItemAnimation
 
 import java.io.File
-import java.util.ArrayList
 
 class AudioItemAdapter(
         val ctx: Context,
@@ -27,8 +28,18 @@ class AudioItemAdapter(
         fun onItemClick(view: View, obj: File, position: Int)
     }
 
+    interface OnMoreButtonClickListener {
+        fun onItemClick(view: View, obj: File, menuItem: MenuItem)
+    }
+
     fun setOnItemClickListener(mItemClickListener: OnItemClickListener) {
         this.mOnItemClickListener = mItemClickListener
+    }
+
+    private var onMoreButtonClickListener: OnMoreButtonClickListener? = null
+
+    fun setOnMoreButtonClickListener(onMoreButtonClickListener: OnMoreButtonClickListener) {
+        this.onMoreButtonClickListener = onMoreButtonClickListener
     }
 
     inner class OriginalViewHolder(v: View) : RecyclerView.ViewHolder(v) {
@@ -52,13 +63,29 @@ class AudioItemAdapter(
         if (holder is OriginalViewHolder) {
             holder.name.text = items[position].name
             holder.lyt_parent.setOnClickListener { view ->
-                if (mOnItemClickListener != null) {
-                    mOnItemClickListener!!.onItemClick(view, items[position], position)
+                mOnItemClickListener?.onItemClick(view, items[position], position)
+            }
+
+            holder.iv_more.setOnClickListener { view ->
+                onMoreButtonClickListener?.let {
+                    onMoreButtonClick(view, items[position])
                 }
             }
+
         }
         setAnimation(holder.itemView, position)
     }
+
+    private fun onMoreButtonClick(view: View, file: File) {
+        val popupMenu = PopupMenu(ctx, view)
+        popupMenu.setOnMenuItemClickListener { item ->
+            onMoreButtonClickListener?.onItemClick(view, file, item)
+            true
+        }
+        popupMenu.inflate(R.menu.menu_audio_more)
+        popupMenu.show()
+    }
+
 
     override fun getItemCount(): Int {
         return items.size
