@@ -1,8 +1,10 @@
 package com.example.kkgroup.soundscape_v2.activity
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -26,6 +28,17 @@ class RemoteAudioFilesActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var mAudioItemAdapter: AudioItemAdapter
     private lateinit var categoryName: String
+
+//    interface AddToTrackListener {
+//        fun addToTrack(file: File)
+//    }
+
+//    companion object {
+//        private var mAddToTrackListener: AddToTrackListener? = null
+//        fun setAddToTrackListener(mAddToTrackListener: AddToTrackListener) {
+//            this.mAddToTrackListener = mAddToTrackListener
+//        }
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +94,35 @@ class RemoteAudioFilesActivity : AppCompatActivity() {
             override fun onItemClick(view: View, file: File, position: Int) {
                 startActivity<PlayActivity>("obj" to file)
             }
+        })
 
+        mAudioItemAdapter.setOnMoreButtonClickListener(object : AudioItemAdapter.OnMoreButtonClickListener {
+            override fun onItemClick(view: View, file: File, menuItem: MenuItem) {
+                when(menuItem.itemId) {
+                    R.id.action_play -> {
+                        startActivity<PlayActivity>("obj" to file)
+                    }
+
+                    R.id.action_add_to_track -> {
+                        Tools.toastShow(this@RemoteAudioFilesActivity, " add to track")
+
+//                        mAddToTrackListener?.addToTrack(file)
+//
+//                        val intent = Intent(this@RemoteAudioFilesActivity,
+//                                NewSoundscapeActivity::class.java).setFlags(
+//                                Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+
+                        // intent.putExtra("obj", file)
+
+                       // startActivity(intent)
+                    }
+
+                    R.id.action_delete -> {
+                        Tools.toastShow(this@RemoteAudioFilesActivity, "still working on it ")
+                    }
+                }
+
+            }
         })
     }
 

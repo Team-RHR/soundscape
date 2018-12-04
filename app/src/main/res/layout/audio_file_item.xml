@@ -81,8 +81,8 @@
                 android:id="@+id/iv_more"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_play"
-                android:tint="@color/colorPrimary" />
+                android:src="@drawable/ic_more"
+                android:tint="@color/grey_60" />
         </RelativeLayout>
 
         <View
