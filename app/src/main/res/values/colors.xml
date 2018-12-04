@@ -10,6 +10,7 @@
     <color name="buttonColor">#0987c1</color>
 
     <!--Material color list from https://material.io/guidelines/style/color.html-->
+    <color name="ic_launcher_background">#157AA6</color>
 
     <color name="overlay_dark_10">#1A000000</color>
     <color name="overlay_dark_20">#33000000</color>
