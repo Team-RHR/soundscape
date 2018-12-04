@@ -13,13 +13,26 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="?colorPrimaryDark"
         app:navigationIcon="?attr/homeAsUpIndicator"
         app:title="Settings">
 
 
 
     </android.support.v7.widget.Toolbar>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
 
 
     <TextView
@@ -43,7 +56,7 @@
         android:id="@+id/modeSwitch"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="Night mode"
+        android:text="@string/night_mode"
         android:textSize="18sp"/>
 </LinearLayout>
 
@@ -54,7 +67,7 @@
         tools:context=".activity.SettingsActivity">
 
         <TextView
-            android:text="Language"
+            android:text="@string/language"
             android:textSize="18sp"
             android:textColor="#000"
             android:layout_width="wrap_content"
@@ -64,11 +77,11 @@
 
         <TextView
             android:id="@+id/select_language"
-            android:text="English"
+            android:text="@string/english"
             android:textSize="14sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentEnd="true"/>
 </RelativeLayout>
 
     <TextView
@@ -89,13 +102,13 @@
 
         <TextView
             android:id="@+id/delete_soundscapes"
-            android:text="Delete files"
+            android:text="@string/delete_files"
             android:textSize="18sp"
             android:textColor="#000"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_delete_black_24dp"
-            android:drawablePadding="10dp"/>/>
+            android:drawablePadding="10dp"/>
 
     </LinearLayout>
 
@@ -117,7 +130,7 @@
 
         <TextView
             android:id="@+id/logout_button"
-            android:text="Click here to logout"
+            android:text="@string/click_to_logout"
             android:textSize="18sp"
             android:textColor="@color/red_600"
             android:layout_width="wrap_content"
@@ -126,7 +139,8 @@
             android:drawablePadding="10dp"/>
 
     </LinearLayout>
-
+    </LinearLayout>
+    </ScrollView>
 
 
 </LinearLayout>

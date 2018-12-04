@@ -24,6 +24,24 @@
     <string name="change_lang">Change language</string>
     <string name="change_lang_tag">fi</string>
     <string name="general_settings"><u>General settings</u></string>
+    <string name="night_mode"><u>Night mode</u></string>
+    <string name="language"><u>Language</u></string>
     <string name="delete_settings"><u>File settings</u></string>
+    <string name="delete_files"><u>Delete files</u></string>
     <string name="log_out"><u>Log out</u></string>
+    <string name="click_to_logout"><u>Click here to logout</u></string>
+    <string name="english"><u>English</u></string>
+    <string name="finnish"><u>Finnish</u></string>
+    <string name="to_finnish"><u>english</u></string>
+    <string name="to_english"><u>finnish</u></string>
+    <string name="cancel"><u>Cancel</u></string>
+    <string name="delete_option_1"><u>Soundscapes</u></string>
+    <string name="delete_title"><u>Choose which files you want to delete:</u></string>
+    <string name="delete_option_2"><u>Downloaded audio files</u></string>
+    <string name="delete_option_3"><u>Your own recordings</u></string>
+    <string name="delete_toast"><u>Files deleted</u></string>
+    <string name="choose_language"><u>Choose language: </u></string>
+    <string name="language_confirmation"><u>Language set to </u></string>
+    <string name="logout_confirmation"><u>Are you sure you want to log out?</u></string>
+
 </resources>

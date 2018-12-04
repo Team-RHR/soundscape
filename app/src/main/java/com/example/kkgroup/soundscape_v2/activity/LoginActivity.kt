@@ -57,15 +57,6 @@ class LoginActivity : AppCompatActivity() {
             callWebService(json)
         }
 
-        // language change button listener
-        languageBtn.setOnClickListener{
-            Tools.log_e("clicked languageBtn")
-            val lang = languageBtn.tag.toString()
-
-            LocaleManager(this).changeLocale(lang)
-            this.recreate()
-        }
-
         LocaleManager(this).getLocale()
     }
 

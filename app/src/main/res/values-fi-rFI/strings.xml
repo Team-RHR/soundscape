@@ -24,6 +24,23 @@
     <string name="change_lang">Vaihda kieltä</string>
     <string name="change_lang_tag">us</string>
     <string name="general_settings"><u>Yleiset asetukset</u></string>
+    <string name="night_mode"><u>Yö tila</u></string>
+    <string name="language"><u>Kieli</u></string>
     <string name="delete_settings"><u>Tiedostojen hallinta</u></string>
+    <string name="delete_files"><u>Poista tiedostoja</u></string>
     <string name="log_out"><u>Kirjaudu ulos</u></string>
+    <string name="click_to_logout"><u>Kirjaudu ulos painamalla tästä</u></string>
+    <string name="english"><u>Englanti</u></string>
+    <string name="finnish"><u>Suomi</u></string>
+    <string name="to_finnish"><u>suomeksi</u></string>
+    <string name="to_english"><u>englanniksi</u></string>
+    <string name="cancel"><u>Peruuta</u></string>
+    <string name="delete_title"><u>Valitse poistettavat tiedostot:</u></string>
+    <string name="delete_option_1"><u>Äänimaisemat</u></string>
+    <string name="delete_option_2"><u>Ladatut äänitiedostot</u></string>
+    <string name="delete_option_3"><u>Omat nauhoitukset</u></string>
+    <string name="delete_toast"><u>Tiedostot poistettu</u></string>
+    <string name="choose_language"><u>Valitse kieli: </u></string>
+    <string name="language_confirmation"><u>Kieli vaihdettu </u></string>
+    <string name="logout_confirmation"><u>Haluatko varmasti kirjautua ulos?</u></string>
 </resources>

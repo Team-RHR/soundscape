@@ -11,6 +11,15 @@
         <item name="android:windowDisablePreview">true</item>
     </style>
 
+    <!-- Night mode theme. -->
+    <style name="NightMode" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="colorPrimary">#212121</item>
+        <item name="colorPrimaryDark">#000</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!-- language changing -->
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+
     <!-- style for EditText view -->
     <style name="EditText.Grey" parent="@style/AppTheme">
         <item name="colorControlActivated">@color/grey_60</item>
