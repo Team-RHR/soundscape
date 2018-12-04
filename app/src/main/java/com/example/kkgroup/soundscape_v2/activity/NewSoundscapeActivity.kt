@@ -2,6 +2,9 @@ package com.example.kkgroup.soundscape_v2.activity
 
 import android.content.Context
 import android.graphics.Rect
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
@@ -94,6 +97,7 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener,
 
             isFirst = false
         }
+
     }
 
     private fun getOrderOfAudioCards() {
@@ -223,23 +227,96 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener,
         Tools.setSystemBarColor(this, R.color.colorPrimary)
     }
 
+
+    // Media Player
+    private lateinit var mediaPlayer: MediaPlayer
+    private lateinit var mediaPlayer2: MediaPlayer
+    private var isPlayedAlready = false
     private fun initListeners() {
+
+        // Media Player 01
+        mediaPlayer = MediaPlayer()
+        try {
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+            mediaPlayer = MediaPlayer.create(this, Uri.parse("/storage/emulated/0/soundscape/downloads/Human/Saksofonin_soittoa_30s.mp3"))
+            mediaPlayer.duration
+            mediaPlayer.prepare()
+        } catch (e: Exception) {
+            Tools.log_e("Cannot load audio file")
+        }
+        mediaPlayer.setOnCompletionListener {
+            ib_play.setImageResource(R.drawable.ic_play_arrow)
+            Tools.log_e("mediaPlayer1 is done")
+        }
+
+        // ++++++++++++++++++++++++++++++++++
+        // Media Player 01
+        mediaPlayer2 = MediaPlayer()
+        try {
+            mediaPlayer2.setAudioStreamType(AudioManager.STREAM_MUSIC)
+            mediaPlayer2 = MediaPlayer.create(this, Uri.parse("/storage/emulated/0/soundscape/downloads/Human/Humalainen_porukka_15s.mp3"))
+
+            mediaPlayer2.duration
+            mediaPlayer2.prepare()
+        } catch (e: Exception) {
+            Tools.log_e("Cannot load audio file 02")
+        }
+        mediaPlayer2.setOnCompletionListener {
+            // ib_play.setImageResource(R.drawable.ic_play_arrow)
+            Tools.log_e("mediaPlayer2 is done")
+            isPlayedAlready = true
+        }
+
+
+
 
         audioTrack01.setMyVerticalPositionDetectListener(this)
         audioTrack02.setMyVerticalPositionDetectListener(this)
 
         ib_play.setOnClickListener {
 
-            getOrderOfAudioCards()
-
-            if (isPlaying) {
+            // check for already playing
+            if (mediaPlayer.isPlaying) {
+                mediaPlayer.pause()
+                // Changing button image to play button
                 ib_play.setImageResource(R.drawable.ic_play_arrow)
-                switchDraggable(true)
             } else {
+                // Resume song
+                mediaPlayer.start()
+                Tools.log_e("mediaPlayer1 is starting")
+                // Changing button image to pause button
                 ib_play.setImageResource(R.drawable.ic_pause)
-                switchDraggable(false)
             }
-            isPlaying = !isPlaying
+
+            // ++++++++++++++++++++++++++++++
+
+            if (! isPlayedAlready) {
+                // check for already playing
+                if (mediaPlayer2.isPlaying) {
+                    mediaPlayer2.pause()
+                    // Changing button image to play button
+                    // ib_play.setImageResource(R.drawable.ic_play_arrow)
+                } else {
+                    // Resume song
+                    mediaPlayer2.start()
+                    Tools.log_e("mediaPlayer2 is starting")
+
+                    // Changing button image to pause button
+                    //  ib_play.setImageResource(R.drawable.ic_pause)
+                }
+            }
+
+
+//            getOrderOfAudioCards()
+//
+//            if (isPlaying) {
+//                ib_play.setImageResource(R.drawable.ic_play_arrow)
+//                switchDraggable(true)
+//            } else {
+//                ib_play.setImageResource(R.drawable.ic_pause)
+//                switchDraggable(false)
+//            }
+//            isPlaying = !isPlaying
         }
 
         seekBar.setOnRangeChangedListener(object : OnRangeChangedListener {
@@ -260,6 +337,19 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener,
 
         // make it work!
         seekBar.invalidate()
+    }
+
+    // stop player when destroy
+    public override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
+        mediaPlayer2.release()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mediaPlayer.stop()
+        mediaPlayer2.stop()
     }
 
     private fun switchDraggable(isDraggable: Boolean) {
