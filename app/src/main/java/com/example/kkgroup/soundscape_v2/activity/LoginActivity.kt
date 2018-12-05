@@ -37,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
             Networking.API_TOKEN = prefManager.getApiKey()
             // TODO: go to next screen, user already logged in
             Tools.log_e("Already logged in")
-            startActivity<LocalAudioFilesActivity>()
+            startActivity<MainActivity>()
             return
         } else {
             Tools.log_e("Need to log in")
@@ -89,7 +89,7 @@ class LoginActivity : AppCompatActivity() {
                         Networking.API_TOKEN = apiKey
                         prefManager.setApiKey(Networking.API_TOKEN)
                         // TODO: go to next screen, login succesfull
-                        startActivity<LocalAudioFilesActivity>()
+                        startActivity<MainActivity>()
                     } else {
                         Tools.toastShow(this@LoginActivity, getString(R.string.toast_login_fail))
                     }

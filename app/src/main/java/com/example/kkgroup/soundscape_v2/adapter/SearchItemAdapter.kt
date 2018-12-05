@@ -30,7 +30,7 @@ class SearchItemAdapter(val ctx: Context,
     inner class OriginalViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         internal var image: ImageView = v.findViewById(R.id.image)
         internal var name: TextView = v.findViewById(R.id.name)
-        internal var date: TextView = v.findViewById(R.id.date)
+        internal var duration: TextView = v.findViewById(R.id.duration)
         internal var lyt_parent: View = v.findViewById(R.id.lyt_parent)
         internal var iv_more: ImageView = v.findViewById(R.id.iv_more)
 
@@ -47,6 +47,7 @@ class SearchItemAdapter(val ctx: Context,
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is OriginalViewHolder) {
             holder.name.text = items[position].title
+            holder.duration.text = ""
             holder.lyt_parent.setOnClickListener { view ->
                 if (mOnItemClickListener != null) {
                     mOnItemClickListener!!.onItemClick(view, items[position], position)

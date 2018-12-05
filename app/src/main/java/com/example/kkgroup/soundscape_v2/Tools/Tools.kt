@@ -1,13 +1,12 @@
 package com.example.kkgroup.soundscape_v2.Tools
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.support.annotation.ColorRes
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +23,6 @@ import okhttp3.*
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
-import java.lang.reflect.Array
 
 /**
  * @ Author     ：Hao Zhang.
@@ -111,6 +109,10 @@ object Tools {
         }
     }
 
+    fun dpToPx(ctx: Context, dp: Int): Int {
+        val r = ctx.resources
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), r.displayMetrics))
+    }
     // view fade out effect, Prepare the View for the animation
     fun viewFadeOut(v: View) {
         v.alpha = 1.0f

@@ -58,8 +58,9 @@ class MyLinearLayout(val mContext: Context, attrs: AttributeSet?) : LinearLayout
              *         false -> Do not Capture this child view's event -> view can NOT be dragged
              */
             override fun tryCaptureView(child: View, pointerId: Int): Boolean {
-                val audioCardModel = child.tag as AudioCardModel
-                return audioCardModel.isDraggable
+                // val audioCardModel = child.tag as AudioCardModel
+                // return audioCardModel.isDraggable
+                return true
             }
 
             /**

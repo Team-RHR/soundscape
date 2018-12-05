@@ -22,23 +22,12 @@ import org.jetbrains.anko.startActivity
 import java.io.File
 
 class RemoteAudioFilesActivity : AppCompatActivity() {
-
     private val LOADING_DURATION = 2000
+
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var mAudioItemAdapter: AudioItemAdapter
     private lateinit var categoryName: String
-
-//    interface AddToTrackListener {
-//        fun addToTrack(file: File)
-//    }
-
-//    companion object {
-//        private var mAddToTrackListener: AddToTrackListener? = null
-//        fun setAddToTrackListener(mAddToTrackListener: AddToTrackListener) {
-//            this.mAddToTrackListener = mAddToTrackListener
-//        }
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

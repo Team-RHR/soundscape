@@ -54,7 +54,6 @@ class LocalAudioFilesActivity : AppCompatActivity() {
     }
 
     private fun requestPermission() {
-
         if(ContextCompat.checkSelfPermission(this,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED){

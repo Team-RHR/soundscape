@@ -16,7 +16,7 @@
     <string name="toast_added_later">Will be added later</string>
     <string name="menu_refresh">Refresh</string>
     <string name="search_hint">Search</string>
-    <string name="fragment_recording_text">After recording, go back to refresh page</string>
+    <string name="fragment_recording_text">After recording, please go to Library page to use</string>
     <string name="toast_permission_denied">Permission denied</string>
     <string name="toast_repeat_clicked">Repeat clicked</string>
     <string name="toast_shuffle_clicked">Shuffle clicked</string>
