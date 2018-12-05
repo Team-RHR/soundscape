@@ -1,9 +1,13 @@
 package com.example.kkgroup.soundscape_v2.fragment
 
+import android.content.DialogInterface
+import android.drm.DrmStore.Action.RINGTONE
 import android.os.Bundle
 import android.os.Handler
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -33,6 +37,16 @@ class FragmentLibraryAudioList : Fragment() {
         fun newInstance(): FragmentLibraryAudioList {
             return FragmentLibraryAudioList()
         }
+
+        private var myAddToTrackListener: addToTrackListener? = null
+        fun setMyAddToTrackListener(myAddToTrackListener: addToTrackListener){
+            this.myAddToTrackListener = myAddToTrackListener
+        }
+
+    }
+
+    interface addToTrackListener{
+        fun addToTrack(trackNum:Int, file: File)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -87,6 +101,8 @@ class FragmentLibraryAudioList : Fragment() {
 
                     R.id.action_add_to_track -> {
                         Tools.toastShow(context!!, " add to track")
+
+                        showSingleChoiceDialog(file)
                     }
 
                     R.id.action_delete -> {
@@ -95,9 +111,26 @@ class FragmentLibraryAudioList : Fragment() {
                 }
             }
         })
-
-
     }
+
+    private var single_choice_selected: String? = null
+
+    private val trackNumbers = arrayOf("1", "2")
+
+    private fun showSingleChoiceDialog(file: File) {
+        single_choice_selected = trackNumbers[0]
+        val builder = AlertDialog.Builder(context!!)
+        builder.setTitle("Add this audio to")
+        builder.setSingleChoiceItems(trackNumbers, 0) { dialogInterface, i ->
+            single_choice_selected = trackNumbers[i]
+        }
+        builder.setPositiveButton("OK") { dialogInterface, i ->
+            myAddToTrackListener?.addToTrack(single_choice_selected!!.toInt(), file)
+        }
+        builder.setNegativeButton("Cancel", null)
+        builder.show()
+    }
+
 
     private fun initListeners() {
 

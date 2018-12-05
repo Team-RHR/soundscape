@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Tools.toastCancel()
                 moveTaskToBack(true)
-                // finish()
+                finish()
             }
             return true
         }

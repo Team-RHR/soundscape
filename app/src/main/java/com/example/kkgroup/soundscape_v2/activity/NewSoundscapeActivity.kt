@@ -165,7 +165,7 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener,
 
         if (flag == 1) {
             val audioCard = LayoutInflater.from(this)
-                    .inflate(R.layout.audio_file_small_item, audioTrack01, false)
+                    .inflate(R.layout.audio_file_card_item, audioTrack01, false)
 
             audioTrack01.addView(audioCard)
             audioCardViewListForTrack01.add(audioCard)
@@ -179,7 +179,7 @@ class NewSoundscapeActivity : AppCompatActivity(), View.OnLongClickListener,
 
         } else {
             val audioCard = LayoutInflater.from(this)
-                    .inflate(R.layout.audio_file_small_item, audioTrack02, false)
+                    .inflate(R.layout.audio_file_card_item, audioTrack02, false)
 
             audioTrack02.addView(audioCard)
             audioCardViewListForTrack02.add(audioCard)
