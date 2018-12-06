@@ -29,6 +29,10 @@ import com.jaygoo.widget.RangeSeekBar
 import com.jaygoo.widget.VerticalRangeSeekBar
 import java.io.File
 
+
+private const val AUDIO_TRACK_ONE = 1
+private const val AUDIO_TRACK_TWO = 2
+
 class FragmentNewSoundscape : Fragment() {
 
     private lateinit var seekBar: VerticalRangeSeekBar
@@ -46,8 +50,8 @@ class FragmentNewSoundscape : Fragment() {
     private lateinit var dragAdapter2: AdapterListDrag
     private var mItemTouchHelper1: ItemTouchHelper? = null
     private var mItemTouchHelper2: ItemTouchHelper? = null
-    private val audioCardTrack1 = ArrayList<File>()
-    private val audioCardTrack2 = ArrayList<File>()
+    private val audioCardsListOnTrack1 = ArrayList<File>()
+    private val audioCardsListOnTrack2 = ArrayList<File>()
 
     companion object {
         fun newInstance(): FragmentNewSoundscape {
@@ -66,13 +70,14 @@ class FragmentNewSoundscape : Fragment() {
     }
 
     private fun initFakeData() {
-        audioCardTrack1.add(File("/storage/emulated/0/soundscape/downloads/Machine/Antiikki_auto_käyntiä_30s.mp3"))
-        audioCardTrack1.add(File("/storage/emulated/0/soundscape/downloads/Machine/Metro_ohiajo_30s.mp3"))
-        audioCardTrack1.add(File("/storage/emulated/0/soundscape/downloads/Nature/A_Suomalaisia_lintuja_15s.mp3"))
+        audioCardsListOnTrack1.add(File("/storage/emulated/0/soundscape/downloads/Nature/A_Suomalaisia_lintuja_15s.mp3"))
+        audioCardsListOnTrack1.add(File("/storage/emulated/0/soundscape/downloads/Machine/Antiikki_auto_käyntiä_30s.mp3"))
+        // audioCardsListOnTrack1.add(File("/storage/emulated/0/soundscape/downloads/Machine/Metro_ohiajo_30s.mp3"))
 
-        audioCardTrack2.add(File("/storage/emulated/0/soundscape/downloads/Nature/Hevonen_hirnuu_15s.mp3"))
-        audioCardTrack2.add(File("/storage/emulated/0/soundscape/downloads/Human/Humalainen_porukka_15s.mp3"))
+        audioCardsListOnTrack2.add(File("/storage/emulated/0/soundscape/downloads/Nature/Hevonen_hirnuu_15s.mp3"))
+        audioCardsListOnTrack2.add(File("/storage/emulated/0/soundscape/downloads/Human/Humalainen_porukka_15s.mp3"))
 
+        initPlayers()
     }
 
     private fun initComponents(view: View) {
@@ -95,7 +100,7 @@ class FragmentNewSoundscape : Fragment() {
         recyclerView1 = view.findViewById(R.id.recyclerView1)
         recyclerView1.layoutManager = LinearLayoutManager(context)
         recyclerView1.setHasFixedSize(true)
-        dragAdapter1 = AdapterListDrag(context!!, audioCardTrack1)
+        dragAdapter1 = AdapterListDrag(context!!, audioCardsListOnTrack1)
         recyclerView1.adapter = dragAdapter1
 
         mItemTouchHelper1 = ItemTouchHelper(DragItemTouchHelper(dragAdapter1))
@@ -108,7 +113,7 @@ class FragmentNewSoundscape : Fragment() {
         recyclerView2 = view.findViewById(R.id.recyclerView2)
         recyclerView2.layoutManager = LinearLayoutManager(context)
         recyclerView2.setHasFixedSize(true)
-        dragAdapter2 = AdapterListDrag(context!!, audioCardTrack2)
+        dragAdapter2 = AdapterListDrag(context!!, audioCardsListOnTrack2)
         recyclerView2.adapter = dragAdapter2
 
         mItemTouchHelper2 = ItemTouchHelper(DragItemTouchHelper(dragAdapter2))
@@ -157,11 +162,11 @@ class FragmentNewSoundscape : Fragment() {
         FragmentLibraryAudioList.setMyAddToTrackListener(object : FragmentLibraryAudioList.addToTrackListener {
             override fun addToTrack(trackNum: Int, file: File) {
                 if (trackNum == 1) {
-                    audioCardTrack1.add(file)
+                    audioCardsListOnTrack1.add(file)
                     dragAdapter1.notifyDataSetChanged()
                     log_e("1 添加了一个 ${file.absolutePath}")
                 } else {
-                    audioCardTrack2.add(file)
+                    audioCardsListOnTrack2.add(file)
                     dragAdapter2.notifyDataSetChanged()
                     log_e("2 添加了一个 ${file.absolutePath}")
                 }
@@ -170,50 +175,97 @@ class FragmentNewSoundscape : Fragment() {
 
         playButton.setOnClickListener {
 
-            log_e("size = ${audioCardTrack2.size}")
-            playSound4FileList(audioCardTrack2[0].absolutePath)
+                // check for already playing
+            playerOnTrack1?.let {
+                if (it.isPlaying) {
+                    it.pause()
+                    isPlayingOnTrack1 = false
+                } else {
+                    it.start()
+                    isPlayingOnTrack1 = true
+                }
+            }
 
-            //            setUpPlayers()
-//
-//            if (mediaPlayer1.isPlaying) {
-//                mediaPlayer1.pause()
-//                playButton.setImageResource(R.drawable.ic_play_arrow)
-//            } else {
-//                mediaPlayer1.start()
-//                Tools.log_e("mediaPlayer1 is starting")
-//                playButton.setImageResource(R.drawable.ic_pause)
-//            }
-//
-//            if (mediaPlayer2.isPlaying) {
-//                mediaPlayer2.pause()
-//                playButton.setImageResource(R.drawable.ic_play_arrow)
-//            } else {
-//                mediaPlayer2.start()
-//                Tools.log_e("mediaPlayer2 is starting")
-//                playButton.setImageResource(R.drawable.ic_pause)
-//            }
+            playerOnTrack2?.let {
+                if (it.isPlaying) {
+                    it.pause()
+                    isPlayingOnTrack2 = false
+                } else {
+                    it.start()
+                    isPlayingOnTrack2 = true
+                }
+            }
+
+            if (isPlayingOnTrack1 || isPlayingOnTrack2) {
+                playButton.setImageResource(R.drawable.ic_pause)
+            } else {
+                playButton.setImageResource(R.drawable.ic_play_arrow)
+            }
         }
     }
 
-//    var i = 0
-//
-//    private lateinit var player: MediaPlayer
-//    private fun playAudio(path: String) {
-//
-//        player = MediaPlayer.create(context, Uri.parse(path))
-//        player.setAudioStreamType(AudioManager.STREAM_MUSIC)
-//        player.prepare();
-//        player.setOnCompletionListener {
-//            player.stop();
-//            if (i < audioCardTrack2.size) {
-//                i++;
-//                playAudio(audioCardTrack2[i].absolutePath);
-//            } else i = 0;
-//        }
-//
-//        player.start();
-//
-//    }
+    private fun initPlayers() {
+
+        playerList.clear()
+        log_e("size 1=  ${audioCardsListOnTrack1.size}")
+        log_e("size 2 = ${audioCardsListOnTrack2.size}")
+        log_e("isPlayingOnTrack1 = ${isPlayingOnTrack1}")
+        log_e("isPlayingOnTrack1 = ${isPlayingOnTrack2}")
+
+
+        if (audioCardsListOnTrack1.size == audioCardsListOnTrack2.size &&
+                ! isPlayingOnTrack1 && ! isPlayingOnTrack2) {
+
+            log_e("准备播放01 = ${audioCardsListOnTrack1[0].absolutePath}")
+            log_e("准备播放02 = ${audioCardsListOnTrack2[0].absolutePath}")
+
+            playerOnTrack1 = playThisAudioCard(AUDIO_TRACK_ONE, audioCardsListOnTrack1[0].absolutePath)
+            playerOnTrack2 = playThisAudioCard(AUDIO_TRACK_TWO, audioCardsListOnTrack2[0].absolutePath)
+
+        }
+    }
+
+    private var isPlayingOnTrack1 = false
+    private var isPlayingOnTrack2 = false
+    private var playerOnTrack1: MediaPlayer? = null
+    private var playerOnTrack2: MediaPlayer? = null
+    private var playerList = ArrayList<MediaPlayer>()
+    private fun playThisAudioCard(trackNum: Int, fileName: String): MediaPlayer {
+        val player = MediaPlayer()
+        try {
+            player.setDataSource(context, Uri.parse(fileName))
+            player.prepare();
+            player.setVolume(1f, 1f);
+            player.isLooping = false;
+
+            player.setOnCompletionListener {
+                Tools.log_e("mediaPlayer $fileName 播放完成")
+                swapPlayingFlag(trackNum, false)
+            }
+//            player.start()
+//            swapPlayingFlag(trackNum, true)
+//            playerList.add(player)
+        } catch (e: Exception) {
+            log_e("e: ${e.toString()}")
+        }
+
+        return player
+    }
+
+    private fun swapPlayingFlag(trackNum: Int, isPlaying: Boolean) {
+        if (trackNum == AUDIO_TRACK_ONE) {
+            isPlayingOnTrack1 = isPlaying
+        } else {
+            isPlayingOnTrack2 = isPlaying
+        }
+
+        Tools.log_e("1号音轨状态:$isPlayingOnTrack1, 2号音轨状态:$isPlayingOnTrack2")
+        if (isPlayingOnTrack1 || isPlayingOnTrack2) {
+            playButton.setImageResource(R.drawable.ic_pause)
+        } else {
+            playButton.setImageResource(R.drawable.ic_play_arrow)
+        }
+    }
 
     var y = 0
     private fun playSound4FileList(fileList: String) {
@@ -225,13 +277,13 @@ class FragmentNewSoundscape : Fragment() {
             mPlayerT.isLooping = false;
 
             mPlayerT.setOnCompletionListener {
-                Tools.log_e("mediaPlayer ${fileList} 播放完成")
+                Tools.log_e("mediaPlayer $fileList 播放完成")
 
                 mPlayerT.stop();
-                if (y < audioCardTrack2.size - 1) {
+                if (y < audioCardsListOnTrack2.size - 1) {
                     y++
                     Tools.log_e("y = ${y}")
-                    playSound4FileList(audioCardTrack2[y].absolutePath)
+                    playSound4FileList(audioCardsListOnTrack2[y].absolutePath)
                 } else y = 0;
             }
 
@@ -239,69 +291,6 @@ class FragmentNewSoundscape : Fragment() {
         } catch (e: Exception) {
             log_e("e: ${e.toString()}")
         }
-
-    }
-
-    private fun setUpPlayers() {
-
-        // Media Player 01
-//        val fileSize01 = if (audioCardTrack1.isNotEmpty()) {
-//            audioCardTrack1[0].length()
-//        } else {
-//            0
-//        }
-//
-//        val fileSize02 = if (audioCardTrack2.isNotEmpty()) {
-//            audioCardTrack2[0].length()
-//        } else {
-//            0
-//        }
-//
-//        Tools.log_e(" fileSize01 size : ${fileSize01}")
-//        Tools.log_e(" fileSize02 size : ${fileSize02}")
-//
-//        audioCardTrack1.forEachIndexed { index, file ->
-//
-//        }
-//
-//        audioCardTrack2.forEachIndexed { index, file ->
-//
-//        }
-//
-//        if (audioCardTrack1.isNotEmpty()) {
-//            val filePath = audioCardTrack1[0].absolutePath
-//
-//            /**
-//             * init two mediaplayer
-//             */
-//            try {
-//                mediaPlayer1 = MediaPlayer.create(context, Uri.parse(filePath))
-//                mediaPlayer1.duration
-//                mediaPlayer1.prepare()
-//            } catch (e: Exception) {
-//                Tools.log_e("Cannot load audio file 01")
-//            }
-//            mediaPlayer1.setOnCompletionListener {
-//                playButton.setImageResource(R.drawable.ic_play_arrow)
-//                Tools.log_e("media Player1 is done")
-//            }
-//        }
-//
-//        if (audioCardTrack2.isNotEmpty()) {
-//            val filePath2 = audioCardTrack2[0].absolutePath
-//            // Media Player 02
-//            try {
-//                mediaPlayer2 = MediaPlayer.create(context, Uri.parse(filePath2))
-//                mediaPlayer2.duration
-//                mediaPlayer2.prepare()
-//            } catch (e: Exception) {
-//                Tools.log_e("Cannot load audio file 02")
-//            }
-//            mediaPlayer2.setOnCompletionListener {
-//                // ib_play.setImageResource(R.drawable.ic_play_arrow)
-//                Tools.log_e("media Player2 is done")
-//            }
-//        }
     }
 
     private fun showBottomSheetDialog(message: String) {

@@ -20,7 +20,7 @@ import java.util.ArrayList
 import java.util.Collections
 
 class AdapterListDrag(private val ctx: Context,
-                      private val items: List<File>) :
+                      private val items: ArrayList<File>) :
         RecyclerView.Adapter<RecyclerView.ViewHolder>(), DragItemTouchHelper.MoveHelperAdapter {
 
     private var mOnItemClickListener: OnItemClickListener? = null
@@ -99,8 +99,17 @@ class AdapterListDrag(private val ctx: Context,
     }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-        Collections.swap(items, fromPosition, toPosition)
-        notifyItemMoved(fromPosition, toPosition)
+
+        val item = items.get(fromPosition)
+        items.removeAt(fromPosition)
+        items.add(toPosition, item);
+        notifyItemMoved(fromPosition, toPosition);
+
+        Tools.log_e("items : ${items}, fromPosition: $fromPosition --> toPosition: $toPosition")
+
+
+//        Collections.swap(items, fromPosition, toPosition)
+//        notifyItemMoved(fromPosition, toPosition)
         return true
     }
 
