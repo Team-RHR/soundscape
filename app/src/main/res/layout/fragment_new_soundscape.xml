@@ -97,17 +97,6 @@
                 android:background="@drawable/dashborder_outter"
                 android:gravity="center">
 
-                <!--<com.example.kkgroup.soundscape_v2.widget.MyLinearLayout-->
-                <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-                <!--android:id="@+id/audio_track_one"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_weight="1"-->
-                <!--android:gravity="center">-->
-
-
-                <!--</com.example.kkgroup.soundscape_v2.widget.MyLinearLayout>-->
-
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerView1"
                     android:layout_width="0dp"
@@ -116,19 +105,9 @@
                     android:layout_weight="1"
                     android:scrollingCache="true" />
 
-                <View
-                    android:layout_width="2px"
-                    android:layout_height="fill_parent"
-                    android:background="@color/colorPrimary" />
-
-                <!--<com.example.kkgroup.soundscape_v2.widget.MyLinearLayout-->
-                <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-                <!--android:id="@+id/audio_track_two"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_weight="1"-->
-                <!--android:gravity="center">-->
-                <!--</com.example.kkgroup.soundscape_v2.widget.MyLinearLayout>-->
+                <!--<View-->
+                    <!--android:layout_width="@dimen/spacing_middle"-->
+                    <!--android:layout_height="fill_parent"/>-->
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerView2"

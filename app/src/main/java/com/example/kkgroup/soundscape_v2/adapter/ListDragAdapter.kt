@@ -23,22 +23,36 @@ class ListDragAdapter(private val ctx: Context,
 
     private var itemTouchHelper: ItemTouchHelper? = null
     private var mOnItemClickListener: OnItemClickListener? = null
+    private var mOnItemsChangeListener: OnItemsChangeListener? = null
 
     interface OnItemClickListener {
         fun onItemClick(view: View, file: File, position: Int)
+    }
+
+    interface OnItemsChangeListener {
+        fun onItemsChange(fromPosition: Int, toPosition: Int)
     }
 
     fun setOnItemClickListener(mItemClickListener: OnItemClickListener) {
         this.mOnItemClickListener = mItemClickListener
     }
 
+    fun setOnItemsChangeListener(mOnItemsChangeListener: OnItemsChangeListener) {
+        this.mOnItemsChangeListener = mOnItemsChangeListener
+    }
+
     fun setOnItemTouchHelper(itemTouchHelper: ItemTouchHelper) {
         this.itemTouchHelper = itemTouchHelper
+    }
+
+    fun getItems(): ArrayList<File>{
+        return items
     }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
         Collections.swap(items, fromPosition, toPosition)
         notifyItemMoved(fromPosition, toPosition)
+        mOnItemsChangeListener?.onItemsChange(fromPosition, toPosition)
         return true
     }
 
