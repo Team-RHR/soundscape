@@ -9,6 +9,7 @@ import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialog
 import android.support.v4.app.Fragment
 import android.support.v7.widget.AppCompatButton
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
@@ -22,8 +23,8 @@ import android.widget.Toast
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.Tools.Tools.log_e
-import com.example.kkgroup.soundscape_v2.adapter.AdapterListDrag
-import com.example.kkgroup.soundscape_v2.widget.DragItemTouchHelper
+import com.example.kkgroup.soundscape_v2.adapter.ListDragAdapter
+import com.example.kkgroup.soundscape_v2.widget.ItemTouchHelperCallback
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import com.jaygoo.widget.VerticalRangeSeekBar
@@ -44,13 +45,15 @@ class FragmentNewSoundscape : Fragment() {
     private var mBottomSheetDialog: BottomSheetDialog? = null
     private var bottom_sheet: View? = null
 
+    // ====================
     private lateinit var recyclerView1: RecyclerView
-    private lateinit var recyclerView2: RecyclerView
-    private lateinit var dragAdapter1: AdapterListDrag
-    private lateinit var dragAdapter2: AdapterListDrag
-    private var mItemTouchHelper1: ItemTouchHelper? = null
-    private var mItemTouchHelper2: ItemTouchHelper? = null
+    private lateinit var itemTouchHelper1: ItemTouchHelper
+    private lateinit var listDragAdapter1: ListDragAdapter
     private val audioCardsListOnTrack1 = ArrayList<File>()
+
+    private lateinit var recyclerView2: RecyclerView
+    private lateinit var itemTouchHelper2: ItemTouchHelper
+    private lateinit var listDragAdapter2: ListDragAdapter
     private val audioCardsListOnTrack2 = ArrayList<File>()
 
     companion object {
@@ -99,12 +102,18 @@ class FragmentNewSoundscape : Fragment() {
          */
         recyclerView1 = view.findViewById(R.id.recyclerView1)
         recyclerView1.layoutManager = LinearLayoutManager(context)
+        // recyclerView1.layoutManager = GridLayoutManager(context, 2);
+        //recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, OrientationHelper.VERTICAL));
         recyclerView1.setHasFixedSize(true)
-        dragAdapter1 = AdapterListDrag(context!!, audioCardsListOnTrack1)
-        recyclerView1.adapter = dragAdapter1
+        listDragAdapter1 = ListDragAdapter(context!!, audioCardsListOnTrack1)
+        recyclerView1.adapter = listDragAdapter1
 
-        mItemTouchHelper1 = ItemTouchHelper(DragItemTouchHelper(dragAdapter1))
-        mItemTouchHelper1?.attachToRecyclerView(recyclerView1)
+        val itemTouchHelperCallback = ItemTouchHelperCallback(listDragAdapter1)
+        itemTouchHelper1 = ItemTouchHelper(itemTouchHelperCallback)
+        listDragAdapter1.setOnItemTouchHelper(itemTouchHelper1)
+        itemTouchHelper1.attachToRecyclerView(recyclerView1)
+
+
 
         /**
          * set data and list adapter for recycleview01 (Track 02)
@@ -113,37 +122,26 @@ class FragmentNewSoundscape : Fragment() {
         recyclerView2 = view.findViewById(R.id.recyclerView2)
         recyclerView2.layoutManager = LinearLayoutManager(context)
         recyclerView2.setHasFixedSize(true)
-        dragAdapter2 = AdapterListDrag(context!!, audioCardsListOnTrack2)
-        recyclerView2.adapter = dragAdapter2
+        listDragAdapter2 = ListDragAdapter(context!!, audioCardsListOnTrack2)
+        recyclerView2.adapter = listDragAdapter2
 
-        mItemTouchHelper2 = ItemTouchHelper(DragItemTouchHelper(dragAdapter2))
-        mItemTouchHelper2?.attachToRecyclerView(recyclerView2)
-
+        val itemTouchHelperCallback2 = ItemTouchHelperCallback(listDragAdapter2)
+        itemTouchHelper2 = ItemTouchHelper(itemTouchHelperCallback2)
+        listDragAdapter2.setOnItemTouchHelper(itemTouchHelper2)
+        itemTouchHelper2.attachToRecyclerView(recyclerView2)
     }
 
     private fun initListeners() {
 
-        dragAdapter1.setOnItemClickListener(object : AdapterListDrag.OnItemClickListener {
+        listDragAdapter1.setOnItemClickListener(object : ListDragAdapter.OnItemClickListener {
             override fun onItemClick(view: View, obj: File, position: Int) {
                 Tools.toastShow(context!!, "Item " + obj.name + " clicked")
             }
         })
 
-        dragAdapter1.setDragListener(object : AdapterListDrag.OnStartDragListener {
-            override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
-                mItemTouchHelper1?.startDrag(viewHolder)
-            }
-        })
-
-        dragAdapter2.setOnItemClickListener(object : AdapterListDrag.OnItemClickListener {
+        listDragAdapter2.setOnItemClickListener(object : ListDragAdapter.OnItemClickListener {
             override fun onItemClick(view: View, obj: File, position: Int) {
                 Tools.toastShow(context!!, "Item " + obj.name + " clicked")
-            }
-        })
-
-        dragAdapter2.setDragListener(object : AdapterListDrag.OnStartDragListener {
-            override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
-                mItemTouchHelper2?.startDrag(viewHolder)
             }
         })
 
@@ -163,11 +161,11 @@ class FragmentNewSoundscape : Fragment() {
             override fun addToTrack(trackNum: Int, file: File) {
                 if (trackNum == 1) {
                     audioCardsListOnTrack1.add(file)
-                    dragAdapter1.notifyDataSetChanged()
+                    listDragAdapter1.notifyDataSetChanged()
                     log_e("1 添加了一个 ${file.absolutePath}")
                 } else {
                     audioCardsListOnTrack2.add(file)
-                    dragAdapter2.notifyDataSetChanged()
+                    listDragAdapter2.notifyDataSetChanged()
                     log_e("2 添加了一个 ${file.absolutePath}")
                 }
             }

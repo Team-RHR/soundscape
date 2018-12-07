@@ -3,26 +3,28 @@ package com.example.kkgroup.soundscape_v2.widget
 import android.graphics.Canvas
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.StaggeredGridLayoutManager
 import android.support.v7.widget.helper.ItemTouchHelper
 
-class DragItemTouchHelper(private val mAdapter: MoveHelperAdapter) : ItemTouchHelper.Callback() {
+/**
+ * Reference from https://github.com/WuXiaolong/AndroidSamples/
+ */
+class ItemTouchHelperCallback (private val itemTouchHelperAdapter: ItemTouchHelperAdapter) : ItemTouchHelper.Callback() {
 
-    companion object {
-        val ALPHA_FULL = 1.0f
-    }
+    private val ALPHA_FULL = 1.0f
 
     override fun isLongPressDragEnabled(): Boolean {
         return true
     }
 
     override fun isItemViewSwipeEnabled(): Boolean {
-        return false
+        return true
     }
 
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-        // Set movement flags based on the layout manager
-        if (recyclerView.layoutManager is GridLayoutManager) {
+        if (recyclerView.layoutManager is GridLayoutManager || recyclerView.layoutManager is StaggeredGridLayoutManager) {
             val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+
             val swipeFlags = 0
             return ItemTouchHelper.Callback.makeMovementFlags(dragFlags, swipeFlags)
         } else {
@@ -32,21 +34,23 @@ class DragItemTouchHelper(private val mAdapter: MoveHelperAdapter) : ItemTouchHe
         }
     }
 
-    override fun onMove(recyclerView: RecyclerView, source: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-        if (source.itemViewType != target.itemViewType) {
+    /**
+     * Notify the adapter of the move
+     */
+    override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+        if (viewHolder.itemViewType != target.itemViewType) {
             return false
         }
-
-        // Notify the adapter of the move
-        mAdapter.onItemMove(source.adapterPosition, target.adapterPosition)
+        itemTouchHelperAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
         return true
     }
 
-    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {}
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        itemTouchHelperAdapter.onItemDismiss(viewHolder.adapterPosition)
+    }
 
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            // Fade out the view as it is swiped out of the parent's bounds
             val alpha = ALPHA_FULL - Math.abs(dX) / viewHolder.itemView.width.toFloat()
             viewHolder.itemView.alpha = alpha
             viewHolder.itemView.translationX = dX
@@ -55,38 +59,41 @@ class DragItemTouchHelper(private val mAdapter: MoveHelperAdapter) : ItemTouchHe
         }
     }
 
+    /**
+     * We only want the active item to change
+     * Let the view holder know that this item is being moved or dragged
+     */
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
-        // We only want the active item to change
+        //
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
-            if (viewHolder is TouchViewHolder) {
-                // Let the view holder know that this item is being moved or dragged
-                val itemViewHolder = viewHolder as TouchViewHolder?
+            if (viewHolder is ItemTouchHelperViewHolder) {
+                val itemViewHolder = viewHolder as ItemTouchHelperViewHolder?
                 itemViewHolder!!.onItemSelected()
             }
         }
-
         super.onSelectedChanged(viewHolder, actionState)
     }
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         super.clearView(recyclerView, viewHolder)
-
         viewHolder.itemView.alpha = ALPHA_FULL
-
-        if (viewHolder is TouchViewHolder) {
-            // Tell the view holder it's time to restore the idle state
-            val itemViewHolder = viewHolder as TouchViewHolder
+        if (viewHolder is ItemTouchHelperViewHolder) {
+            val itemViewHolder = viewHolder as ItemTouchHelperViewHolder
             itemViewHolder.onItemClear()
         }
     }
+}
 
-    interface MoveHelperAdapter {
-        fun onItemMove(fromPosition: Int, toPosition: Int): Boolean
-    }
+interface ItemTouchHelperViewHolder {
 
-    interface TouchViewHolder {
-        fun onItemSelected()
+    fun onItemSelected()
 
-        fun onItemClear()
-    }
+    fun onItemClear()
+}
+
+interface ItemTouchHelperAdapter {
+
+    fun onItemMove(fromPosition: Int, toPosition: Int): Boolean
+
+    fun onItemDismiss(position: Int)
 }
