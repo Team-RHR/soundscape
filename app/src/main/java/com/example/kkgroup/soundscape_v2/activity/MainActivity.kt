@@ -5,29 +5,27 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.media.MediaPlayer
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.TabLayout
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.ImageButton
 import android.widget.ProgressBar
-import android.widget.Toast
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.Tools.Tools
-import com.example.kkgroup.soundscape_v2.adapter.AudioItemAdapter
 import com.example.kkgroup.soundscape_v2.adapter.MyViewPagerAdapter
-import com.example.kkgroup.soundscape_v2.fragment.*
-import com.example.kkgroup.soundscape_v2.widget.ItemAnimation
+import com.example.kkgroup.soundscape_v2.fragment.FragmentNewSoundscape
+import com.example.kkgroup.soundscape_v2.fragment.FragmentPreference
+import com.example.kkgroup.soundscape_v2.fragment.FragmentRecording
+import com.example.kkgroup.soundscape_v2.fragment.FragmentRoot
 import org.jetbrains.anko.startActivity
-import java.io.File
 
 private const val REQUEST_WRITE_EXTERNAL_PERMISSION = 200
 class MainActivity : AppCompatActivity() {

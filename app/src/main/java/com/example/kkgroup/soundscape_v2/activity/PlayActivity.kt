@@ -2,7 +2,6 @@ package com.example.kkgroup.soundscape_v2.activity
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.content.res.Configuration
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri

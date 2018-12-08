@@ -1,8 +1,5 @@
 package com.example.kkgroup.soundscape_v2.activity
 
-import android.content.Context
-import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.example.kkgroup.soundscape_v2.R
@@ -16,7 +13,6 @@ import org.jetbrains.anko.startActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 
 
 class LoginActivity : AppCompatActivity() {

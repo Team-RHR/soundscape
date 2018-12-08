@@ -1,7 +1,6 @@
 package com.example.kkgroup.soundscape_v2.activity
 
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity

@@ -39,5 +39,4 @@ dependencies {
     implementation 'com.mikhaellopez:circularimageview:3.2.0'           // circle image view
     implementation 'com.balysv:material-ripple:1.0.2'                   // ripple effect
     implementation 'org.jetbrains.anko:anko:0.10.5'                     // anko
-    implementation 'com.github.Jay-Goo:RangeSeekBar:v2.0.4'             // vertical seekbar
 }
