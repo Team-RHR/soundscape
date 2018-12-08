@@ -71,7 +71,7 @@ class LocalAudioFilesActivity : AppCompatActivity() {
     }
 
     private fun initListeners() {
-        fabInMyFilesPage.setOnClickListener { startActivity<NewSoundscapeActivity>() }
+        // fabInMyFilesPage.setOnClickListener { startActivity<NewSoundscapeActivity>() }
     }
 
     private fun initToolbar() {

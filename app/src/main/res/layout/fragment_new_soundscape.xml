@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,42 +9,13 @@
     tools:context=".activity.NewSoundscapeActivity">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageButton
-                android:id="@+id/ib_play"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginBottom="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:tint="@color/colorAccent"
-                app:srcCompat="@drawable/ic_play_arrow" />
-
-            <com.jaygoo.widget.VerticalRangeSeekBar
-                android:id="@+id/myVerticalSeekbar"
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                app:rsb_mode="single"
-                app:rsb_orientation="right"
-                app:rsb_progress_color="@color/colorPrimary" />
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/linearLayout2"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
@@ -52,8 +24,6 @@
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@+id/linearLayout"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
@@ -69,7 +39,6 @@
                     android:gravity="center">
 
                     <TextView
-                        android:id="@+id/up_grade"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Audio Track 01"
@@ -83,7 +52,6 @@
                     android:gravity="center">
 
                     <TextView
-                        android:id="@+id/data_analysis"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Audio Track 02"
@@ -94,7 +62,6 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/dashborder_outter"
                 android:gravity="center">
 
                 <android.support.v7.widget.RecyclerView
@@ -105,9 +72,10 @@
                     android:layout_weight="1"
                     android:scrollingCache="true" />
 
-                <!--<View-->
-                    <!--android:layout_width="@dimen/spacing_middle"-->
-                    <!--android:layout_height="fill_parent"/>-->
+                <View
+                    android:background="@color/colorPrimary"
+                    android:layout_width="2dp"
+                    android:layout_height="fill_parent" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerView2"
@@ -122,11 +90,17 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <!--bottom sheet container-->
-    <FrameLayout
-        android:id="@+id/bottom_sheet"
-        android:layout_width="match_parent"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_play"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_behavior="@string/bottom_sheet_behavior" />
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/ic_play_arrow"
+        app:fabSize="normal"
+        app:layout_anchor="@+id/constraintLayout"
+        app:layout_anchorGravity="right|bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -3,30 +3,22 @@ package com.example.kkgroup.soundscape_v2.fragment
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.BottomSheetDialog
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
-import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.Toast
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.Tools.Tools.log_e
+import com.example.kkgroup.soundscape_v2.activity.PlayActivity
 import com.example.kkgroup.soundscape_v2.adapter.ListDragAdapter
 import com.example.kkgroup.soundscape_v2.widget.ItemTouchHelperCallback
-import com.jaygoo.widget.OnRangeChangedListener
-import com.jaygoo.widget.RangeSeekBar
-import com.jaygoo.widget.VerticalRangeSeekBar
+import org.jetbrains.anko.support.v4.startActivity
 import java.io.File
 
 
@@ -35,15 +27,11 @@ private const val AUDIO_TRACK_TWO = 2
 
 class FragmentNewSoundscape : Fragment() {
 
-    private lateinit var seekBar: VerticalRangeSeekBar
-    private lateinit var playButton: ImageButton
+    private lateinit var playButton: FloatingActionButton
     private var mediaPlayer1: MediaPlayer = MediaPlayer()
     private var mediaPlayer2: MediaPlayer = MediaPlayer()
-    private lateinit var mBehavior: BottomSheetBehavior<View>
     private var isPlayedAlready1 = false
     private var isPlayedAlready2 = false
-    private var mBottomSheetDialog: BottomSheetDialog? = null
-    private var bottom_sheet: View? = null
 
     // ====================
     private lateinit var recyclerView1: RecyclerView
@@ -85,7 +73,7 @@ class FragmentNewSoundscape : Fragment() {
         audioCardsListOnTrack1.add(File("/storage/emulated/0/soundscape/downloads/Machine/Antiikki_auto_käyntiä_30s.mp3"))
         // audioCardsListOnTrack1.add(File("/storage/emulated/0/soundscape/downloads/Machine/Metro_ohiajo_30s.mp3"))
 
-        audioCardsListOnTrack2.add(File("/storage/emulated/0/soundscape/downloads/Nature/Hevonen_hirnuu_15s.mp3"))
+        // audioCardsListOnTrack2.add(File("/storage/emulated/0/soundscape/downloads/Nature/Hevonen_hirnuu_15s.mp3"))
         audioCardsListOnTrack2.add(File("/storage/emulated/0/soundscape/downloads/Human/Humalainen_porukka_15s.mp3"))
 
         initPlayers()
@@ -96,13 +84,7 @@ class FragmentNewSoundscape : Fragment() {
         mediaPlayer1.setAudioStreamType(AudioManager.STREAM_MUSIC)
         mediaPlayer2.setAudioStreamType(AudioManager.STREAM_MUSIC)
 
-        playButton = view.findViewById(R.id.ib_play)
-        seekBar = view.findViewById(R.id.myVerticalSeekbar)
-        seekBar.setValue(30f)
-        seekBar.invalidate()
-
-        bottom_sheet = view.findViewById(R.id.bottom_sheet)
-        mBehavior = BottomSheetBehavior.from(bottom_sheet)
+        playButton = view.findViewById(R.id.fab_play)
 
         /**
          * set data and list adapter for recycleview01 (Track 01)
@@ -136,19 +118,20 @@ class FragmentNewSoundscape : Fragment() {
         itemTouchHelper2 = ItemTouchHelper(itemTouchHelperCallback2)
         listDragAdapter2.setOnItemTouchHelper(itemTouchHelper2)
         itemTouchHelper2.attachToRecyclerView(recyclerView2)
+
     }
 
     private fun initListeners() {
 
         listDragAdapter1.setOnItemClickListener(object : ListDragAdapter.OnItemClickListener {
-            override fun onItemClick(view: View, obj: File, position: Int) {
-                Tools.toastShow(context!!, "Item " + obj.name + " clicked")
+            override fun onItemClick(view: View, file: File, position: Int) {
+                startActivity<PlayActivity>("obj" to file)
             }
         })
 
         listDragAdapter2.setOnItemClickListener(object : ListDragAdapter.OnItemClickListener {
-            override fun onItemClick(view: View, obj: File, position: Int) {
-                Tools.toastShow(context!!, "Item " + obj.name + " clicked")
+            override fun onItemClick(view: View, file: File, position: Int) {
+                startActivity<PlayActivity>("obj" to file)
             }
         })
 
@@ -169,17 +152,18 @@ class FragmentNewSoundscape : Fragment() {
             }
         })
 
-        seekBar.setOnRangeChangedListener(object : OnRangeChangedListener {
-            override fun onStartTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {}
-
-            override fun onRangeChanged(view: RangeSeekBar?, leftValue: Float, rightValue: Float, isFromUser: Boolean) {
-                // Tools.log_e("leftValue: $leftValue --> rightValue: $rightValue")
+        listDragAdapter1.setOnItemDeleteListener(object : ListDragAdapter.OnItemDeleteListener {
+            override fun onItemDelete(file: File) {
+                Tools.log_e("listDragAdapter1 被删除: ${file.name}")
+                initPlayers()
             }
-
-            override fun onStopTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {}
-
         })
-        seekBar.invalidate()
+        listDragAdapter2.setOnItemDeleteListener(object : ListDragAdapter.OnItemDeleteListener {
+            override fun onItemDelete(file: File) {
+                Tools.log_e("listDragAdapter2 被删除: ${file.name}")
+                initPlayers()
+            }
+        })
 
         FragmentLibraryAudioList.setMyAddToTrackListener(object : FragmentLibraryAudioList.addToTrackListener {
             override fun addToTrack(trackNum: Int, file: File) {
@@ -190,10 +174,12 @@ class FragmentNewSoundscape : Fragment() {
                     audioCardsListOnTrack1.add(file)
                     listDragAdapter1.notifyDataSetChanged()
                     log_e("1 添加了一个 ${file.absolutePath}")
+                    initPlayers()
                 } else {
                     audioCardsListOnTrack2.add(file)
                     listDragAdapter2.notifyDataSetChanged()
                     log_e("2 添加了一个 ${file.absolutePath}")
+                    initPlayers()
                 }
             }
         })
@@ -202,6 +188,8 @@ class FragmentNewSoundscape : Fragment() {
 
             log_e("isPlayedAlready1 = ${isPlayedAlready1}")
             log_e("isPlayedAlready2 = ${isPlayedAlready2}")
+            log_e("playerOnTrack1 = ${playerOnTrack1 == null}")
+            log_e("playerOnTrack2 = ${playerOnTrack2 == null}")
 
             // check for already playing
             if (!isPlayedAlready1) {
@@ -241,12 +229,25 @@ class FragmentNewSoundscape : Fragment() {
         playerList.clear()
         maxRowCount = Math.max(listDragAdapter1.getItems().size, listDragAdapter2.getItems().size)
 
-        if ( ! isPlayingOnTrack1 && ! isPlayingOnTrack2) {
-            playerList = playAudioRowByRow(listDragAdapter1.getItems()[0].absolutePath,
-                    listDragAdapter2.getItems()[0].absolutePath)
+        if (!isPlayingOnTrack1 && !isPlayingOnTrack2) {
 
-            playerOnTrack1 = playerList[0]
-            playerOnTrack2 = playerList[1]
+            playerList = playAudioRowByRow(getAbsolutePath(AUDIO_TRACK_ONE, currentIndex),
+                    getAbsolutePath(AUDIO_TRACK_TWO, currentIndex))
+
+            if (playerList.isNotEmpty()) {
+                playerOnTrack1 = playerList[0]
+            } else {
+                playerOnTrack1 = null
+            }
+
+            log_e("返回的size: ${playerList.size}")
+            if (playerList.size > 1) {
+                playerOnTrack2 = playerList[1]
+            } else {
+                playerOnTrack2 = null
+                log_e("playerOnTrack2 重置为 null")
+            }
+
         }
     }
 
@@ -256,108 +257,135 @@ class FragmentNewSoundscape : Fragment() {
         log_e("准备播放02 = $absolutePath2")
 
         val playersList = ArrayList<MediaPlayer>()
-        val player1 = MediaPlayer()
-        try {
-            player1.setDataSource(context, Uri.parse(absolutePath1))
-            player1.prepare();
-            player1.setVolume(1f, 1f);
-            player1.isLooping = false;
 
-            playersList.add(player1)
+        absolutePath1?.let {
+            val player1 = MediaPlayer()
+            try {
+                player1.setDataSource(context, Uri.parse(it))
+                player1.prepare();
+                player1.setVolume(1f, 1f);
+                player1.isLooping = false;
 
-            if (currentIndex != 0) {
-                player1.start()
-                isPlayingOnTrack1 = true
-                isPlayedAlready1 = false
+                playersList.add(player1)
 
-                playerOnTrack1 = player1
-                playButton.setImageResource(R.drawable.ic_pause)
-            }
+                if (currentIndex != 0) {
+                    player1.start()
+                    isPlayingOnTrack1 = true
+                    isPlayedAlready1 = false
 
-            player1.setOnCompletionListener {
-                Tools.log_e("mediaPlayer $absolutePath1 播放完成")
-                swapPlayingFlag(AUDIO_TRACK_ONE, false)
+                    playerOnTrack1 = player1
+                    playButton.setImageResource(R.drawable.ic_pause)
+                }
 
-                isPlayedAlready1 = true
+                player1.setOnCompletionListener {
+                    Tools.log_e("mediaPlayer $absolutePath1 播放完成")
+                    swapPlayingFlag(AUDIO_TRACK_ONE, false)
 
-                if ( ! isPlayingOnTrack1 && ! isPlayingOnTrack2) {
-                    Tools.log_e("mediaPlayer row: ${currentIndex} 两个都 播放完成, maxRowCount: $maxRowCount")
-                    if (currentIndex < maxRowCount - 1) {
-                        currentIndex++
-                        Tools.log_e("currentIndex = ${currentIndex}")
-                        playAudioRowByRow(listDragAdapter1.getItems()[currentIndex].absolutePath,
-                                listDragAdapter2.getItems()[currentIndex].absolutePath)
-                    } else {
-                        /**
-                         * The audios of each row have been played, and the reset flags is performed here.
-                         */
-                        isPlayingOnTrack1 = false
-                        isPlayingOnTrack2 = false
-                        isPlayedAlready1 = false
-                        isPlayedAlready2 = false
-                        currentIndex = 0
+                    isPlayedAlready1 = true
 
-                        initPlayers()
-                        Tools.log_e("=============================================")
+                    if (!isPlayingOnTrack1 && !isPlayingOnTrack2) {
+                        Tools.log_e("mediaPlayer row: ${currentIndex} 两个都 播放完成, maxRowCount: $maxRowCount")
+                        if (currentIndex < maxRowCount - 1) {
+                            currentIndex++
+                            Tools.log_e("currentIndex = ${currentIndex}")
+                            playAudioRowByRow(getAbsolutePath(AUDIO_TRACK_ONE, currentIndex),
+                                    getAbsolutePath(AUDIO_TRACK_TWO, currentIndex))
+                        } else {
+                            /**
+                             * The audios of each row have been played, and the reset flags is performed here.
+                             */
+                            isPlayingOnTrack1 = false
+                            isPlayingOnTrack2 = false
+                            isPlayedAlready1 = false
+                            isPlayedAlready2 = false
+                            currentIndex = 0
+
+                            initPlayers()
+                            Tools.log_e("=============================================")
+                        }
                     }
                 }
+            } catch (e: Exception) {
+                log_e("e: ${e.toString()}")
             }
-        } catch (e: Exception) {
-            log_e("e: ${e.toString()}")
         }
-        
-        val player2 = MediaPlayer()
-        try {
-            player2.setDataSource(context, Uri.parse(absolutePath2))
-            player2.prepare();
-            player2.setVolume(1f, 1f);
-            player2.isLooping = false;
 
-            playersList.add(player2)
+        absolutePath2?.let {
+            val player2 = MediaPlayer()
+            try {
+                player2.setDataSource(context, Uri.parse(it))
+                player2.prepare();
+                player2.setVolume(1f, 1f);
+                player2.isLooping = false;
 
-            if (currentIndex != 0) {
-                player2.start()
-                isPlayingOnTrack2 = true
-                playButton.setImageResource(R.drawable.ic_pause)
+                playersList.add(player2)
 
-                playerOnTrack2 = player2
-                isPlayedAlready2 = false
-            }
+                log_e("添加了player2")
 
-            player2.setOnCompletionListener {
-                Tools.log_e("mediaPlayer $absolutePath2 播放完成")
-                swapPlayingFlag(AUDIO_TRACK_TWO, false)
+                if (currentIndex != 0) {
+                    player2.start()
+                    isPlayingOnTrack2 = true
+                    playButton.setImageResource(R.drawable.ic_pause)
 
-                isPlayedAlready2 = true
+                    playerOnTrack2 = player2
+                    isPlayedAlready2 = false
+                }
 
-                if ( ! isPlayingOnTrack1 && ! isPlayingOnTrack2) {
-                    Tools.log_e("mediaPlayer row: ${currentIndex} 两个都 播放完成, maxRowCount: $maxRowCount")
-                    if (currentIndex < maxRowCount - 1) {
-                        currentIndex++
-                        Tools.log_e("currentIndex = ${currentIndex}")
-                        playAudioRowByRow(listDragAdapter1.getItems()[currentIndex].absolutePath,
-                                listDragAdapter2.getItems()[currentIndex].absolutePath)
-                    } else {
-                        /**
-                         * The audios of each row have been played, and the reset flags is performed here.
-                         */
+                player2.setOnCompletionListener {
+                    Tools.log_e("mediaPlayer $absolutePath2 播放完成")
+                    swapPlayingFlag(AUDIO_TRACK_TWO, false)
 
-                        isPlayingOnTrack1 = false
-                        isPlayingOnTrack2 = false
-                        isPlayedAlready1 = false
-                        isPlayedAlready2 = false
-                        currentIndex = 0
+                    isPlayedAlready2 = true
 
-                        initPlayers()
-                        Tools.log_e("=============================================")
+                    if (!isPlayingOnTrack1 && !isPlayingOnTrack2) {
+                        Tools.log_e("mediaPlayer row: ${currentIndex} 两个都 播放完成, maxRowCount: $maxRowCount")
+                        if (currentIndex < maxRowCount - 1) {
+                            currentIndex++
+                            Tools.log_e("currentIndex = ${currentIndex}")
+                            playAudioRowByRow(getAbsolutePath(AUDIO_TRACK_ONE, currentIndex),
+                                    getAbsolutePath(AUDIO_TRACK_TWO, currentIndex))
+                        } else {
+                            /**
+                             * The audios of each row have been played, and the reset flags is performed here.
+                             */
+
+                            isPlayingOnTrack1 = false
+                            isPlayingOnTrack2 = false
+                            isPlayedAlready1 = false
+                            isPlayedAlready2 = false
+                            currentIndex = 0
+
+                            initPlayers()
+                            Tools.log_e("=============================================")
+                        }
                     }
                 }
+            } catch (e: Exception) {
+                log_e("e: $e")
             }
-        } catch (e: Exception) {
-            log_e("e: $e")
         }
 
         return playersList
+    }
+
+    private fun getAbsolutePath(trackNum: Int, currentIndex: Int): String? {
+
+        Tools.log_e("currentIndex: $currentIndex --> size: ${listDragAdapter2.getItems().size}")
+        Tools.log_e("currentIndex: $currentIndex --> items: ${listDragAdapter2.getItems()}")
+
+        if (trackNum == AUDIO_TRACK_ONE) {
+            return if (currentIndex >= listDragAdapter1.getItems().size) {
+                null
+            } else {
+                listDragAdapter1.getItems()[currentIndex].absolutePath
+            }
+        } else {
+            return if (currentIndex >= listDragAdapter2.getItems().size) {
+                null
+            } else {
+                listDragAdapter2.getItems()[currentIndex].absolutePath
+            }
+        }
     }
 
     private fun swapPlayingFlag(trackNum: Int, isPlaying: Boolean) {
@@ -373,38 +401,6 @@ class FragmentNewSoundscape : Fragment() {
         } else {
             playButton.setImageResource(R.drawable.ic_play_arrow)
         }
-    }
-
-    private fun showBottomSheetDialog(message: String) {
-        if (mBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-            mBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
-
-        val view = layoutInflater.inflate(R.layout.sheet_audio_card_floating, null)
-        (view.findViewById(R.id.name) as TextView).text = message
-        (view.findViewById(R.id.brief) as TextView).text = "From human category"
-        view.findViewById<ImageButton>(R.id.bt_close).setOnClickListener {
-            mBottomSheetDialog?.hide()
-        }
-
-        view.findViewById<AppCompatButton>(R.id.deleteFromTrack).setOnClickListener {
-            Toast.makeText(context, "Delete From Track", Toast.LENGTH_SHORT).show()
-        }
-
-        view.findViewById<AppCompatButton>(R.id.previewAudioCard).setOnClickListener {
-            Toast.makeText(context, "Preview Audio Card", Toast.LENGTH_SHORT).show()
-        }
-
-        mBottomSheetDialog = BottomSheetDialog(context!!)
-        mBottomSheetDialog?.setContentView(view)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mBottomSheetDialog?.getWindow()!!.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        }
-
-        // set background transparent
-        (view.parent as View).setBackgroundColor(resources.getColor(android.R.color.transparent))
-        mBottomSheetDialog?.show()
-        mBottomSheetDialog?.setOnDismissListener { mBottomSheetDialog = null }
     }
 
     // stop player when destroy

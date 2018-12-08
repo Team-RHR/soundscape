@@ -1,10 +1,7 @@
 package com.example.kkgroup.soundscape_v2.fragment
 
-import android.content.DialogInterface
-import android.drm.DrmStore.Action.RINGTONE
 import android.os.Bundle
 import android.os.Handler
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AlertDialog
@@ -23,7 +20,6 @@ import com.example.kkgroup.soundscape_v2.widget.ItemAnimation
 import kotlinx.android.synthetic.main.fragment_library_audio_list.*
 import org.jetbrains.anko.support.v4.startActivity
 import java.io.File
-
 
 
 class FragmentLibraryAudioList : Fragment() {

@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/lyt_parent"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:clickable="true"
-    android:focusable="true"
-    android:layout_height="wrap_content">
+    android:focusable="true">
 
 
     <android.support.v7.widget.CardView
@@ -31,8 +31,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_margin="@dimen/spacing_middle"
-                    android:text="Here is the title "
                     android:maxLines="2"
+                    android:text="Here is the title "
                     android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                     android:textColor="@android:color/white" />
 
@@ -53,22 +53,50 @@
                     android:layout_width="@dimen/spacing_middle"
                     android:layout_height="wrap_content" />
 
-                <TextView
-                    android:id="@+id/card_time"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Time: 0:15"
-                    android:textSize="12dp"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                    android:textColor="@android:color/white" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:id="@+id/card_format"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mp3"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textColor="@android:color/white"
+                        android:paddingRight="@dimen/spacing_middle"
+                        android:textSize="12dp" />
+
+                    <!--<LinearLayout-->
+                        <!--android:id="@+id/lyt_progress"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_centerInParent="true"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:layout_margin="@dimen/spacing_medium"-->
+                        <!--android:orientation="vertical">-->
+
+                        <!--<com.example.kkgroup.soundscape_v2.widget.ViewLoadingDotsBounce-->
+                            <!--android:layout_width="30dp"-->
+                            <!--android:gravity="center_vertical"-->
+                            <!--android:layout_height="20dp"-->
+                            <!--android:background="@android:color/white" />-->
+
+                    <!--</LinearLayout>-->
+
+                </LinearLayout>
+
 
                 <ImageButton
                     android:id="@+id/iv_move"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/spacing_middle"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="@dimen/spacing_middle"
                     android:tint="@android:color/white"
                     app:srcCompat="@drawable/ic_reoder" />
 
@@ -78,92 +106,88 @@
     </android.support.v7.widget.CardView>
 
 
-
     <!--<android.support.v7.widget.CardView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="@dimen/spacing_medium"-->
-        <!--android:layout_marginLeft="@dimen/spacing_middle"-->
-        <!--android:layout_marginRight="@dimen/spacing_middle"-->
-        <!--android:layout_marginTop="@dimen/spacing_medium"-->
-        <!--android:visibility="visible"-->
-        <!--app:cardBackgroundColor="@color/blue_700"-->
-        <!--app:cardCornerRadius="2dp"-->
-        <!--app:cardElevation="2dp">-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="@dimen/spacing_medium"-->
+    <!--android:layout_marginLeft="@dimen/spacing_middle"-->
+    <!--android:layout_marginRight="@dimen/spacing_middle"-->
+    <!--android:layout_marginTop="@dimen/spacing_medium"-->
+    <!--android:visibility="visible"-->
+    <!--app:cardBackgroundColor="@color/blue_700"-->
+    <!--app:cardCornerRadius="2dp"-->
+    <!--app:cardElevation="2dp">-->
 
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="vertical">-->
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="vertical">-->
 
-            <!--<TextView-->
-                <!--android:id="@+id/card_title"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="@dimen/spacing_large"-->
-                <!--android:layout_marginRight="@dimen/spacing_large"-->
-                <!--android:layout_marginTop="@dimen/spacing_middle"-->
-                <!--android:layout_marginBottom="@dimen/spacing_medium"-->
-                <!--android:text="Here is the title"-->
-                <!--android:maxLines="1"-->
-                <!--android:textColor="@android:color/white" />-->
+    <!--<TextView-->
+    <!--android:id="@+id/card_title"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="@dimen/spacing_large"-->
+    <!--android:layout_marginRight="@dimen/spacing_large"-->
+    <!--android:layout_marginTop="@dimen/spacing_middle"-->
+    <!--android:layout_marginBottom="@dimen/spacing_medium"-->
+    <!--android:text="Here is the title"-->
+    <!--android:maxLines="1"-->
+    <!--android:textColor="@android:color/white" />-->
 
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="@dimen/spacing_xlarge"-->
-                <!--android:orientation="horizontal">-->
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="@dimen/spacing_xlarge"-->
+    <!--android:orientation="horizontal">-->
 
-                <!--<TextView-->
-                    <!--android:id="@+id/card_time"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_weight="5"-->
-                    <!--android:layout_height="@dimen/spacing_xlarge"-->
-                    <!--android:gravity="left|center_vertical"-->
-                    <!--android:layout_marginBottom="@dimen/spacing_large"-->
-                    <!--android:layout_marginLeft="@dimen/spacing_large"-->
-                    <!--android:text="Time: 0:15 "-->
-                    <!--android:textColor="@color/grey_10" />-->
+    <!--<TextView-->
+    <!--android:id="@+id/card_time"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_weight="5"-->
+    <!--android:layout_height="@dimen/spacing_xlarge"-->
+    <!--android:gravity="left|center_vertical"-->
+    <!--android:layout_marginBottom="@dimen/spacing_large"-->
+    <!--android:layout_marginLeft="@dimen/spacing_large"-->
+    <!--android:text="Time: 0:15 "-->
+    <!--android:textColor="@color/grey_10" />-->
 
-                <!--<ImageButton-->
-                    <!--android:id="@+id/bt_move"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:layout_height="@dimen/spacing_xlarge"-->
-                    <!--android:background="@android:color/transparent"-->
-                    <!--app:srcCompat="@drawable/ic_reoder" />-->
+    <!--<ImageButton-->
+    <!--android:id="@+id/bt_move"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:layout_height="@dimen/spacing_xlarge"-->
+    <!--android:background="@android:color/transparent"-->
+    <!--app:srcCompat="@drawable/ic_reoder" />-->
 
-            <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
 
 
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="horizontal">-->
 
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:orientation="horizontal">-->
+    <!--<Button-->
+    <!--android:id="@+id/btnListenNow"-->
+    <!--style="@style/Button.Accent.Borderless.WhiteText"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:gravity="center"-->
+    <!--android:paddingLeft="@dimen/spacing_large"-->
+    <!--android:text="LISTEN NOW" />-->
 
-                <!--<Button-->
-                    <!--android:id="@+id/btnListenNow"-->
-                    <!--style="@style/Button.Accent.Borderless.WhiteText"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:gravity="center"-->
-                    <!--android:paddingLeft="@dimen/spacing_large"-->
-                    <!--android:text="LISTEN NOW" />-->
+    <!--<ImageView-->
+    <!--android:id="@+id/card_logo"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:scaleType="centerCrop"-->
+    <!--android:src="@drawable/ic_track_changes" />-->
 
-                <!--<ImageView-->
-                    <!--android:id="@+id/card_logo"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_gravity="center"-->
-                    <!--android:scaleType="centerCrop"-->
-                    <!--android:src="@drawable/ic_track_changes" />-->
+    <!--</LinearLayout>-->
 
-            <!--</LinearLayout>-->
-
-        <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
     <!--</android.support.v7.widget.CardView>-->
-
-
 
 
 </RelativeLayout>

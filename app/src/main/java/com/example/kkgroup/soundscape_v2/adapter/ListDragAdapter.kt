@@ -1,7 +1,6 @@
 package com.example.kkgroup.soundscape_v2.adapter
 
 import android.content.Context
-import android.graphics.Color
 import android.support.v4.view.MotionEventCompat
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
@@ -9,11 +8,9 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import com.example.kkgroup.soundscape_v2.R
-import com.example.kkgroup.soundscape_v2.Tools.AudioUtils
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.widget.ItemTouchHelperAdapter
 import com.example.kkgroup.soundscape_v2.widget.ItemTouchHelperViewHolder
@@ -27,6 +24,7 @@ class ListDragAdapter(private val ctx: Context,
     private var itemTouchHelper: ItemTouchHelper? = null
     private var mOnItemClickListener: OnItemClickListener? = null
     private var mOnItemsChangeListener: OnItemsChangeListener? = null
+    private var mOnItemDeleteListener: OnItemDeleteListener? = null
 
     interface OnItemClickListener {
         fun onItemClick(view: View, file: File, position: Int)
@@ -36,12 +34,20 @@ class ListDragAdapter(private val ctx: Context,
         fun onItemsChange(fromPosition: Int, toPosition: Int)
     }
 
+    interface OnItemDeleteListener {
+        fun onItemDelete(file: File)
+    }
+
     fun setOnItemClickListener(mItemClickListener: OnItemClickListener) {
         this.mOnItemClickListener = mItemClickListener
     }
 
     fun setOnItemsChangeListener(mOnItemsChangeListener: OnItemsChangeListener) {
         this.mOnItemsChangeListener = mOnItemsChangeListener
+    }
+
+    fun setOnItemDeleteListener(mOnItemDeleteListener: OnItemDeleteListener) {
+        this.mOnItemDeleteListener = mOnItemDeleteListener
     }
 
     fun setOnItemTouchHelper(itemTouchHelper: ItemTouchHelper) {
@@ -60,8 +66,10 @@ class ListDragAdapter(private val ctx: Context,
     }
 
     override fun onItemDismiss(position: Int) {
-        items.removeAt(position)
+        val removeAt = items.removeAt(position)
+        Tools.log_e("items size: ${items.size}")
         notifyItemRemoved(position)
+        mOnItemDeleteListener?.onItemDelete(removeAt)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -71,7 +79,6 @@ class ListDragAdapter(private val ctx: Context,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.title.text = items[position].name
-       //  holder.time.text = "Time: " + AudioUtils.milliSecondsToTimer(items[position].))
 
         holder.reorder.setOnTouchListener { v, event ->
             if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
@@ -79,6 +86,7 @@ class ListDragAdapter(private val ctx: Context,
             }
             false
         }
+
     }
 
     override fun getItemCount(): Int {
@@ -88,13 +96,12 @@ class ListDragAdapter(private val ctx: Context,
     inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v), ItemTouchHelperViewHolder {
 
         var title: TextView = v.findViewById(R.id.card_title)
-        var time: TextView = v.findViewById(R.id.card_time)
+        var time: TextView = v.findViewById(R.id.card_format)
         var reorder: ImageButton = v.findViewById(R.id.iv_move)
         var lyt_parent: View = v.findViewById(R.id.lyt_parent)
 
         init {
             lyt_parent.setOnClickListener {
-                Tools.log_e(layoutPosition.toString() + "=text=" + items[layoutPosition])
                 mOnItemClickListener?.onItemClick(it,items[layoutPosition],layoutPosition)
             }
         }
