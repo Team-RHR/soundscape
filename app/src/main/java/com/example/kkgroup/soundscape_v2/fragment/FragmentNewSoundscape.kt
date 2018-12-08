@@ -9,7 +9,6 @@ import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialog
 import android.support.v4.app.Fragment
 import android.support.v7.widget.AppCompatButton
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
@@ -56,6 +55,14 @@ class FragmentNewSoundscape : Fragment() {
     private lateinit var itemTouchHelper2: ItemTouchHelper
     private lateinit var listDragAdapter2: ListDragAdapter
     private val audioCardsListOnTrack2 = ArrayList<File>()
+    private var maxRowCount = 0
+
+    private var isPlayingOnTrack1 = false
+    private var isPlayingOnTrack2 = false
+    private var playerOnTrack1: MediaPlayer? = null
+    private var playerOnTrack2: MediaPlayer? = null
+    private var playerList = ArrayList<MediaPlayer>()
+    private var currentIndex = 0
 
     companion object {
         fun newInstance(): FragmentNewSoundscape {
@@ -197,7 +204,7 @@ class FragmentNewSoundscape : Fragment() {
             log_e("isPlayedAlready2 = ${isPlayedAlready2}")
 
             // check for already playing
-            if ( ! isPlayedAlready1) {
+            if (!isPlayedAlready1) {
                 playerOnTrack1?.let {
                     if (it.isPlaying) {
                         it.pause()
@@ -209,8 +216,7 @@ class FragmentNewSoundscape : Fragment() {
                 }
             }
 
-
-            if ( ! isPlayedAlready2) {
+            if (!isPlayedAlready2) {
                 playerOnTrack2?.let {
                     if (it.isPlaying) {
                         it.pause()
@@ -232,64 +238,126 @@ class FragmentNewSoundscape : Fragment() {
     }
 
     private fun initPlayers() {
-
         playerList.clear()
-        log_e("size 1=  ${audioCardsListOnTrack1.size}")
-        log_e("size 2 = ${audioCardsListOnTrack2.size}")
-        log_e("isPlayingOnTrack1 = ${isPlayingOnTrack1}")
-        log_e("isPlayingOnTrack1 = ${isPlayingOnTrack2}")
+        maxRowCount = Math.max(listDragAdapter1.getItems().size, listDragAdapter2.getItems().size)
 
-
-        if (audioCardsListOnTrack1.size == audioCardsListOnTrack2.size &&
-                ! isPlayingOnTrack1 && ! isPlayingOnTrack2) {
-
-            log_e("准备播放01 = ${listDragAdapter1.getItems()[0].absolutePath}")
-            log_e("准备播放02 = ${listDragAdapter2.getItems()[0].absolutePath}")
-
-//            playerOnTrack1 = playThisAudioCard(AUDIO_TRACK_ONE, listDragAdapter1.getItems()[0].absolutePath)
-//            playerOnTrack2 = playThisAudioCard(AUDIO_TRACK_TWO, listDragAdapter2.getItems()[0].absolutePath)
-            val list:ArrayList<MediaPlayer> = playAudioRowByRow(listDragAdapter1.getItems()[0].absolutePath,
+        if ( ! isPlayingOnTrack1 && ! isPlayingOnTrack2) {
+            playerList = playAudioRowByRow(listDragAdapter1.getItems()[0].absolutePath,
                     listDragAdapter2.getItems()[0].absolutePath)
 
+            playerOnTrack1 = playerList[0]
+            playerOnTrack2 = playerList[1]
         }
     }
 
     private fun playAudioRowByRow(absolutePath1: String?, absolutePath2: String?): ArrayList<MediaPlayer> {
-        val players = ArrayList<MediaPlayer>()
-        return players
-    }
 
-    private var isPlayingOnTrack1 = false
-    private var isPlayingOnTrack2 = false
-    private var playerOnTrack1: MediaPlayer? = null
-    private var playerOnTrack2: MediaPlayer? = null
-    private var playerList = ArrayList<MediaPlayer>()
-    private fun playThisAudioCard(trackNum: Int, fileName: String): MediaPlayer {
-        val player = MediaPlayer()
+        log_e("准备播放01 = $absolutePath1")
+        log_e("准备播放02 = $absolutePath2")
+
+        val playersList = ArrayList<MediaPlayer>()
+        val player1 = MediaPlayer()
         try {
-            player.setDataSource(context, Uri.parse(fileName))
-            player.prepare();
-            player.setVolume(1f, 1f);
-            player.isLooping = false;
+            player1.setDataSource(context, Uri.parse(absolutePath1))
+            player1.prepare();
+            player1.setVolume(1f, 1f);
+            player1.isLooping = false;
 
-            player.setOnCompletionListener {
-                Tools.log_e("mediaPlayer $fileName 播放完成")
-                swapPlayingFlag(trackNum, false)
+            playersList.add(player1)
 
-                if (trackNum == AUDIO_TRACK_ONE) {
-                    isPlayedAlready1 = true
-                } else {
-                    isPlayedAlready2 = true
+            if (currentIndex != 0) {
+                player1.start()
+                isPlayingOnTrack1 = true
+                isPlayedAlready1 = false
+
+                playerOnTrack1 = player1
+                playButton.setImageResource(R.drawable.ic_pause)
+            }
+
+            player1.setOnCompletionListener {
+                Tools.log_e("mediaPlayer $absolutePath1 播放完成")
+                swapPlayingFlag(AUDIO_TRACK_ONE, false)
+
+                isPlayedAlready1 = true
+
+                if ( ! isPlayingOnTrack1 && ! isPlayingOnTrack2) {
+                    Tools.log_e("mediaPlayer row: ${currentIndex} 两个都 播放完成, maxRowCount: $maxRowCount")
+                    if (currentIndex < maxRowCount - 1) {
+                        currentIndex++
+                        Tools.log_e("currentIndex = ${currentIndex}")
+                        playAudioRowByRow(listDragAdapter1.getItems()[currentIndex].absolutePath,
+                                listDragAdapter2.getItems()[currentIndex].absolutePath)
+                    } else {
+                        /**
+                         * The audios of each row have been played, and the reset flags is performed here.
+                         */
+                        isPlayingOnTrack1 = false
+                        isPlayingOnTrack2 = false
+                        isPlayedAlready1 = false
+                        isPlayedAlready2 = false
+                        currentIndex = 0
+
+                        initPlayers()
+                        Tools.log_e("=============================================")
+                    }
                 }
             }
-//            player.start()
-//            swapPlayingFlag(trackNum, true)
-//            playerList.add(player)
         } catch (e: Exception) {
             log_e("e: ${e.toString()}")
         }
+        
+        val player2 = MediaPlayer()
+        try {
+            player2.setDataSource(context, Uri.parse(absolutePath2))
+            player2.prepare();
+            player2.setVolume(1f, 1f);
+            player2.isLooping = false;
 
-        return player
+            playersList.add(player2)
+
+            if (currentIndex != 0) {
+                player2.start()
+                isPlayingOnTrack2 = true
+                playButton.setImageResource(R.drawable.ic_pause)
+
+                playerOnTrack2 = player2
+                isPlayedAlready2 = false
+            }
+
+            player2.setOnCompletionListener {
+                Tools.log_e("mediaPlayer $absolutePath2 播放完成")
+                swapPlayingFlag(AUDIO_TRACK_TWO, false)
+
+                isPlayedAlready2 = true
+
+                if ( ! isPlayingOnTrack1 && ! isPlayingOnTrack2) {
+                    Tools.log_e("mediaPlayer row: ${currentIndex} 两个都 播放完成, maxRowCount: $maxRowCount")
+                    if (currentIndex < maxRowCount - 1) {
+                        currentIndex++
+                        Tools.log_e("currentIndex = ${currentIndex}")
+                        playAudioRowByRow(listDragAdapter1.getItems()[currentIndex].absolutePath,
+                                listDragAdapter2.getItems()[currentIndex].absolutePath)
+                    } else {
+                        /**
+                         * The audios of each row have been played, and the reset flags is performed here.
+                         */
+
+                        isPlayingOnTrack1 = false
+                        isPlayingOnTrack2 = false
+                        isPlayedAlready1 = false
+                        isPlayedAlready2 = false
+                        currentIndex = 0
+
+                        initPlayers()
+                        Tools.log_e("=============================================")
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            log_e("e: $e")
+        }
+
+        return playersList
     }
 
     private fun swapPlayingFlag(trackNum: Int, isPlaying: Boolean) {
@@ -304,32 +372,6 @@ class FragmentNewSoundscape : Fragment() {
             playButton.setImageResource(R.drawable.ic_pause)
         } else {
             playButton.setImageResource(R.drawable.ic_play_arrow)
-        }
-    }
-
-    var y = 0
-    private fun playSound4FileList(fileList: String) {
-        try {
-            val mPlayerT = MediaPlayer()
-            mPlayerT.setDataSource(context, Uri.parse(fileList))
-            mPlayerT.prepare();
-            mPlayerT.setVolume(1f, 1f);
-            mPlayerT.isLooping = false;
-
-            mPlayerT.setOnCompletionListener {
-                Tools.log_e("mediaPlayer $fileList 播放完成")
-
-                mPlayerT.stop();
-                if (y < audioCardsListOnTrack2.size - 1) {
-                    y++
-                    Tools.log_e("y = ${y}")
-                    playSound4FileList(audioCardsListOnTrack2[y].absolutePath)
-                } else y = 0;
-            }
-
-            mPlayerT.start()
-        } catch (e: Exception) {
-            log_e("e: ${e.toString()}")
         }
     }
 

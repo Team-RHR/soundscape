@@ -5,127 +5,165 @@
     android:layout_width="match_parent"
     android:clickable="true"
     android:focusable="true"
-    android:layout_height="120dp">
+    android:layout_height="wrap_content">
+
 
     <android.support.v7.widget.CardView
-        android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-        app:cardBackgroundColor="@color/deep_purple_400"
-        app:cardCornerRadius="6dp"
-        app:cardElevation="3dp">
+        android:layout_margin="@dimen/spacing_medium"
+        app:cardBackgroundColor="@color/colorPrimary"
+        app:cardCornerRadius="2dp"
+        app:cardElevation="2dp">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/card_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="@dimen/spacing_middle"
+                    android:text="Here is the title "
+                    android:maxLines="2"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="@android:color/white" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="@color/grey_40" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_middle">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/card_title"
-                        android:layout_weight="1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:textSize="13sp"
-                        android:maxLines="3"
-                        android:text="Here is the audio name,Here is the audio name"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
-                        android:textColor="@android:color/white" />
-
-                    <ImageView
-                        android:id="@+id/card_logo"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_gravity="end|right"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_track_changes" />
-
-                </LinearLayout>
-
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <View
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/spacing_middle" />
+                    android:layout_width="@dimen/spacing_middle"
+                    android:layout_height="wrap_content" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/card_time"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_weight="1"
+                    android:text="Time: 0:15"
+                    android:textSize="12dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@android:color/white" />
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                <ImageButton
+                    android:id="@+id/iv_move"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/spacing_middle"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/ic_reoder" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Volume"
-                            android:textSize="12sp"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                            android:textColor="@color/grey_10" />
-
-                        <TextView
-                            android:id="@+id/card_volume"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="monospace"
-                            android:text="55/100"
-                            android:textSize="12sp"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                            android:textColor="@android:color/white" />
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="@dimen/spacing_smlarge"
-                        android:layout_height="0dp" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/cvv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Time"
-                            android:textSize="12sp"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                            android:textColor="@color/grey_10" />
-
-                        <TextView
-                            android:id="@+id/card_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="monospace"
-                            android:text="3:24"
-                            android:textSize="12sp"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                            android:textColor="@android:color/white" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/spacing_middle" />
             </LinearLayout>
 
-        </RelativeLayout>
-
+        </LinearLayout>
     </android.support.v7.widget.CardView>
+
+
+
+    <!--<android.support.v7.widget.CardView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="@dimen/spacing_medium"-->
+        <!--android:layout_marginLeft="@dimen/spacing_middle"-->
+        <!--android:layout_marginRight="@dimen/spacing_middle"-->
+        <!--android:layout_marginTop="@dimen/spacing_medium"-->
+        <!--android:visibility="visible"-->
+        <!--app:cardBackgroundColor="@color/blue_700"-->
+        <!--app:cardCornerRadius="2dp"-->
+        <!--app:cardElevation="2dp">-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical">-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/card_title"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="@dimen/spacing_large"-->
+                <!--android:layout_marginRight="@dimen/spacing_large"-->
+                <!--android:layout_marginTop="@dimen/spacing_middle"-->
+                <!--android:layout_marginBottom="@dimen/spacing_medium"-->
+                <!--android:text="Here is the title"-->
+                <!--android:maxLines="1"-->
+                <!--android:textColor="@android:color/white" />-->
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="@dimen/spacing_xlarge"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/card_time"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_weight="5"-->
+                    <!--android:layout_height="@dimen/spacing_xlarge"-->
+                    <!--android:gravity="left|center_vertical"-->
+                    <!--android:layout_marginBottom="@dimen/spacing_large"-->
+                    <!--android:layout_marginLeft="@dimen/spacing_large"-->
+                    <!--android:text="Time: 0:15 "-->
+                    <!--android:textColor="@color/grey_10" />-->
+
+                <!--<ImageButton-->
+                    <!--android:id="@+id/bt_move"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:layout_height="@dimen/spacing_xlarge"-->
+                    <!--android:background="@android:color/transparent"-->
+                    <!--app:srcCompat="@drawable/ic_reoder" />-->
+
+            <!--</LinearLayout>-->
+
+
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<Button-->
+                    <!--android:id="@+id/btnListenNow"-->
+                    <!--style="@style/Button.Accent.Borderless.WhiteText"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:gravity="center"-->
+                    <!--android:paddingLeft="@dimen/spacing_large"-->
+                    <!--android:text="LISTEN NOW" />-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/card_logo"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:scaleType="centerCrop"-->
+                    <!--android:src="@drawable/ic_track_changes" />-->
+
+            <!--</LinearLayout>-->
+
+        <!--</LinearLayout>-->
+    <!--</android.support.v7.widget.CardView>-->
+
+
+
 
 </RelativeLayout>

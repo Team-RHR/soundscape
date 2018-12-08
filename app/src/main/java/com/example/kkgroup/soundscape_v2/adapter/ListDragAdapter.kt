@@ -9,8 +9,11 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import com.example.kkgroup.soundscape_v2.R
+import com.example.kkgroup.soundscape_v2.Tools.AudioUtils
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.widget.ItemTouchHelperAdapter
 import com.example.kkgroup.soundscape_v2.widget.ItemTouchHelperViewHolder
@@ -68,7 +71,9 @@ class ListDragAdapter(private val ctx: Context,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.title.text = items[position].name
-        holder.lyt_parent.setOnTouchListener { v, event ->
+       //  holder.time.text = "Time: " + AudioUtils.milliSecondsToTimer(items[position].))
+
+        holder.reorder.setOnTouchListener { v, event ->
             if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
                 itemTouchHelper?.startDrag(holder)
             }
@@ -83,8 +88,8 @@ class ListDragAdapter(private val ctx: Context,
     inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v), ItemTouchHelperViewHolder {
 
         var title: TextView = v.findViewById(R.id.card_title)
-        var volume: TextView = v.findViewById(R.id.card_volume)
         var time: TextView = v.findViewById(R.id.card_time)
+        var reorder: ImageButton = v.findViewById(R.id.iv_move)
         var lyt_parent: View = v.findViewById(R.id.lyt_parent)
 
         init {
@@ -95,7 +100,7 @@ class ListDragAdapter(private val ctx: Context,
         }
 
         override fun onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY)
+            itemView.setBackgroundColor(ctx.resources.getColor(R.color.grey_10))
         }
 
         override fun onItemClear() {
