@@ -16,6 +16,7 @@ class SearchItemAdapter(val ctx: Context,
                         val animation_type: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var mOnItemClickListener: OnItemClickListener? = null
+    private var mOnAddToTrackListener: OnAddToTrackListener? = null
     private var lastPosition = -1
     private var on_attach = true
 
@@ -23,16 +24,24 @@ class SearchItemAdapter(val ctx: Context,
         fun onItemClick(view: View, obj: SearchApiModel, position: Int)
     }
 
+    interface OnAddToTrackListener {
+        fun onAddToTrack(view: View, obj: SearchApiModel, position: Int)
+    }
+
     fun setOnItemClickListener(mItemClickListener: OnItemClickListener) {
         this.mOnItemClickListener = mItemClickListener
     }
 
+    fun setOnAddToTrackListener(mOnAddToTrackListener: OnAddToTrackListener) {
+        this.mOnAddToTrackListener = mOnAddToTrackListener
+    }
+
     inner class OriginalViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        internal var image: ImageView = v.findViewById(R.id.image)
+        internal var playBtn: ImageView = v.findViewById(R.id.iv_play)
         internal var name: TextView = v.findViewById(R.id.name)
-        internal var duration: TextView = v.findViewById(R.id.duration)
+        internal var category: TextView = v.findViewById(R.id.tv_category)
         internal var lyt_parent: View = v.findViewById(R.id.lyt_parent)
-        internal var iv_more: ImageView = v.findViewById(R.id.iv_more)
+        internal var addToTrackBtn: ImageView = v.findViewById(R.id.iv_add_to_track)
 
     }
 
@@ -47,11 +56,13 @@ class SearchItemAdapter(val ctx: Context,
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is OriginalViewHolder) {
             holder.name.text = items[position].title
-            holder.duration.text = ""
+            holder.category.text = items[position].category
             holder.lyt_parent.setOnClickListener { view ->
-                if (mOnItemClickListener != null) {
-                    mOnItemClickListener!!.onItemClick(view, items[position], position)
-                }
+                mOnItemClickListener?.onItemClick(view, items[position], position)
+
+            }
+            holder.addToTrackBtn.setOnClickListener { view ->
+                mOnAddToTrackListener?.onAddToTrack(view, items[position], position)
             }
         }
         setAnimation(holder.itemView, position)

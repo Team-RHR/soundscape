@@ -16,6 +16,7 @@ import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.Tools.Tools.log_e
 import com.example.kkgroup.soundscape_v2.activity.PlayActivity
+import com.example.kkgroup.soundscape_v2.activity.SearchActivity
 import com.example.kkgroup.soundscape_v2.adapter.ListDragAdapter
 import com.example.kkgroup.soundscape_v2.widget.ItemTouchHelperCallback
 import org.jetbrains.anko.support.v4.startActivity
@@ -179,6 +180,25 @@ class FragmentNewSoundscape : Fragment() {
                     audioCardsListOnTrack2.add(file)
                     listDragAdapter2.notifyDataSetChanged()
                     log_e("2 添加了一个 ${file.absolutePath}")
+                    initPlayers()
+                }
+            }
+        })
+
+        SearchActivity.setMyAddToTrackListener(object : SearchActivity.addToTrackListener {
+            override fun addToTrack(trackNum: Int, file: File) {
+                /**
+                 * 在这里每次添加一个就要刷新一遍initPlayers()
+                 */
+                if (trackNum == 1) {
+                    audioCardsListOnTrack1.add(file)
+                    listDragAdapter1.notifyDataSetChanged()
+                    log_e("1 添加了一个 from SearchActivity ${file.absolutePath}")
+                    initPlayers()
+                } else {
+                    audioCardsListOnTrack2.add(file)
+                    listDragAdapter2.notifyDataSetChanged()
+                    log_e("2 添加了一个 from SearchActivity ${file.absolutePath}")
                     initPlayers()
                 }
             }

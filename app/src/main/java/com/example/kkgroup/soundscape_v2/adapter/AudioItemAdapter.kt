@@ -4,11 +4,11 @@ import android.content.Context
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.example.kkgroup.soundscape_v2.Model.SearchApiModel
 
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.widget.ItemAnimation
@@ -21,6 +21,7 @@ class AudioItemAdapter(
         val animation_type: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var mOnItemClickListener: OnItemClickListener? = null
+    private var mOnAddToTrackListener: OnAddToTrackListener? = null
     private var lastPosition = -1
     private var on_attach = true
 
@@ -28,26 +29,24 @@ class AudioItemAdapter(
         fun onItemClick(view: View, obj: File, position: Int)
     }
 
-    interface OnMoreButtonClickListener {
-        fun onItemClick(view: View, obj: File, menuItem: MenuItem)
+    interface OnAddToTrackListener {
+        fun onItemClick(view: View, obj: File, position: Int)
     }
 
     fun setOnItemClickListener(mItemClickListener: OnItemClickListener) {
         this.mOnItemClickListener = mItemClickListener
     }
 
-    private var onMoreButtonClickListener: OnMoreButtonClickListener? = null
-
-    fun setOnMoreButtonClickListener(onMoreButtonClickListener: OnMoreButtonClickListener) {
-        this.onMoreButtonClickListener = onMoreButtonClickListener
+    fun setOnAddToTrackListener(mOnAddToTrackListener: OnAddToTrackListener) {
+        this.mOnAddToTrackListener = mOnAddToTrackListener
     }
 
     inner class OriginalViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        internal var image: ImageView = v.findViewById(R.id.image)
+        internal var playBtn: ImageView = v.findViewById(R.id.iv_play)
         internal var name: TextView = v.findViewById(R.id.name)
-        internal var duration: TextView = v.findViewById(R.id.duration)
+        internal var category: TextView = v.findViewById(R.id.tv_category)
         internal var lyt_parent: View = v.findViewById(R.id.lyt_parent)
-        internal var iv_more: ImageView = v.findViewById(R.id.iv_more)
+        internal var addToTrackBtn: ImageView = v.findViewById(R.id.iv_add_to_track)
 
     }
 
@@ -62,32 +61,19 @@ class AudioItemAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is OriginalViewHolder) {
             holder.name.text = items[position].name
-            holder.duration.text = ""
+            holder.category.text = ""
 
             holder.lyt_parent.setOnClickListener { view ->
                 mOnItemClickListener?.onItemClick(view, items[position], position)
             }
 
-            holder.iv_more.setOnClickListener { view ->
-                onMoreButtonClickListener?.let {
-                    onMoreButtonClick(view, items[position])
-                }
+            holder.addToTrackBtn.setOnClickListener { view ->
+                mOnAddToTrackListener?.onItemClick(view, items[position], position)
             }
 
         }
         setAnimation(holder.itemView, position)
     }
-
-    private fun onMoreButtonClick(view: View, file: File) {
-        val popupMenu = PopupMenu(ctx, view)
-        popupMenu.setOnMenuItemClickListener { item ->
-            onMoreButtonClickListener?.onItemClick(view, file, item)
-            true
-        }
-        popupMenu.inflate(R.menu.menu_audio_more)
-        popupMenu.show()
-    }
-
 
     override fun getItemCount(): Int {
         return items.size

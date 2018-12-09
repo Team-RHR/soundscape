@@ -106,20 +106,20 @@ class PlayActivity : AppCompatActivity() {
         return "${musicTime / 60}:${musicTime % 60}"
     }
     /**
-     * Play button click event plays a song and changes button to pause image
-     * pauses a song and changes button to play image
+     * Play button click event plays a song and changes button to pause playBtn
+     * pauses a song and changes button to play playBtn
      */
     private fun buttonPlayerAction() {
         bt_play.setOnClickListener {
             // check for already playing
             if (mediaPlayer.isPlaying) {
                 mediaPlayer.pause()
-                // Changing button image to play button
+                // Changing button playBtn to play button
                 bt_play.setImageResource(R.drawable.ic_play_arrow)
             } else {
                 // Resume song
                 mediaPlayer.start()
-                // Changing button image to pause button
+                // Changing button playBtn to pause button
                 bt_play.setImageResource(R.drawable.ic_pause)
                 // Updating progress bar
                 mHandler.post(mUpdateTimeTask)

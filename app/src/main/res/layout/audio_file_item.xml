@@ -18,77 +18,83 @@
             android:layout_width="@dimen/spacing_large"
             android:layout_height="0dp" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:tint="@color/grey_40"
-                app:srcCompat="@drawable/shape_circle" />
-
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:padding="@dimen/spacing_middle"
-                app:srcCompat="@drawable/ic_file" />
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="@dimen/spacing_large"
-            android:layout_height="0dp" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/spacing_middle"
-            android:paddingTop="@dimen/spacing_middle">
-
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Audio 01"
-                android:maxLines="1"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/grey_90" />
-
-            <TextView
-                android:id="@+id/duration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_small"
-                android:maxLines="2"
-                android:text="Metadata is here, If we have"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="@color/grey_40" />
-
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/iv_play"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="@dimen/spacing_large"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:scaleType="centerCrop"
+            android:tint="@color/colorPrimary"
+            android:src="@drawable/ic_play_arrow" />
 
         <View
             android:layout_width="@dimen/spacing_large"
             android:layout_height="0dp" />
 
         <RelativeLayout
-            android:layout_width="@dimen/spacing_xlarge"
-            android:layout_height="@dimen/spacing_xlarge">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/iv_more"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_more"
-                android:tint="@color/grey_60" />
-        </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-        <View
-            android:layout_width="@dimen/spacing_large"
-            android:layout_height="0dp" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Audio Name is here"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                        android:textColor="@color/grey_90" />
+
+                    <TextView
+                        android:id="@+id/tv_category"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="Duration: 3:35"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        android:textColor="@color/grey_40" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="@dimen/spacing_large"
+                    android:layout_height="0dp" />
+
+                <ImageButton
+                    android:id="@+id/iv_add_to_track"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:tint="@color/grey_60"
+                    app:srcCompat="@drawable/ic_playlist_add" />
+
+                <View
+                    android:layout_width="@dimen/spacing_large"
+                    android:layout_height="0dp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_alignParentBottom="true"
+                android:background="@color/grey_20" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 

@@ -8,11 +8,12 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import com.example.kkgroup.soundscape_v2.R
+import com.example.kkgroup.soundscape_v2.R.id.fabBack
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.activity.PlayActivity
 import com.example.kkgroup.soundscape_v2.adapter.AudioItemAdapter
@@ -35,14 +36,14 @@ class FragmentLibraryAudioList : Fragment() {
         }
 
         private var myAddToTrackListener: addToTrackListener? = null
-        fun setMyAddToTrackListener(myAddToTrackListener: addToTrackListener){
+        fun setMyAddToTrackListener(myAddToTrackListener: addToTrackListener) {
             this.myAddToTrackListener = myAddToTrackListener
         }
 
     }
 
-    interface addToTrackListener{
-        fun addToTrack(trackNum:Int, file: File)
+    interface addToTrackListener {
+        fun addToTrack(trackNum: Int, file: File)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -74,8 +75,12 @@ class FragmentLibraryAudioList : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
 
-        val audioFilesByCategory = Tools.getRemoteAudioFiles(
-                Tools.getDownloadedAudioByCategoryPath(categoryName))
+        val audioFilesByCategory = if (categoryName == "My Recordings") {
+            Tools.getMyRecordingsFiles(Tools.getMyRecordingPath())
+        } else {
+            Tools.getRemoteAudioFiles(
+                    Tools.getDownloadedAudioByCategoryPath(categoryName))
+        }
 
         //set data and list adapter
         mAudioItemAdapter = AudioItemAdapter(context!!, audioFilesByCategory, ItemAnimation.FADE_IN)
@@ -88,40 +93,26 @@ class FragmentLibraryAudioList : Fragment() {
             }
         })
 
-        mAudioItemAdapter.setOnMoreButtonClickListener(object : AudioItemAdapter.OnMoreButtonClickListener {
-            override fun onItemClick(view: View, file: File, menuItem: MenuItem) {
-                when(menuItem.itemId) {
-                    R.id.action_play -> {
-                        startActivity<PlayActivity>("obj" to file)
-                    }
-
-                    R.id.action_add_to_track -> {
-                        Tools.toastShow(context!!, " add to track")
-
-                        showSingleChoiceDialog(file)
-                    }
-
-                    R.id.action_delete -> {
-                        Tools.toastShow(context!!, "still working on it ")
-                    }
-                }
+        mAudioItemAdapter.setOnAddToTrackListener(object : AudioItemAdapter.OnAddToTrackListener {
+            override fun onItemClick(view: View, file: File, position: Int) {
+                showSingleChoiceDialog(file, view as ImageView)
             }
         })
     }
 
     private var single_choice_selected: String? = null
-
     private val trackNumbers = arrayOf("1", "2")
-
-    private fun showSingleChoiceDialog(file: File) {
+    private val trackStrs = arrayOf("Track 1", "Track 2")
+    private fun showSingleChoiceDialog(file: File, imageView: ImageView) {
         single_choice_selected = trackNumbers[0]
         val builder = AlertDialog.Builder(context!!)
         builder.setTitle("Add this audio to")
-        builder.setSingleChoiceItems(trackNumbers, 0) { dialogInterface, i ->
+        builder.setSingleChoiceItems(trackStrs, 0) { _, i ->
             single_choice_selected = trackNumbers[i]
         }
-        builder.setPositiveButton("OK") { dialogInterface, i ->
+        builder.setPositiveButton("OK") { _, i ->
             myAddToTrackListener?.addToTrack(single_choice_selected!!.toInt(), file)
+            imageView.setImageDrawable(resources.getDrawable(R.drawable.ic_playlist_add_check))
         }
         builder.setNegativeButton("Cancel", null)
         builder.show()

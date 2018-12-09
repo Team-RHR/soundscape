@@ -26,6 +26,7 @@ import com.example.kkgroup.soundscape_v2.fragment.FragmentPreference
 import com.example.kkgroup.soundscape_v2.fragment.FragmentRecording
 import com.example.kkgroup.soundscape_v2.fragment.FragmentRoot
 import org.jetbrains.anko.startActivity
+import kotlin.system.exitProcess
 
 private const val REQUEST_WRITE_EXTERNAL_PERMISSION = 200
 class MainActivity : AppCompatActivity() {
@@ -145,7 +146,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Tools.toastCancel()
                 moveTaskToBack(true)
-                finish()
+                exitProcess(1)
             }
             return true
         }

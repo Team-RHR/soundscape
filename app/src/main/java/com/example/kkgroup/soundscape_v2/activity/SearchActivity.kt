@@ -3,6 +3,7 @@ package com.example.kkgroup.soundscape_v2.activity
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -12,6 +13,7 @@ import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import android.widget.LinearLayout
 import com.example.kkgroup.soundscape_v2.Model.SearchApiModel
 import com.example.kkgroup.soundscape_v2.R
@@ -20,6 +22,7 @@ import com.example.kkgroup.soundscape_v2.Tools.Networking
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.adapter.SearchItemAdapter
 import com.example.kkgroup.soundscape_v2.adapter.SuggestionSearchAdapter
+import com.example.kkgroup.soundscape_v2.fragment.FragmentLibraryAudioList
 import com.example.kkgroup.soundscape_v2.widget.ItemAnimation
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
@@ -34,6 +37,17 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var mSearchItemAdapter: SearchItemAdapter
     private lateinit var lytSuggestion: LinearLayout
     private var searchResultCount = 0
+
+    companion object {
+        private var myAddToTrackListener: SearchActivity.addToTrackListener? = null
+        fun setMyAddToTrackListener(myAddToTrackListener: addToTrackListener) {
+            this.myAddToTrackListener = myAddToTrackListener
+        }
+    }
+
+    interface addToTrackListener {
+        fun addToTrack(trackNum: Int, file: File)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -211,6 +225,36 @@ class SearchActivity : AppCompatActivity() {
                 }
             }
         })
+
+        // add to track button clicked
+        mSearchItemAdapter.setOnAddToTrackListener(object : SearchItemAdapter.OnAddToTrackListener {
+            override fun onAddToTrack(view: View, obj: SearchApiModel, position: Int) {
+
+                if (Tools.getAudioPathByObj(obj) != null) {
+                    Tools.log_e("obj.path: ${Tools.getAudioPathByObj(obj)}")
+                    showSingleChoiceDialog(File(Tools.getAudioPathByObj(obj)), view as ImageView)
+                }
+
+            }
+        })
+    }
+
+    private var single_choice_selected: String? = null
+    private val trackNumbers = arrayOf("1", "2")
+    private val trackStrs = arrayOf("Track 1", "Track 2")
+    private fun showSingleChoiceDialog(file: File, imageView: ImageView) {
+        single_choice_selected = trackNumbers[0]
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Add this audio to")
+        builder.setSingleChoiceItems(trackStrs, 0) { _, i ->
+            single_choice_selected = trackNumbers[i]
+        }
+        builder.setPositiveButton("OK") { _, i ->
+            myAddToTrackListener?.addToTrack(single_choice_selected!!.toInt(), file)
+            imageView.setImageDrawable(resources.getDrawable(R.drawable.ic_playlist_add_check))
+        }
+        builder.setNegativeButton("Cancel", null)
+        builder.show()
     }
 
 }

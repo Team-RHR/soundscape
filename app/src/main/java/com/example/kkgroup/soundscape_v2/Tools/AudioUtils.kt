@@ -13,7 +13,7 @@ object AudioUtils {
         var finalTimerString = ""
         var secondsString = ""
 
-        // Convert total duration into time
+        // Convert total category into time
         val hours = (milliseconds / (1000 * 60 * 60)).toInt()
         val minutes = (milliseconds % (1000 * 60 * 60)).toInt() / (1000 * 60)
         val seconds = (milliseconds % (1000 * 60 * 60) % (1000 * 60) / 1000).toInt()
@@ -54,7 +54,7 @@ object AudioUtils {
      * Function to change progress to timer
      *
      * @param progress - totalDuration
-     * returns current duration in milliseconds
+     * returns current category in milliseconds
      */
     fun progressToTimer(progress: Int, totalDuration: Int): Int {
         var totalDuration = totalDuration
@@ -62,7 +62,7 @@ object AudioUtils {
         totalDuration /= 1000
         currentDuration = (progress.toDouble() / MAX_PROGRESS * totalDuration).toInt()
 
-        // return current duration in milliseconds
+        // return current category in milliseconds
         return currentDuration * 1000
     }
 }

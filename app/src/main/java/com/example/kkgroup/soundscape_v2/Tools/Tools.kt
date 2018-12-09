@@ -148,6 +148,17 @@ object Tools {
         return listFiles.toMutableList()
     }
 
+    fun getMyRecordingsFiles(folderPath: String): MutableList<File> {
+
+        val folderPath = File(folderPath)
+        if (!folderPath.exists()) folderPath.mkdirs()
+
+        val listFiles = folderPath.listFiles().filter {
+            it.name.endsWith(".3gp")
+        }
+        return listFiles.toMutableList()
+    }
+
     /**
      * collapse the view, used in search suggestion bar
      */

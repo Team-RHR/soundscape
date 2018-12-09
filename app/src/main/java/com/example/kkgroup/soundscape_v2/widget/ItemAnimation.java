@@ -13,7 +13,7 @@ public class ItemAnimation {
     public static final int RIGHT_LEFT = 4;
     public static final int NONE = 0;
 
-    /* animation duration */
+    /* animation category */
     private static final long DURATION_IN_BOTTOM_UP = 150;
     private static final long DURATION_IN_FADE_ID = 500;
     private static final long DURATION_IN_LEFT_RIGHT = 150;
