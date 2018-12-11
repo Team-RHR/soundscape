@@ -78,8 +78,17 @@ class FragmentLibraryAudioList : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
 
-        val audioFilesByCategory = Tools.getRemoteAudioFiles(
+        var audioFilesByCategory: MutableList<File>
+
+        if (categoryName == "My Recordings") {
+             audioFilesByCategory = Tools.getRemoteAudioFiles(
+                    Tools.getMyRecordingPath())
+        } else {
+         audioFilesByCategory = Tools.getRemoteAudioFiles(
                 Tools.getDownloadedAudioByCategoryPath(categoryName))
+        }
+
+        println(categoryName)
 
         //set data and list adapter
         mAudioItemAdapter = AudioItemAdapter(context!!, audioFilesByCategory, ItemAnimation.FADE_IN)

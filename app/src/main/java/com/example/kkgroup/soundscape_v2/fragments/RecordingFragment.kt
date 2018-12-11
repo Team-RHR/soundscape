@@ -2,17 +2,21 @@ package com.example.kkgroup.soundscape_v2.fragments
 
 
 import android.Manifest
+import android.content.IntentSender
 import android.content.pm.PackageManager
+import android.icu.util.DateInterval
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.Tools.Tools
+import com.google.gson.annotations.Until
 import kotlinx.android.synthetic.main.fragment_recording.*
 import java.io.File
 import java.io.IOException
@@ -25,6 +29,7 @@ class RecordingFragment : Fragment() {
     private var mPlayer: MediaPlayer? = null
     private var audioFile:File? = null
     private var mStartRecording = true
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_recording, container, false)
@@ -39,23 +44,13 @@ class RecordingFragment : Fragment() {
                     Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS), REQUEST_RECORD_AUDIO_PERMISSION)
         }
 
-        recordingBtn.setOnClickListener {
-            onRecord(mStartRecording)
-            if (mStartRecording) {
-                recordingBtn.setImageDrawable(resources.getDrawable(R.drawable.ic_stop))
-            } else {
-                recordingBtn.setImageDrawable(resources.getDrawable(R.drawable.ic_mic))
-            }
-
-            mStartRecording = !mStartRecording
-        }
     }
 
     private fun onRecord(start: Boolean) = if (start) {
         startRecording()
     } else {
         stopRecording()
-        storageTV.text = audioFile?.absolutePath
+        //storageTV.text = audioFile?.absolutePath
     }
 
     private fun startRecording() {

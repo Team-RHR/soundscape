@@ -40,4 +40,5 @@ dependencies {
     implementation 'com.balysv:material-ripple:1.0.2'                   // ripple effect
     implementation 'org.jetbrains.anko:anko:0.10.5'                     // anko
     implementation 'com.github.Jay-Goo:RangeSeekBar:v2.0.4'             // vertical seekbar
+  //  implementation 'me.zhanghai.android.materialprogressbar:library:1.6.0' // Timer progress bar
 }

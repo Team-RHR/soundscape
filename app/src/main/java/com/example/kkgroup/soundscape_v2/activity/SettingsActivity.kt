@@ -171,6 +171,7 @@ class SettingsActivity : AppCompatActivity() {
         builder.setNeutralButton(getString(R.string.cancel)){ _, _ ->
 
         }
+
         val dialog: AlertDialog = builder.create()
         dialog.show()
 

@@ -24,7 +24,7 @@
     <string name="change_lang">Vaihda kieltä</string>
     <string name="change_lang_tag">us</string>
     <string name="general_settings"><u>Yleiset asetukset</u></string>
-    <string name="night_mode"><u>Yö tila</u></string>
+    <string name="night_mode"><u>Yötila</u></string>
     <string name="language"><u>Kieli</u></string>
     <string name="delete_settings"><u>Tiedostojen hallinta</u></string>
     <string name="delete_files"><u>Poista tiedostoja</u></string>
@@ -43,4 +43,9 @@
     <string name="choose_language"><u>Valitse kieli: </u></string>
     <string name="language_confirmation"><u>Kieli vaihdettu </u></string>
     <string name="logout_confirmation"><u>Haluatko varmasti kirjautua ulos?</u></string>
+    <string name="record_delete">Nauhoitus poistettui!</string>
+    <string name="record_save">Nauhoitus tallennettu!</string>
+    <string name="set_name">Nimi:</string>
+    <string name="delete">Poista</string>
+    <string name="save">Tallenna</string>
 </resources>
