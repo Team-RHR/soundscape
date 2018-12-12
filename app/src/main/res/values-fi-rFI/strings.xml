@@ -48,4 +48,8 @@
     <string name="set_name">Nimi:</string>
     <string name="delete">Poista</string>
     <string name="save">Tallenna</string>
+    <string name="recoring">Nauhoita</string>
+    <string name="Library">Äänet</string>
+    <string name="new_soundscape">Uusi äänimaisema</string>
+    <string name="preference">Asetukset</string>
 </resources>

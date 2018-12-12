@@ -38,7 +38,7 @@ class FragmentRecording : Fragment() {
     inner class MyCounter(millisInFuture: Long, countDownInterval: Long) : CountDownTimer(millisInFuture, countDownInterval) {
 
         override fun onFinish() {
-            textView_Countdown.text = "00:00"
+            textView_Countdown.text = getString(R.string.time00)
             fab_start.setImageDrawable(resources.getDrawable(R.drawable.ic_mic))
         }
 
@@ -72,28 +72,7 @@ class FragmentRecording : Fragment() {
         }
 
         val timer = MyCounter(30000, 1000)
-        //fab_pause.setOnClickListener{ timer.cancel() }
         initListeners(timer)
-
-        /* recordingBtn.setOnClickListener {
-             onRecord(mStartRecording)
-             if (mStartRecording) {
-                 recordingBtn.setImageDrawable(resources.getDrawable(R.drawable.ic_stop))
-             } else {
-                 recordingBtn.setImageDrawable(resources.getDrawable(R.drawable.ic_mic))
-             }
-
-             mStartRecording = !mStartRecording
-         }
-
-         pauseButton.setOnClickListener() {
-         pauseRecording()
-         }
-
-         unPauseButton.setOnClickListener() {
-         unPauseRecording()
-         }
-         */
     }
 
     private fun initListeners(timer: MyCounter) {
@@ -207,5 +186,4 @@ class FragmentRecording : Fragment() {
         dialog1.window!!.attributes = lp
 
     }
-
 }

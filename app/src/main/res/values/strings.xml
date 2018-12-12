@@ -49,5 +49,8 @@
     <string name="set_name">Set name:</string>
     <string name="delete">Delete</string>
     <string name="save">Save</string>
-
+    <string name="recoring">Recording</string>
+    <string name="Library">Library</string>
+    <string name="new_soundscape">New Soundscape</string>
+    <string name="preference">Preference</string>
 </resources>

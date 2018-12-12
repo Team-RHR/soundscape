@@ -115,10 +115,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupViewPager(viewPager: ViewPager) {
         viewPagerAdapter = MyViewPagerAdapter(supportFragmentManager)
-        viewPagerAdapter.addFragment(FragmentRecording.newInstance(), "Recording")
-        viewPagerAdapter.addFragment(FragmentRoot.newInstance(), "Library")
-        viewPagerAdapter.addFragment(FragmentNewSoundscape.newInstance(), "New Soundscape")
-        viewPagerAdapter.addFragment(FragmentPreference.newInstance(), "Preference")
+        viewPagerAdapter.addFragment(FragmentRecording.newInstance(), getString(R.string.recoring))
+        viewPagerAdapter.addFragment(FragmentRoot.newInstance(), getString(R.string.Library))
+        viewPagerAdapter.addFragment(FragmentNewSoundscape.newInstance(), getString(R.string.new_soundscape))
+        viewPagerAdapter.addFragment(FragmentPreference.newInstance(), getString(R.string.preference))
         viewPager.offscreenPageLimit = 4
         viewPager.adapter = viewPagerAdapter
     }
