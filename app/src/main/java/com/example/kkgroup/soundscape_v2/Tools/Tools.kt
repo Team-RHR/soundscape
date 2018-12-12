@@ -113,6 +113,7 @@ object Tools {
         val r = ctx.resources
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), r.displayMetrics))
     }
+
     // view fade out effect, Prepare the View for the animation
     fun viewFadeOut(v: View) {
         v.alpha = 1.0f
@@ -130,7 +131,7 @@ object Tools {
         val listFiles = folderPath.listFiles().filter {
             // using 3gp for test purpose
             // it.name.endsWith(Tools.audioFormat)
-            it.name.endsWith(".3gp")
+            it.name.endsWith(".3gp") || it.name.endsWith(Tools.audioFormat)
 
         }
         return listFiles.toMutableList()
@@ -154,7 +155,7 @@ object Tools {
         if (!folderPath.exists()) folderPath.mkdirs()
 
         val listFiles = folderPath.listFiles().filter {
-            it.name.endsWith(".3gp")
+            it.name.endsWith(".3gp") || it.name.endsWith(Tools.audioFormat)
         }
         return listFiles.toMutableList()
     }
@@ -266,12 +267,18 @@ object Tools {
         Tools.log_e(obj.toString())
 
         if (obj.category != null) {
-            when (obj.category){
-                "human" -> { folderName = "Human" }
+            when (obj.category) {
+                "human" -> {
+                    folderName = "Human"
+                }
 
-                "machine" -> { folderName = "Machine" }
+                "machine" -> {
+                    folderName = "Machine"
+                }
 
-                "nature" -> { folderName = "Nature" }
+                "nature" -> {
+                    folderName = "Nature"
+                }
             }
         }
 

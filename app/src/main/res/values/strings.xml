@@ -43,5 +43,11 @@
     <string name="choose_language"><u>Choose language: </u></string>
     <string name="language_confirmation"><u>Language set to </u></string>
     <string name="logout_confirmation"><u>Are you sure you want to log out?</u></string>
+    <string name="time00" translatable="false">00:00</string>
+    <string name="record_delete">Recording deleted successfully!</string>
+    <string name="record_save">Recording saved successfully!</string>
+    <string name="set_name">Set name:</string>
+    <string name="delete">Delete</string>
+    <string name="save">Save</string>
 
 </resources>
