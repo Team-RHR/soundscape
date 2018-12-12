@@ -98,13 +98,13 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@+id/bt_repeat"
-                    android:layout_width="?attr/actionBarSize"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:tint="@color/grey_40"
-                    app:srcCompat="@drawable/ic_repeat" />
+                <!--<ImageButton-->
+                    <!--android:id="@+id/bt_repeat"-->
+                    <!--android:layout_width="?attr/actionBarSize"-->
+                    <!--android:layout_height="?attr/actionBarSize"-->
+                    <!--android:background="?attr/selectableItemBackgroundBorderless"-->
+                    <!--android:tint="@color/grey_40"-->
+                    <!--app:srcCompat="@drawable/ic_repeat" />-->
 
                 <android.support.v7.widget.AppCompatSeekBar
                     android:id="@+id/seek_song_progressbar"
@@ -115,13 +115,13 @@
                     android:progressDrawable="@drawable/seek_progress_blue_small"
                     android:thumb="@drawable/seek_thumb_blue" />
 
-                <ImageButton
-                    android:id="@+id/bt_shuffle"
-                    android:layout_width="?attr/actionBarSize"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:tint="@color/grey_40"
-                    app:srcCompat="@drawable/ic_shuffle" />
+                <!--<ImageButton-->
+                    <!--android:id="@+id/bt_shuffle"-->
+                    <!--android:layout_width="?attr/actionBarSize"-->
+                    <!--android:layout_height="?attr/actionBarSize"-->
+                    <!--android:background="?attr/selectableItemBackgroundBorderless"-->
+                    <!--android:tint="@color/grey_40"-->
+                    <!--app:srcCompat="@drawable/ic_shuffle" />-->
 
             </LinearLayout>
 
@@ -156,17 +156,23 @@
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/tv_title"
+            android:layout_marginLeft="@dimen/spacing_mlarge"
+            android:layout_marginRight="@dimen/spacing_mlarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_middle"
             android:text="Title is here"
+            android:maxLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@android:color/white" />
 
         <TextView
+            android:id="@+id/tv_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_medium"
+            android:maxLines="1"
             android:text="Category 01"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:textColor="@color/grey_40" />

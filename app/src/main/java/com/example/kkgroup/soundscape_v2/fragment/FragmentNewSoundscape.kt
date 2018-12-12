@@ -12,6 +12,7 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.kkgroup.soundscape_v2.Model.AudioCardModel
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.Tools.Tools.log_e
@@ -38,12 +39,14 @@ class FragmentNewSoundscape : Fragment() {
     private lateinit var recyclerView1: RecyclerView
     private lateinit var itemTouchHelper1: ItemTouchHelper
     private lateinit var listDragAdapter1: ListDragAdapter
-    private val audioCardsListOnTrack1 = ArrayList<File>()
+    private val audioCardsListOnTrack1 = ArrayList<AudioCardModel>()
 
     private lateinit var recyclerView2: RecyclerView
     private lateinit var itemTouchHelper2: ItemTouchHelper
     private lateinit var listDragAdapter2: ListDragAdapter
-    private val audioCardsListOnTrack2 = ArrayList<File>()
+    private lateinit var itemTouchHelperCallback :ItemTouchHelperCallback
+    private lateinit var itemTouchHelperCallback2 :ItemTouchHelperCallback
+    private val audioCardsListOnTrack2 = ArrayList<AudioCardModel>()
     private var maxRowCount = 0
 
     private var isPlayingOnTrack1 = false
@@ -70,13 +73,25 @@ class FragmentNewSoundscape : Fragment() {
     }
 
     private fun initFakeData() {
-        audioCardsListOnTrack1.add(File("/storage/emulated/0/soundscape/downloads/Nature/A_Suomalaisia_lintuja_15s.mp3"))
-        audioCardsListOnTrack1.add(File("/storage/emulated/0/soundscape/downloads/Machine/Antiikki_auto_käyntiä_30s.mp3"))
+        audioCardsListOnTrack1.add(AudioCardModel(
+                "Nature",
+                File("/storage/emulated/0/soundscape/downloads/Nature/A_Suomalaisia_lintuja_15s.mp3"),
+                R.color.green_700))
+        audioCardsListOnTrack1.add(AudioCardModel(
+                "Machine",
+                File("/storage/emulated/0/soundscape/downloads/Machine/Antiikki_auto_käyntiä_15s.mp3"),
+                R.color.blue_700))
+        audioCardsListOnTrack1.add(AudioCardModel(
+                "Machine",
+                File("/storage/emulated/0/soundscape/downloads/Machine/Machine_signal_15s.mp3"),
+                R.color.blue_700))
+        audioCardsListOnTrack2.add(AudioCardModel(
+                "Human",
+                File("/storage/emulated/0/soundscape/downloads/Human/Humalainen_porukka_15s.mp3"),
+                R.color.teal_700))
+
         // audioCardsListOnTrack1.add(File("/storage/emulated/0/soundscape/downloads/Machine/Metro_ohiajo_30s.mp3"))
-
         // audioCardsListOnTrack2.add(File("/storage/emulated/0/soundscape/downloads/Nature/Hevonen_hirnuu_15s.mp3"))
-        audioCardsListOnTrack2.add(File("/storage/emulated/0/soundscape/downloads/Human/Humalainen_porukka_15s.mp3"))
-
         initPlayers()
     }
 
@@ -99,7 +114,10 @@ class FragmentNewSoundscape : Fragment() {
         listDragAdapter1 = ListDragAdapter(context!!, audioCardsListOnTrack1)
         recyclerView1.adapter = listDragAdapter1
 
-        val itemTouchHelperCallback = ItemTouchHelperCallback(listDragAdapter1)
+        itemTouchHelperCallback = ItemTouchHelperCallback(listDragAdapter1)
+
+        itemTouchHelperCallback.setDraggable(true)
+
         itemTouchHelper1 = ItemTouchHelper(itemTouchHelperCallback)
         listDragAdapter1.setOnItemTouchHelper(itemTouchHelper1)
         itemTouchHelper1.attachToRecyclerView(recyclerView1)
@@ -115,7 +133,10 @@ class FragmentNewSoundscape : Fragment() {
         listDragAdapter2 = ListDragAdapter(context!!, audioCardsListOnTrack2)
         recyclerView2.adapter = listDragAdapter2
 
-        val itemTouchHelperCallback2 = ItemTouchHelperCallback(listDragAdapter2)
+        itemTouchHelperCallback2 = ItemTouchHelperCallback(listDragAdapter2)
+
+        itemTouchHelperCallback2.setDraggable(true)
+
         itemTouchHelper2 = ItemTouchHelper(itemTouchHelperCallback2)
         listDragAdapter2.setOnItemTouchHelper(itemTouchHelper2)
         itemTouchHelper2.attachToRecyclerView(recyclerView2)
@@ -125,14 +146,18 @@ class FragmentNewSoundscape : Fragment() {
     private fun initListeners() {
 
         listDragAdapter1.setOnItemClickListener(object : ListDragAdapter.OnItemClickListener {
-            override fun onItemClick(view: View, file: File, position: Int) {
-                startActivity<PlayActivity>("obj" to file)
+            override fun onItemClick(view: View, audioCardModel: AudioCardModel, position: Int) {
+                startActivity<PlayActivity>("obj" to audioCardModel.file,
+                        "category" to audioCardModel.category,
+                        "title" to audioCardModel.file.name)
             }
         })
 
         listDragAdapter2.setOnItemClickListener(object : ListDragAdapter.OnItemClickListener {
-            override fun onItemClick(view: View, file: File, position: Int) {
-                startActivity<PlayActivity>("obj" to file)
+            override fun onItemClick(view: View, audioCardModel: AudioCardModel, position: Int) {
+                startActivity<PlayActivity>("obj" to audioCardModel.file,
+                        "category" to audioCardModel.category,
+                        "title" to audioCardModel.file.name)
             }
         })
 
@@ -154,51 +179,51 @@ class FragmentNewSoundscape : Fragment() {
         })
 
         listDragAdapter1.setOnItemDeleteListener(object : ListDragAdapter.OnItemDeleteListener {
-            override fun onItemDelete(file: File) {
-                Tools.log_e("listDragAdapter1 被删除: ${file.name}")
+            override fun onItemDelete(audioCardModel: AudioCardModel) {
+                Tools.log_e("listDragAdapter1 被删除: ${audioCardModel.file.name}")
                 initPlayers()
             }
         })
         listDragAdapter2.setOnItemDeleteListener(object : ListDragAdapter.OnItemDeleteListener {
-            override fun onItemDelete(file: File) {
-                Tools.log_e("listDragAdapter2 被删除: ${file.name}")
+            override fun onItemDelete(audioCardModel: AudioCardModel) {
+                Tools.log_e("listDragAdapter2 被删除: ${audioCardModel.file.name}")
                 initPlayers()
             }
         })
 
         FragmentLibraryAudioList.setMyAddToTrackListener(object : FragmentLibraryAudioList.addToTrackListener {
-            override fun addToTrack(trackNum: Int, file: File) {
+            override fun addToTrack(trackNum: Int, audioCardModel: AudioCardModel) {
                 /**
                  * 在这里每次添加一个就要刷新一遍initPlayers()
                  */
                 if (trackNum == 1) {
-                    audioCardsListOnTrack1.add(file)
+                    audioCardsListOnTrack1.add(audioCardModel)
                     listDragAdapter1.notifyDataSetChanged()
-                    log_e("1 添加了一个 ${file.absolutePath}")
+                    log_e("1 添加了一个 ${audioCardModel.file.absolutePath}")
                     initPlayers()
                 } else {
-                    audioCardsListOnTrack2.add(file)
+                    audioCardsListOnTrack2.add(audioCardModel)
                     listDragAdapter2.notifyDataSetChanged()
-                    log_e("2 添加了一个 ${file.absolutePath}")
+                    log_e("2 添加了一个 ${audioCardModel.file.absolutePath}")
                     initPlayers()
                 }
             }
         })
 
         SearchActivity.setMyAddToTrackListener(object : SearchActivity.addToTrackListener {
-            override fun addToTrack(trackNum: Int, file: File) {
+            override fun addToTrack(trackNum: Int, audioCardModel: AudioCardModel) {
                 /**
                  * 在这里每次添加一个就要刷新一遍initPlayers()
                  */
                 if (trackNum == 1) {
-                    audioCardsListOnTrack1.add(file)
+                    audioCardsListOnTrack1.add(audioCardModel)
                     listDragAdapter1.notifyDataSetChanged()
-                    log_e("1 添加了一个 from SearchActivity ${file.absolutePath}")
+                    log_e("1 添加了一个 from SearchActivity ${audioCardModel.file.absolutePath}")
                     initPlayers()
                 } else {
-                    audioCardsListOnTrack2.add(file)
+                    audioCardsListOnTrack2.add(audioCardModel)
                     listDragAdapter2.notifyDataSetChanged()
-                    log_e("2 添加了一个 from SearchActivity ${file.absolutePath}")
+                    log_e("2 添加了一个 from SearchActivity ${audioCardModel.file.absolutePath}")
                     initPlayers()
                 }
             }
@@ -217,9 +242,17 @@ class FragmentNewSoundscape : Fragment() {
                     if (it.isPlaying) {
                         it.pause()
                         isPlayingOnTrack1 = false
+
+                        animationControl(recyclerView1, false)
+                        itemTouchHelperCallback.setDraggable(true)
+                        itemTouchHelperCallback2.setDraggable(true)
                     } else {
                         it.start()
                         isPlayingOnTrack1 = true
+
+                        animationControl(recyclerView1, true)
+                        itemTouchHelperCallback.setDraggable(false)
+                        itemTouchHelperCallback2.setDraggable(false)
                     }
                 }
             }
@@ -229,13 +262,20 @@ class FragmentNewSoundscape : Fragment() {
                     if (it.isPlaying) {
                         it.pause()
                         isPlayingOnTrack2 = false
+
+                        animationControl(recyclerView2, false)
+                        itemTouchHelperCallback.setDraggable(true)
+                        itemTouchHelperCallback2.setDraggable(true)
                     } else {
                         it.start()
                         isPlayingOnTrack2 = true
+
+                        animationControl(recyclerView2, true)
+                        itemTouchHelperCallback.setDraggable(false)
+                        itemTouchHelperCallback2.setDraggable(false)
                     }
                 }
             }
-
 
             if (isPlayingOnTrack1 || isPlayingOnTrack2) {
                 playButton.setImageResource(R.drawable.ic_pause)
@@ -245,7 +285,36 @@ class FragmentNewSoundscape : Fragment() {
         }
     }
 
+    private fun animationControl(recyclerView: RecyclerView, appear: Boolean) {
+        if (appear) {
+            recyclerView.layoutManager?.let {
+                it.getChildAt(currentIndex)?.let { it ->
+                    val holder = recyclerView.getChildViewHolder(it) as ListDragAdapter.ViewHolder
+                    holder.lyt_playing.visibility = View.VISIBLE
+                    holder.lyt_playing.alpha = 1.0f
+                }
+            }
+        } else {
+            recyclerView.layoutManager?.let {
+                it.getChildAt(currentIndex)?.let {
+                    val holder = recyclerView.getChildViewHolder(it)
+                            as ListDragAdapter.ViewHolder
+                    holder.lyt_playing.visibility = View.GONE
+                    holder.lyt_playing.alpha = 0f
+                }
+            }
+        }
+
+    }
+
     private fun initPlayers() {
+
+        isPlayingOnTrack1 = false
+        isPlayingOnTrack2 = false
+        isPlayedAlready1 = false
+        isPlayedAlready2 = false
+        currentIndex = 0
+
         playerList.clear()
         maxRowCount = Math.max(listDragAdapter1.getItems().size, listDragAdapter2.getItems().size)
 
@@ -295,10 +364,15 @@ class FragmentNewSoundscape : Fragment() {
 
                     playerOnTrack1 = player1
                     playButton.setImageResource(R.drawable.ic_pause)
+
+                    animationControl(recyclerView1, true)
                 }
 
                 player1.setOnCompletionListener {
-                    Tools.log_e("mediaPlayer $absolutePath1 播放完成")
+                    Tools.log_e("mediaPlayer $absolutePath1 播放完成, index: ${currentIndex}")
+
+                    animationControl(recyclerView1, false)
+
                     swapPlayingFlag(AUDIO_TRACK_ONE, false)
 
                     isPlayedAlready1 = true
@@ -314,11 +388,6 @@ class FragmentNewSoundscape : Fragment() {
                             /**
                              * The audios of each row have been played, and the reset flags is performed here.
                              */
-                            isPlayingOnTrack1 = false
-                            isPlayingOnTrack2 = false
-                            isPlayedAlready1 = false
-                            isPlayedAlready2 = false
-                            currentIndex = 0
 
                             initPlayers()
                             Tools.log_e("=============================================")
@@ -349,10 +418,15 @@ class FragmentNewSoundscape : Fragment() {
 
                     playerOnTrack2 = player2
                     isPlayedAlready2 = false
+
+                    animationControl(recyclerView2, true)
                 }
 
                 player2.setOnCompletionListener {
-                    Tools.log_e("mediaPlayer $absolutePath2 播放完成")
+
+                    Tools.log_e("mediaPlayer $absolutePath2 播放完成, index: ${currentIndex}")
+
+                    animationControl(recyclerView2, false)
                     swapPlayingFlag(AUDIO_TRACK_TWO, false)
 
                     isPlayedAlready2 = true
@@ -390,20 +464,17 @@ class FragmentNewSoundscape : Fragment() {
 
     private fun getAbsolutePath(trackNum: Int, currentIndex: Int): String? {
 
-        Tools.log_e("currentIndex: $currentIndex --> size: ${listDragAdapter2.getItems().size}")
-        Tools.log_e("currentIndex: $currentIndex --> items: ${listDragAdapter2.getItems()}")
-
         if (trackNum == AUDIO_TRACK_ONE) {
             return if (currentIndex >= listDragAdapter1.getItems().size) {
                 null
             } else {
-                listDragAdapter1.getItems()[currentIndex].absolutePath
+                listDragAdapter1.getItems()[currentIndex].file.absolutePath
             }
         } else {
             return if (currentIndex >= listDragAdapter2.getItems().size) {
                 null
             } else {
-                listDragAdapter2.getItems()[currentIndex].absolutePath
+                listDragAdapter2.getItems()[currentIndex].file.absolutePath
             }
         }
     }

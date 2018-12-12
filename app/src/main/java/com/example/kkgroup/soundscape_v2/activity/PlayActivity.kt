@@ -38,6 +38,8 @@ class PlayActivity : AppCompatActivity() {
     private val mHandler = Handler()
     private var currentPos: Int = 0
     private lateinit var targetFile: File
+    private lateinit var category: String
+    private lateinit var title: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,12 +47,18 @@ class PlayActivity : AppCompatActivity() {
         LocaleManager(this).getLocale()
         setContentView(R.layout.activity_play)
         targetFile = intent.extras["obj"] as File
+        category = intent.extras["category"] as String
+        title = intent.extras["title"] as String
         initToolbar()
         initComponents()
         initListeners()
     }
 
     private fun initComponents() {
+
+        tv_title.text = title
+        tv_category.text = category
+
         parent_view = findViewById(R.id.parent_view)
         seek_song_progressbar = findViewById(R.id.seek_song_progressbar)
         bt_play = findViewById(R.id.bt_play)
@@ -128,8 +136,8 @@ class PlayActivity : AppCompatActivity() {
         }
     }
     private fun initListeners() {
-        bt_repeat.setOnClickListener { Tools.toastShow(this, getString(R.string.toast_repeat_clicked)) }
-        bt_shuffle.setOnClickListener { Tools.toastShow(this, getString(R.string.toast_shuffle_clicked)) }
+//        bt_repeat.setOnClickListener { Tools.toastShow(this, getString(R.string.toast_repeat_clicked)) }
+//        bt_shuffle.setOnClickListener { Tools.toastShow(this, getString(R.string.toast_shuffle_clicked)) }
         bt_prev.setOnClickListener {
             if (mediaPlayer.isPlaying) {
                 mediaPlayer.pause()

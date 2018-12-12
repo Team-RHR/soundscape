@@ -15,6 +15,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.LinearLayout
+import com.example.kkgroup.soundscape_v2.Model.AudioCardModel
 import com.example.kkgroup.soundscape_v2.Model.SearchApiModel
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.Tools.LocaleManager
@@ -22,7 +23,6 @@ import com.example.kkgroup.soundscape_v2.Tools.Networking
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.adapter.SearchItemAdapter
 import com.example.kkgroup.soundscape_v2.adapter.SuggestionSearchAdapter
-import com.example.kkgroup.soundscape_v2.fragment.FragmentLibraryAudioList
 import com.example.kkgroup.soundscape_v2.widget.ItemAnimation
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
@@ -46,7 +46,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     interface addToTrackListener {
-        fun addToTrack(trackNum: Int, file: File)
+        fun addToTrack(trackNum: Int, audioCardModel: AudioCardModel)
     }
 
 
@@ -221,7 +221,9 @@ class SearchActivity : AppCompatActivity() {
         mSearchItemAdapter.setOnItemClickListener(object : SearchItemAdapter.OnItemClickListener {
             override fun onItemClick(view: View, obj: SearchApiModel, position: Int) {
                 Tools.getAudioPathByObj(obj)?.let {
-                    startActivity<PlayActivity>("obj" to File(it))
+                    startActivity<PlayActivity>("obj" to File(it),
+                            "category" to obj.category,
+                            "title" to obj.title)
                 }
             }
         })
@@ -231,8 +233,8 @@ class SearchActivity : AppCompatActivity() {
             override fun onAddToTrack(view: View, obj: SearchApiModel, position: Int) {
 
                 if (Tools.getAudioPathByObj(obj) != null) {
-                    Tools.log_e("obj.path: ${Tools.getAudioPathByObj(obj)}")
-                    showSingleChoiceDialog(File(Tools.getAudioPathByObj(obj)), view as ImageView)
+                    Tools.log_e("obj.category: ${obj.category}")
+                    showSingleChoiceDialog(obj, view as ImageView)
                 }
 
             }
@@ -242,7 +244,7 @@ class SearchActivity : AppCompatActivity() {
     private var single_choice_selected: String? = null
     private val trackNumbers = arrayOf("1", "2")
     private val trackStrs = arrayOf("Track 1", "Track 2")
-    private fun showSingleChoiceDialog(file: File, imageView: ImageView) {
+    private fun showSingleChoiceDialog(searchApiModel: SearchApiModel, imageView: ImageView) {
         single_choice_selected = trackNumbers[0]
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Add this audio to")
@@ -250,7 +252,15 @@ class SearchActivity : AppCompatActivity() {
             single_choice_selected = trackNumbers[i]
         }
         builder.setPositiveButton("OK") { _, i ->
-            myAddToTrackListener?.addToTrack(single_choice_selected!!.toInt(), file)
+            var bgColor: Int
+            when(searchApiModel.category){
+                "human" -> { bgColor = R.color.teal_700 }
+                "machine" -> { bgColor = R.color.blue_700 }
+                "nature" -> { bgColor = R.color.green_700 }
+                else -> { bgColor = R.color.deep_orange_500 }
+            }
+            val audioCardModel = AudioCardModel(searchApiModel.category.toString(), File(Tools.getAudioPathByObj(searchApiModel)), bgColor)
+            myAddToTrackListener?.addToTrack(single_choice_selected!!.toInt(), audioCardModel)
             imageView.setImageDrawable(resources.getDrawable(R.drawable.ic_playlist_add_check))
         }
         builder.setNegativeButton("Cancel", null)

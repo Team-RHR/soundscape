@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import com.example.kkgroup.soundscape_v2.Model.AudioCardModel
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.R.id.fabBack
 import com.example.kkgroup.soundscape_v2.Tools.Tools
@@ -25,7 +26,7 @@ import java.io.File
 
 class FragmentLibraryAudioList : Fragment() {
 
-    private val LOADING_DURATION = 1000
+    private val LOADING_DURATION = 500
     private lateinit var recyclerView: RecyclerView
     private lateinit var mAudioItemAdapter: AudioItemAdapter
     private lateinit var categoryName: String
@@ -43,7 +44,7 @@ class FragmentLibraryAudioList : Fragment() {
     }
 
     interface addToTrackListener {
-        fun addToTrack(trackNum: Int, file: File)
+        fun addToTrack(trackNum: Int, audioCardModel: AudioCardModel)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -89,7 +90,9 @@ class FragmentLibraryAudioList : Fragment() {
         // on item list clicked
         mAudioItemAdapter.setOnItemClickListener(object : AudioItemAdapter.OnItemClickListener {
             override fun onItemClick(view: View, file: File, position: Int) {
-                startActivity<PlayActivity>("obj" to file)
+                startActivity<PlayActivity>("obj" to file,
+                        "category" to categoryName,
+                        "title" to file.name)
             }
         })
 
@@ -111,7 +114,20 @@ class FragmentLibraryAudioList : Fragment() {
             single_choice_selected = trackNumbers[i]
         }
         builder.setPositiveButton("OK") { _, i ->
-            myAddToTrackListener?.addToTrack(single_choice_selected!!.toInt(), file)
+
+            var bgColor = R.color.blue_700
+            when(categoryName){
+                "Human" -> { bgColor = R.color.teal_700 }
+                "Machine" -> { bgColor = R.color.blue_700 }
+                "Nature" -> { bgColor = R.color.green_700 }
+                "My Recordings" -> {
+                    bgColor = R.color.deep_orange_500
+                    categoryName = "Recording"
+                }
+            }
+            val audioCardModel = AudioCardModel(categoryName, file, bgColor)
+
+            myAddToTrackListener?.addToTrack(single_choice_selected!!.toInt(), audioCardModel)
             imageView.setImageDrawable(resources.getDrawable(R.drawable.ic_playlist_add_check))
         }
         builder.setNegativeButton("Cancel", null)

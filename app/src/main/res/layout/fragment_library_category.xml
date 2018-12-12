@@ -51,7 +51,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:layout_margin="@dimen/spacing_large"
-                                android:text="Human Category"
+                                android:text="Human        Category"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                                 android:textColor="@android:color/white" />
 
@@ -116,7 +116,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:layout_margin="@dimen/spacing_large"
-                                android:text="Machine Category"
+                                android:text="Machine        Category"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                                 android:textColor="@android:color/white" />
 
@@ -191,7 +191,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:layout_margin="@dimen/spacing_large"
-                                android:text="Nature Category"
+                                android:text="Nature         Category"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                                 android:textColor="@android:color/white" />
 
@@ -285,7 +285,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:layout_margin="@dimen/spacing_large"
-                                android:text="My Recordings"
+                                android:text="My        Recordings"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                                 android:textColor="@android:color/white" />
 

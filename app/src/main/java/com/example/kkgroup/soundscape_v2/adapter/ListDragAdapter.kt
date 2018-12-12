@@ -2,6 +2,7 @@ package com.example.kkgroup.soundscape_v2.adapter
 
 import android.content.Context
 import android.support.v4.view.MotionEventCompat
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
@@ -9,7 +10,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
+import com.example.kkgroup.soundscape_v2.Model.AudioCardModel
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.widget.ItemTouchHelperAdapter
@@ -18,7 +21,7 @@ import java.io.File
 import java.util.*
 
 class ListDragAdapter(private val ctx: Context,
-                      private var items: ArrayList<File>) :
+                      private var items: ArrayList<AudioCardModel>) :
         RecyclerView.Adapter<ListDragAdapter.ViewHolder>(), ItemTouchHelperAdapter {
 
     private var itemTouchHelper: ItemTouchHelper? = null
@@ -27,7 +30,7 @@ class ListDragAdapter(private val ctx: Context,
     private var mOnItemDeleteListener: OnItemDeleteListener? = null
 
     interface OnItemClickListener {
-        fun onItemClick(view: View, file: File, position: Int)
+        fun onItemClick(view: View, audioCardModel: AudioCardModel, position: Int)
     }
 
     interface OnItemsChangeListener {
@@ -35,7 +38,7 @@ class ListDragAdapter(private val ctx: Context,
     }
 
     interface OnItemDeleteListener {
-        fun onItemDelete(file: File)
+        fun onItemDelete(audioCardModel: AudioCardModel)
     }
 
     fun setOnItemClickListener(mItemClickListener: OnItemClickListener) {
@@ -54,7 +57,7 @@ class ListDragAdapter(private val ctx: Context,
         this.itemTouchHelper = itemTouchHelper
     }
 
-    fun getItems(): ArrayList<File>{
+    fun getItems(): ArrayList<AudioCardModel>{
         return items
     }
 
@@ -78,7 +81,9 @@ class ListDragAdapter(private val ctx: Context,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.title.text = items[position].name
+        holder.title.text = items[position].file.name
+        holder.cardView.setCardBackgroundColor(ctx.resources.getColor(items[position].bgColor))
+        holder.time.text = items[position].category
 
         holder.reorder.setOnTouchListener { v, event ->
             if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
@@ -99,6 +104,8 @@ class ListDragAdapter(private val ctx: Context,
         var time: TextView = v.findViewById(R.id.card_format)
         var reorder: ImageButton = v.findViewById(R.id.iv_move)
         var lyt_parent: View = v.findViewById(R.id.lyt_parent)
+        var lyt_playing: LinearLayout = v.findViewById(R.id.lyt_playing)
+        var cardView: CardView = v.findViewById(R.id.cardView)
 
         init {
             lyt_parent.setOnClickListener {

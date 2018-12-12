@@ -13,8 +13,11 @@ class ItemTouchHelperCallback (private val itemTouchHelperAdapter: ItemTouchHelp
 
     private val ALPHA_FULL = 1.0f
 
+    private var dragFlag = ItemTouchHelper.UP or ItemTouchHelper.DOWN   // enable up/down drag
+    private var swipeFlag = ItemTouchHelper.START or ItemTouchHelper.END    // enable left/right drag
+
     override fun isLongPressDragEnabled(): Boolean {
-        return true
+        return false
     }
 
     override fun isItemViewSwipeEnabled(): Boolean {
@@ -28,9 +31,20 @@ class ItemTouchHelperCallback (private val itemTouchHelperAdapter: ItemTouchHelp
             val swipeFlags = 0
             return ItemTouchHelper.Callback.makeMovementFlags(dragFlags, swipeFlags)
         } else {
-            val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
-            val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
-            return ItemTouchHelper.Callback.makeMovementFlags(dragFlags, swipeFlags)
+//            val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
+//            val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
+
+            return ItemTouchHelper.Callback.makeMovementFlags(dragFlag, swipeFlag)
+        }
+    }
+
+    fun setDraggable(isDraggable: Boolean){
+        if (isDraggable) {
+            dragFlag = ItemTouchHelper.UP or ItemTouchHelper.DOWN
+            swipeFlag = ItemTouchHelper.START or ItemTouchHelper.END
+        } else {
+            dragFlag = 0
+            swipeFlag = 0
         }
     }
 

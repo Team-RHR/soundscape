@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.example.kkgroup.soundscape_v2.Tools.Tools;
+
 /**
  * Use this view with width = height or width > height
  * EXAMPLE :
@@ -67,7 +69,7 @@ public class ViewLoadingDotsBounce extends LinearLayout {
         img = new ImageView[OBJECT_SIZE];
         circle.setShape(GradientDrawable.OVAL);
         circle.setColor(color);
-        circle.setSize(100, 100);
+        circle.setSize(20, 20);
 
         LayoutParams layoutParams2 = new LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
         layoutParams2.weight = 1;
@@ -89,7 +91,10 @@ public class ViewLoadingDotsBounce extends LinearLayout {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
+
+        Tools.INSTANCE.log_e("onLayout 1");
         if (!onLayoutReach) {
+            Tools.INSTANCE.log_e("onLayout 2");
             onLayoutReach = true;
             LayoutParams lp = new LayoutParams(getWidth() / 5, getWidth() / 5);
             for (int i = 0; i < OBJECT_SIZE; i++) {
@@ -102,7 +107,13 @@ public class ViewLoadingDotsBounce extends LinearLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        Tools.INSTANCE.log_e("onDetachedFromWindow 1");
         for (int i = 0; i < OBJECT_SIZE; i++) {
+
+            if (animator == null) {
+                animateView();
+            }
+
             if (animator[i].isRunning()) {
                 animator[i].removeAllListeners();
                 animator[i].end();

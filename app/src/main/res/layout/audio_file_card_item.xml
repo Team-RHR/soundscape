@@ -9,6 +9,7 @@
 
 
     <android.support.v7.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/spacing_medium"
@@ -28,11 +29,12 @@
                 <TextView
                     android:id="@+id/card_title"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="62dp"
                     android:layout_centerVertical="true"
                     android:layout_margin="@dimen/spacing_middle"
                     android:maxLines="2"
-                    android:text="Here is the title "
+                    android:gravity="center_vertical"
+                    android:text="Here is the title"
                     android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                     android:textColor="@android:color/white" />
 
@@ -65,28 +67,29 @@
                         android:id="@+id/card_format"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Mp3"
+                        android:text="Human"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="@android:color/white"
                         android:paddingRight="@dimen/spacing_middle"
                         android:textSize="12dp" />
 
-                    <!--<LinearLayout-->
-                        <!--android:id="@+id/lyt_progress"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_centerInParent="true"-->
-                        <!--android:gravity="center_vertical"-->
-                        <!--android:layout_margin="@dimen/spacing_medium"-->
-                        <!--android:orientation="vertical">-->
+                    <LinearLayout
+                        android:id="@+id/lyt_playing"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:gravity="center_vertical"
+                        android:visibility="gone"
+                        android:layout_margin="@dimen/spacing_medium"
+                        android:orientation="vertical">
 
-                        <!--<com.example.kkgroup.soundscape_v2.widget.ViewLoadingDotsBounce-->
-                            <!--android:layout_width="30dp"-->
-                            <!--android:gravity="center_vertical"-->
-                            <!--android:layout_height="20dp"-->
-                            <!--android:background="@android:color/white" />-->
+                        <com.example.kkgroup.soundscape_v2.widget.ViewLoadingDotsBounce
+                            android:layout_width="30dp"
+                            android:gravity="center_vertical"
+                            android:layout_height="10dp"
+                            android:background="@android:color/white" />
 
-                    <!--</LinearLayout>-->
+                    </LinearLayout>
 
                 </LinearLayout>
 
