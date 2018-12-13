@@ -38,8 +38,11 @@ class FragmentRecording : Fragment() {
     inner class MyCounter(millisInFuture: Long, countDownInterval: Long) : CountDownTimer(millisInFuture, countDownInterval) {
 
         override fun onFinish() {
+            onRecord(mStartRecording)
             textView_Countdown.text = getString(R.string.time00)
             fab_start.setImageDrawable(resources.getDrawable(R.drawable.ic_mic))
+            showLogOutDialog()
+            mStartRecording = !mStartRecording
         }
 
         override fun onTick(millisUntilFinished: Long) {
