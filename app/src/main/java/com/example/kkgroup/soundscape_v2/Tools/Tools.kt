@@ -360,27 +360,22 @@ object Tools {
         }
     }
 
-    fun deleteFiles() {
-        val folderDir = File(getRootPath())
-        val pathHuman = getDownloadedAudioByCategoryPath("Human")
-        val pathMachine = getDownloadedAudioByCategoryPath("Machine")
-
-        folderDir.deleteRecursively()
-    }
-
     fun deleteAudios() {
         val folderDir = File(getDownloadPath())
         folderDir.deleteRecursively()
+        folderDir.mkdirs()
     }
 
     fun deleteSoundScapes() {
         val folderDir = File(getMySoundscapePath())
         folderDir.deleteRecursively()
+        folderDir.mkdirs()
     }
 
     fun deleteRecordings() {
         val folderDir = File(getMyRecordingPath())
         folderDir.deleteRecursively()
+        folderDir.mkdirs()
     }
 
 }

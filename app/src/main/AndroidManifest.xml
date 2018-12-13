@@ -5,7 +5,6 @@
 
     <!-- permissions for audio recording -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
@@ -32,25 +31,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.NewSoundscapeActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.LocalAudioFilesActivity"
-            android:configChanges="orientation" />
-        <activity
-            android:name=".activity.SelectAudioActivity"
-            android:configChanges="orientation" />
-        <activity
-            android:name=".activity.RemoteAudioFilesActivity"
-            android:configChanges="orientation" />
-        <activity
             android:name=".activity.PlayActivity"
             android:configChanges="orientation" />
         <activity
             android:name=".activity.SearchActivity"
-            android:configChanges="orientation" />
-        <activity
-            android:name=".activity.SettingsActivity"
             android:configChanges="orientation" />
         <activity android:name=".activity.MainActivity"
             android:configChanges="orientation"></activity>
