@@ -8,6 +8,8 @@ Application Authors: Mikael Ramo, Hao Zhang, Robert Laitila
 - Android Phone (version 6.0 or higher)
 - Android Studio
 
+## Relationships of classes will be added later by tomorrow 2018-12-15...
+
 ## View demo video to help you understand code
 [![Demo video](https://i.imgur.com/5cQYa4A.png)](https://youtu.be/3QlhLGnfMG8?t=5)
 
