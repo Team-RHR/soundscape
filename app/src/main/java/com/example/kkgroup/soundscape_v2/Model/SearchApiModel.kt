@@ -2,6 +2,10 @@ package com.example.kkgroup.soundscape_v2.Model;
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * description: Model for encapsulate the search result data
+ * create time: 15:09 2018/12/15
+ */
 data class SearchApiModel(@SerializedName("Title") val title: String,
                           @SerializedName("Original filename") val originalFilename: String,
                           @SerializedName("Description") val description: String,

@@ -14,7 +14,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import com.example.kkgroup.soundscape_v2.Model.AudioCardModel
 import com.example.kkgroup.soundscape_v2.R
-import com.example.kkgroup.soundscape_v2.R.id.fabBack
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.activity.PlayActivity
 import com.example.kkgroup.soundscape_v2.adapter.AudioItemAdapter
@@ -23,7 +22,11 @@ import kotlinx.android.synthetic.main.fragment_library_audio_list.*
 import org.jetbrains.anko.support.v4.startActivity
 import java.io.File
 
-
+/**
+ * description: This fragment will show up when you click the category,
+ *              basically it will show a list of audios according to which category that you click
+ * create time: 14:29 2018/12/15
+ */
 class FragmentLibraryAudioList : Fragment() {
 
     private val LOADING_DURATION = 500
@@ -31,6 +34,9 @@ class FragmentLibraryAudioList : Fragment() {
     private lateinit var mAudioItemAdapter: AudioItemAdapter
     private lateinit var categoryName: String
 
+    /**
+     * Interface for adding audio to new soundscape page
+     */
     companion object {
         fun newInstance(): FragmentLibraryAudioList {
             return FragmentLibraryAudioList()
@@ -40,7 +46,6 @@ class FragmentLibraryAudioList : Fragment() {
         fun setMyAddToTrackListener(myAddToTrackListener: addToTrackListener) {
             this.myAddToTrackListener = myAddToTrackListener
         }
-
     }
 
     interface addToTrackListener {
@@ -59,15 +64,16 @@ class FragmentLibraryAudioList : Fragment() {
     private fun loadingAndDisplayContent(view: View) {
 
         categoryName = arguments!!.getString("obj")
-
         recyclerView = view.findViewById(R.id.recyclerView)
         val lytProgress = view.findViewById<LinearLayout>(R.id.lyt_progress)
         lytProgress.visibility = View.VISIBLE
         lytProgress.alpha = 1.0f
         recyclerView.visibility = View.GONE
 
+        /**
+         * Show the loading animation first, when invoke initComponents() method
+         */
         Handler().postDelayed({ Tools.viewFadeOut(lytProgress) }, LOADING_DURATION.toLong())
-
         Handler().postDelayed({ initComponents(view) }, (LOADING_DURATION + 400).toLong())
     }
 
@@ -76,6 +82,9 @@ class FragmentLibraryAudioList : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
 
+        /**
+         * Load audio list based on different category
+         */
         val audioFilesByCategory = if (categoryName == "My Recordings") {
             Tools.getMyRecordingsFiles(Tools.getMyRecordingPath())
         } else {
@@ -83,11 +92,15 @@ class FragmentLibraryAudioList : Fragment() {
                     Tools.getDownloadedAudioByCategoryPath(categoryName))
         }
 
-        //set data and list adapter
+        /**
+         * set data and list adapter
+         */
         mAudioItemAdapter = AudioItemAdapter(context!!, audioFilesByCategory, ItemAnimation.FADE_IN)
         recyclerView.adapter = mAudioItemAdapter
 
-        // on item list clicked
+        /**
+         * on item list clicked, go to the preview page
+         */
         mAudioItemAdapter.setOnItemClickListener(object : AudioItemAdapter.OnItemClickListener {
             override fun onItemClick(view: View, file: File, position: Int) {
                 startActivity<PlayActivity>("obj" to file,
@@ -96,6 +109,9 @@ class FragmentLibraryAudioList : Fragment() {
             }
         })
 
+        /**
+         * show single choice dialog
+         */
         mAudioItemAdapter.setOnAddToTrackListener(object : AudioItemAdapter.OnAddToTrackListener {
             override fun onItemClick(view: View, file: File, position: Int) {
                 showSingleChoiceDialog(file, view as ImageView)
@@ -103,6 +119,10 @@ class FragmentLibraryAudioList : Fragment() {
         })
     }
 
+    /**
+     * Show single choice dialog, and pass the selected audio to the new soundscape page
+     * Each color stands for each category
+     */
     private var single_choice_selected: String? = null
     private val trackNumbers = arrayOf("1", "2")
     private val trackStrs = arrayOf("Track 1", "Track 2")
@@ -134,9 +154,11 @@ class FragmentLibraryAudioList : Fragment() {
         builder.show()
     }
 
-
     private fun initListeners() {
 
+        /**
+         * go back to the category fragment
+         */
         fabBack.setOnClickListener {
             val trans = fragmentManager!!.beginTransaction()
             trans.replace(R.id.root_frame, FragmentLibraryCategory.newInstance())
@@ -144,7 +166,6 @@ class FragmentLibraryAudioList : Fragment() {
             trans.addToBackStack(null)
             trans.commit()
         }
-
     }
 
 }

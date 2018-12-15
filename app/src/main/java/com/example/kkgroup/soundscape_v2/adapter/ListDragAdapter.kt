@@ -14,12 +14,14 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.kkgroup.soundscape_v2.Model.AudioCardModel
 import com.example.kkgroup.soundscape_v2.R
-import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.widget.ItemTouchHelperAdapter
 import com.example.kkgroup.soundscape_v2.widget.ItemTouchHelperViewHolder
-import java.io.File
 import java.util.*
 
+/**
+ * description: This adapter is used to handle drag different audio cards, mainly used in new soundscape page
+ * create time: 14:19 2018/12/15
+ */
 class ListDragAdapter(private val ctx: Context,
                       private var items: ArrayList<AudioCardModel>) :
         RecyclerView.Adapter<ListDragAdapter.ViewHolder>(), ItemTouchHelperAdapter {
@@ -61,6 +63,9 @@ class ListDragAdapter(private val ctx: Context,
         return items
     }
 
+    /**
+     * Swap the position
+     */
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
         Collections.swap(items, fromPosition, toPosition)
         notifyItemMoved(fromPosition, toPosition)
@@ -68,9 +73,11 @@ class ListDragAdapter(private val ctx: Context,
         return true
     }
 
+    /**
+     * Delete the item when swipe to left or right
+     */
     override fun onItemDismiss(position: Int) {
         val removeAt = items.removeAt(position)
-        Tools.log_e("items size: ${items.size}")
         notifyItemRemoved(position)
         mOnItemDeleteListener?.onItemDelete(removeAt)
     }
@@ -85,13 +92,15 @@ class ListDragAdapter(private val ctx: Context,
         holder.cardView.setCardBackgroundColor(ctx.resources.getColor(items[position].bgColor))
         holder.time.text = items[position].category
 
+        /**
+         * Press the reorder button to start dragging
+         */
         holder.reorder.setOnTouchListener { v, event ->
             if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
                 itemTouchHelper?.startDrag(holder)
             }
             false
         }
-
     }
 
     override fun getItemCount(): Int {

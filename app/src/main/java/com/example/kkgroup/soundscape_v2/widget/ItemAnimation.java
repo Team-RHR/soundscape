@@ -4,6 +4,10 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.view.View;
 
+/**
+ * description: This class defines different animation types, mainly used for showing the list in the recyclerView
+ * create time: 15:33 2018/12/15
+ */
 public class ItemAnimation {
 
     /* animation type */

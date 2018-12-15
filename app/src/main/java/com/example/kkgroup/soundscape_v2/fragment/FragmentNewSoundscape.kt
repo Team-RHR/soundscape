@@ -23,10 +23,13 @@ import com.example.kkgroup.soundscape_v2.widget.ItemTouchHelperCallback
 import org.jetbrains.anko.support.v4.startActivity
 import java.io.File
 
-
+/**
+ * description: This fragment refers to new soundscape page
+ *              where you can creating your audios by adding multiple audio cards
+ * create time: 14:37 2018/12/15
+ */
 private const val AUDIO_TRACK_ONE = 1
 private const val AUDIO_TRACK_TWO = 2
-
 class FragmentNewSoundscape : Fragment() {
 
     private lateinit var playButton: FloatingActionButton
@@ -34,27 +37,31 @@ class FragmentNewSoundscape : Fragment() {
     private var mediaPlayer2: MediaPlayer = MediaPlayer()
     private var isPlayedAlready1 = false
     private var isPlayedAlready2 = false
-
-    // ====================
-    private lateinit var recyclerView1: RecyclerView
-    private lateinit var itemTouchHelper1: ItemTouchHelper
-    private lateinit var listDragAdapter1: ListDragAdapter
-    private val audioCardsListOnTrack1 = ArrayList<AudioCardModel>()
-
-    private lateinit var recyclerView2: RecyclerView
-    private lateinit var itemTouchHelper2: ItemTouchHelper
-    private lateinit var listDragAdapter2: ListDragAdapter
-    private lateinit var itemTouchHelperCallback :ItemTouchHelperCallback
-    private lateinit var itemTouchHelperCallback2 :ItemTouchHelperCallback
-    private val audioCardsListOnTrack2 = ArrayList<AudioCardModel>()
-    private var maxRowCount = 0
-
     private var isPlayingOnTrack1 = false
     private var isPlayingOnTrack2 = false
     private var playerOnTrack1: MediaPlayer? = null
     private var playerOnTrack2: MediaPlayer? = null
     private var playerList = ArrayList<MediaPlayer>()
     private var currentIndex = 0
+
+    /**
+     * Properties for audio track one
+     */
+    private lateinit var recyclerView1: RecyclerView
+    private lateinit var itemTouchHelper1: ItemTouchHelper
+    private lateinit var listDragAdapter1: ListDragAdapter
+    private lateinit var itemTouchHelperCallback :ItemTouchHelperCallback
+    private val audioCardsListOnTrack1 = ArrayList<AudioCardModel>()
+
+    /**
+     * Properties for audio track two
+     */
+    private lateinit var recyclerView2: RecyclerView
+    private lateinit var itemTouchHelper2: ItemTouchHelper
+    private lateinit var listDragAdapter2: ListDragAdapter
+    private lateinit var itemTouchHelperCallback2 :ItemTouchHelperCallback
+    private val audioCardsListOnTrack2 = ArrayList<AudioCardModel>()
+    private var maxRowCount = 0
 
     companion object {
         fun newInstance(): FragmentNewSoundscape {
@@ -68,56 +75,31 @@ class FragmentNewSoundscape : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initComponents(view)
-        initFakeData()
-        initListeners()
-    }
-
-    private fun initFakeData() {
-        audioCardsListOnTrack1.add(AudioCardModel(
-                "Nature",
-                File("/storage/emulated/0/soundscape/downloads/Nature/A_Suomalaisia_lintuja_15s.mp3"),
-                R.color.green_700))
-        audioCardsListOnTrack1.add(AudioCardModel(
-                "Machine",
-                File("/storage/emulated/0/soundscape/downloads/Machine/Antiikki_auto_käyntiä_15s.mp3"),
-                R.color.blue_700))
-        audioCardsListOnTrack1.add(AudioCardModel(
-                "Machine",
-                File("/storage/emulated/0/soundscape/downloads/Machine/Machine_signal_15s.mp3"),
-                R.color.blue_700))
-        audioCardsListOnTrack2.add(AudioCardModel(
-                "Human",
-                File("/storage/emulated/0/soundscape/downloads/Human/Humalainen_porukka_15s.mp3"),
-                R.color.teal_700))
-
-        // audioCardsListOnTrack1.add(File("/storage/emulated/0/soundscape/downloads/Machine/Metro_ohiajo_30s.mp3"))
-        // audioCardsListOnTrack2.add(File("/storage/emulated/0/soundscape/downloads/Nature/Hevonen_hirnuu_15s.mp3"))
         initPlayers()
+        initListeners()
     }
 
     private fun initComponents(view: View) {
 
         mediaPlayer1.setAudioStreamType(AudioManager.STREAM_MUSIC)
         mediaPlayer2.setAudioStreamType(AudioManager.STREAM_MUSIC)
-
         playButton = view.findViewById(R.id.fab_play)
 
         /**
          * set data and list adapter for recycleview01 (Track 01)
-         * and setup ItemTouchHelper to let item be braggable
+         * and setup ItemTouchHelper to let item be draggable
          */
         recyclerView1 = view.findViewById(R.id.recyclerView1)
         recyclerView1.layoutManager = LinearLayoutManager(context)
-        // recyclerView1.layoutManager = GridLayoutManager(context, 2);
-        //recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, OrientationHelper.VERTICAL));
         recyclerView1.setHasFixedSize(true)
         listDragAdapter1 = ListDragAdapter(context!!, audioCardsListOnTrack1)
         recyclerView1.adapter = listDragAdapter1
 
+        /**
+         * set up touch listener for listDragAdapter1 to detect if the item is touched or not
+         */
         itemTouchHelperCallback = ItemTouchHelperCallback(listDragAdapter1)
-
         itemTouchHelperCallback.setDraggable(true)
-
         itemTouchHelper1 = ItemTouchHelper(itemTouchHelperCallback)
         listDragAdapter1.setOnItemTouchHelper(itemTouchHelper1)
         itemTouchHelper1.attachToRecyclerView(recyclerView1)
@@ -133,18 +115,22 @@ class FragmentNewSoundscape : Fragment() {
         listDragAdapter2 = ListDragAdapter(context!!, audioCardsListOnTrack2)
         recyclerView2.adapter = listDragAdapter2
 
+        /**
+         * set up touch listener for listDragAdapter2 to detect if the item is touched or not
+         */
         itemTouchHelperCallback2 = ItemTouchHelperCallback(listDragAdapter2)
-
         itemTouchHelperCallback2.setDraggable(true)
-
         itemTouchHelper2 = ItemTouchHelper(itemTouchHelperCallback2)
         listDragAdapter2.setOnItemTouchHelper(itemTouchHelper2)
         itemTouchHelper2.attachToRecyclerView(recyclerView2)
-
     }
 
     private fun initListeners() {
 
+        /**
+         * If one audio card in audio track one has been pressed,
+         * then go to the preview page to play this specific audio
+         */
         listDragAdapter1.setOnItemClickListener(object : ListDragAdapter.OnItemClickListener {
             override fun onItemClick(view: View, audioCardModel: AudioCardModel, position: Int) {
                 startActivity<PlayActivity>("obj" to audioCardModel.file,
@@ -153,6 +139,10 @@ class FragmentNewSoundscape : Fragment() {
             }
         })
 
+        /**
+         * If one audio card in audio track two has been pressed,
+         * then go to the preview page to play this specific audio
+         */
         listDragAdapter2.setOnItemClickListener(object : ListDragAdapter.OnItemClickListener {
             override fun onItemClick(view: View, audioCardModel: AudioCardModel, position: Int) {
                 startActivity<PlayActivity>("obj" to audioCardModel.file,
@@ -162,68 +152,83 @@ class FragmentNewSoundscape : Fragment() {
         })
 
         /**
-         * 每添加一次和每拖拽一次都需要更新一下initPlayers()
+         * Once you change the one of the audio card's position,
+         * such as drag it to up or down or delete it from the track, it will play from the start,
+         * so we have to reset the players here
          */
         listDragAdapter1.setOnItemsChangeListener(object : ListDragAdapter.OnItemsChangeListener {
             override fun onItemsChange(fromPosition: Int, toPosition: Int) {
-                Tools.log_e("listDragAdapter1 位置进行了改变: $fromPosition --> $toPosition")
                 initPlayers()
             }
         })
 
+        /**
+         * Once you change the one of the audio card's position,
+         * such as drag it to up or down or delete it from the track, it will play from the start,
+         * so we have to reset the players here
+         */
         listDragAdapter2.setOnItemsChangeListener(object : ListDragAdapter.OnItemsChangeListener {
             override fun onItemsChange(fromPosition: Int, toPosition: Int) {
-                Tools.log_e("listDragAdapter2 位置进行了改变: $fromPosition --> $toPosition")
                 initPlayers()
             }
         })
 
+        /**
+         * Once you change the one of the audio card's position,
+         * such as drag it to up or down or delete it from the track, it will play from the start,
+         * so we have to reset the players here
+         */
         listDragAdapter1.setOnItemDeleteListener(object : ListDragAdapter.OnItemDeleteListener {
             override fun onItemDelete(audioCardModel: AudioCardModel) {
-                Tools.log_e("listDragAdapter1 被删除: ${audioCardModel.file.name}")
-                initPlayers()
-            }
-        })
-        listDragAdapter2.setOnItemDeleteListener(object : ListDragAdapter.OnItemDeleteListener {
-            override fun onItemDelete(audioCardModel: AudioCardModel) {
-                Tools.log_e("listDragAdapter2 被删除: ${audioCardModel.file.name}")
                 initPlayers()
             }
         })
 
+        /**
+         * Once you change the one of the audio card's position,
+         * such as drag it to up or down or delete it from the track, it will play from the start,
+         * so we have to reset the players here
+         */
+        listDragAdapter2.setOnItemDeleteListener(object : ListDragAdapter.OnItemDeleteListener {
+            override fun onItemDelete(audioCardModel: AudioCardModel) {
+                initPlayers()
+            }
+        })
+
+        /**
+         * Add the audio card from the audio list page
+         * Once you add a new audio card to the track, it will play from the start,
+         * so we have to reset the players here
+         */
         FragmentLibraryAudioList.setMyAddToTrackListener(object : FragmentLibraryAudioList.addToTrackListener {
             override fun addToTrack(trackNum: Int, audioCardModel: AudioCardModel) {
-                /**
-                 * 在这里每次添加一个就要刷新一遍initPlayers()
-                 */
-                if (trackNum == 1) {
+
+                if (trackNum == AUDIO_TRACK_ONE) {
                     audioCardsListOnTrack1.add(audioCardModel)
                     listDragAdapter1.notifyDataSetChanged()
-                    log_e("1 添加了一个 ${audioCardModel.file.absolutePath}")
                     initPlayers()
                 } else {
                     audioCardsListOnTrack2.add(audioCardModel)
                     listDragAdapter2.notifyDataSetChanged()
-                    log_e("2 添加了一个 ${audioCardModel.file.absolutePath}")
                     initPlayers()
                 }
             }
         })
 
-        SearchActivity.setMyAddToTrackListener(object : SearchActivity.addToTrackListener {
+        /**
+         * Add the audio card from the search page
+         * Once you add a new audio card to the track, it will play from the start,
+         * so we have to reset the players here
+         */
+        SearchActivity.setMyAddToTrackListener(object : SearchActivity.AddToTrackListener {
             override fun addToTrack(trackNum: Int, audioCardModel: AudioCardModel) {
-                /**
-                 * 在这里每次添加一个就要刷新一遍initPlayers()
-                 */
-                if (trackNum == 1) {
+                if (trackNum == AUDIO_TRACK_ONE) {
                     audioCardsListOnTrack1.add(audioCardModel)
                     listDragAdapter1.notifyDataSetChanged()
-                    log_e("1 添加了一个 from SearchActivity ${audioCardModel.file.absolutePath}")
                     initPlayers()
                 } else {
                     audioCardsListOnTrack2.add(audioCardModel)
                     listDragAdapter2.notifyDataSetChanged()
-                    log_e("2 添加了一个 from SearchActivity ${audioCardModel.file.absolutePath}")
                     initPlayers()
                 }
             }
@@ -236,13 +241,19 @@ class FragmentNewSoundscape : Fragment() {
             log_e("playerOnTrack1 = ${playerOnTrack1 == null}")
             log_e("playerOnTrack2 = ${playerOnTrack2 == null}")
 
-            // check for already playing
+            /**
+             * If this audio has not been played yet, the play it
+             * Here, If it is playing then pause it, otherwise start playing it
+             */
             if (!isPlayedAlready1) {
                 playerOnTrack1?.let {
                     if (it.isPlaying) {
                         it.pause()
                         isPlayingOnTrack1 = false
 
+                        /**
+                         * If we pause the aduio, then we have to make the dynamic flag disappear
+                         */
                         animationControl(recyclerView1, false)
                         itemTouchHelperCallback.setDraggable(true)
                         itemTouchHelperCallback2.setDraggable(true)
@@ -250,6 +261,9 @@ class FragmentNewSoundscape : Fragment() {
                         it.start()
                         isPlayingOnTrack1 = true
 
+                        /**
+                         * If we start playing the aduio, then we have to make the dynamic flag appear
+                         */
                         animationControl(recyclerView1, true)
                         itemTouchHelperCallback.setDraggable(false)
                         itemTouchHelperCallback2.setDraggable(false)
@@ -257,12 +271,19 @@ class FragmentNewSoundscape : Fragment() {
                 }
             }
 
+            /**
+             * If this audio has not been played yet, the play it
+             * Here, If it is playing then pause it, otherwise start playing it
+             */
             if (!isPlayedAlready2) {
                 playerOnTrack2?.let {
                     if (it.isPlaying) {
                         it.pause()
                         isPlayingOnTrack2 = false
 
+                        /**
+                         * If we pause the aduio, then we have to make the dynamic flag disappear
+                         */
                         animationControl(recyclerView2, false)
                         itemTouchHelperCallback.setDraggable(true)
                         itemTouchHelperCallback2.setDraggable(true)
@@ -270,6 +291,9 @@ class FragmentNewSoundscape : Fragment() {
                         it.start()
                         isPlayingOnTrack2 = true
 
+                        /**
+                         * If we start playing the aduio, then we have to make the dynamic flag appear
+                         */
                         animationControl(recyclerView2, true)
                         itemTouchHelperCallback.setDraggable(false)
                         itemTouchHelperCallback2.setDraggable(false)
@@ -277,6 +301,9 @@ class FragmentNewSoundscape : Fragment() {
                 }
             }
 
+            /**
+             * If one of the aduio Tracks is active, then set up the icon as ic_pause
+             */
             if (isPlayingOnTrack1 || isPlayingOnTrack2) {
                 playButton.setImageResource(R.drawable.ic_pause)
             } else {
@@ -285,6 +312,9 @@ class FragmentNewSoundscape : Fragment() {
         }
     }
 
+    /**
+     * To control the visibility of the dynamic flag which stands for which audio is playing
+     */
     private fun animationControl(recyclerView: RecyclerView, appear: Boolean) {
         if (appear) {
             recyclerView.layoutManager?.let {
@@ -307,6 +337,9 @@ class FragmentNewSoundscape : Fragment() {
 
     }
 
+    /**
+     * Reset the flags to the default value
+     */
     private fun initPlayers() {
 
         isPlayingOnTrack1 = false
@@ -318,6 +351,10 @@ class FragmentNewSoundscape : Fragment() {
         playerList.clear()
         maxRowCount = Math.max(listDragAdapter1.getItems().size, listDragAdapter2.getItems().size)
 
+        /**
+         * playAudioRowByRow() method will return two media players object
+         * which will be responsible for respective audi track
+         */
         if (!isPlayingOnTrack1 && !isPlayingOnTrack2) {
 
             playerList = playAudioRowByRow(getAbsolutePath(AUDIO_TRACK_ONE, currentIndex),
@@ -329,21 +366,18 @@ class FragmentNewSoundscape : Fragment() {
                 playerOnTrack1 = null
             }
 
-            log_e("返回的size: ${playerList.size}")
             if (playerList.size > 1) {
                 playerOnTrack2 = playerList[1]
             } else {
                 playerOnTrack2 = null
-                log_e("playerOnTrack2 重置为 null")
             }
-
         }
     }
 
     private fun playAudioRowByRow(absolutePath1: String?, absolutePath2: String?): ArrayList<MediaPlayer> {
 
-        log_e("准备播放01 = $absolutePath1")
-        log_e("准备播放02 = $absolutePath2")
+        log_e("Will be playing 01 = $absolutePath1")
+        log_e("Will be playing 02 = $absolutePath2")
 
         val playersList = ArrayList<MediaPlayer>()
 
@@ -357,6 +391,10 @@ class FragmentNewSoundscape : Fragment() {
 
                 playersList.add(player1)
 
+                /**
+                 * currentIndex != 0 means the current row goes to the second row, In that case, we have to make the
+                 * audios on the second row start playing automatically
+                 */
                 if (currentIndex != 0) {
                     player1.start()
                     isPlayingOnTrack1 = true
@@ -364,33 +402,27 @@ class FragmentNewSoundscape : Fragment() {
 
                     playerOnTrack1 = player1
                     playButton.setImageResource(R.drawable.ic_pause)
-
                     animationControl(recyclerView1, true)
                 }
 
                 player1.setOnCompletionListener {
-                    Tools.log_e("mediaPlayer $absolutePath1 播放完成, index: ${currentIndex}")
+                    Tools.log_e("mediaPlayer $absolutePath1 is over, index: ${currentIndex}")
 
                     animationControl(recyclerView1, false)
-
                     swapPlayingFlag(AUDIO_TRACK_ONE, false)
 
                     isPlayedAlready1 = true
 
                     if (!isPlayingOnTrack1 && !isPlayingOnTrack2) {
-                        Tools.log_e("mediaPlayer row: ${currentIndex} 两个都 播放完成, maxRowCount: $maxRowCount")
                         if (currentIndex < maxRowCount - 1) {
                             currentIndex++
-                            Tools.log_e("currentIndex = ${currentIndex}")
                             playAudioRowByRow(getAbsolutePath(AUDIO_TRACK_ONE, currentIndex),
                                     getAbsolutePath(AUDIO_TRACK_TWO, currentIndex))
                         } else {
                             /**
                              * The audios of each row have been played, and the reset flags is performed here.
                              */
-
                             initPlayers()
-                            Tools.log_e("=============================================")
                         }
                     }
                 }
@@ -409,8 +441,10 @@ class FragmentNewSoundscape : Fragment() {
 
                 playersList.add(player2)
 
-                log_e("添加了player2")
-
+                /**
+                 * currentIndex != 0 means the current row goes to the second row, In that case, we have to make the
+                 * audios on the second row start playing automatically
+                 */
                 if (currentIndex != 0) {
                     player2.start()
                     isPlayingOnTrack2 = true
@@ -424,7 +458,7 @@ class FragmentNewSoundscape : Fragment() {
 
                 player2.setOnCompletionListener {
 
-                    Tools.log_e("mediaPlayer $absolutePath2 播放完成, index: ${currentIndex}")
+                    Tools.log_e("mediaPlayer $absolutePath2 is over, index: ${currentIndex}")
 
                     animationControl(recyclerView2, false)
                     swapPlayingFlag(AUDIO_TRACK_TWO, false)
@@ -432,25 +466,15 @@ class FragmentNewSoundscape : Fragment() {
                     isPlayedAlready2 = true
 
                     if (!isPlayingOnTrack1 && !isPlayingOnTrack2) {
-                        Tools.log_e("mediaPlayer row: ${currentIndex} 两个都 播放完成, maxRowCount: $maxRowCount")
                         if (currentIndex < maxRowCount - 1) {
                             currentIndex++
-                            Tools.log_e("currentIndex = ${currentIndex}")
                             playAudioRowByRow(getAbsolutePath(AUDIO_TRACK_ONE, currentIndex),
                                     getAbsolutePath(AUDIO_TRACK_TWO, currentIndex))
                         } else {
                             /**
                              * The audios of each row have been played, and the reset flags is performed here.
                              */
-
-                            isPlayingOnTrack1 = false
-                            isPlayingOnTrack2 = false
-                            isPlayedAlready1 = false
-                            isPlayedAlready2 = false
-                            currentIndex = 0
-
                             initPlayers()
-                            Tools.log_e("=============================================")
                         }
                     }
                 }
@@ -462,6 +486,10 @@ class FragmentNewSoundscape : Fragment() {
         return playersList
     }
 
+    /**
+     * To get the audio file path on a specific row
+     * For example, If the track one does not have a audio in second row, then return null
+     */
     private fun getAbsolutePath(trackNum: Int, currentIndex: Int): String? {
 
         if (trackNum == AUDIO_TRACK_ONE) {
@@ -479,6 +507,9 @@ class FragmentNewSoundscape : Fragment() {
         }
     }
 
+    /**
+     * Swap the status of audio tracks, to detect if the audio track is active
+     */
     private fun swapPlayingFlag(trackNum: Int, isPlaying: Boolean) {
         if (trackNum == AUDIO_TRACK_ONE) {
             isPlayingOnTrack1 = isPlaying
@@ -486,7 +517,7 @@ class FragmentNewSoundscape : Fragment() {
             isPlayingOnTrack2 = isPlaying
         }
 
-        Tools.log_e("1号音轨状态:$isPlayingOnTrack1, 2号音轨状态:$isPlayingOnTrack2")
+        Tools.log_e("Track one is active:$isPlayingOnTrack1, Track two is active:$isPlayingOnTrack2")
         if (isPlayingOnTrack1 || isPlayingOnTrack2) {
             playButton.setImageResource(R.drawable.ic_pause)
         } else {
@@ -494,7 +525,9 @@ class FragmentNewSoundscape : Fragment() {
         }
     }
 
-    // stop player when destroy
+    /**
+     * stop player when destroy
+     */
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer1.release()

@@ -3,6 +3,10 @@ package com.example.kkgroup.soundscape_v2.Tools
 import android.content.Context
 import android.content.SharedPreferences
 
+/**
+ * description: SharedPreference manager, mainly used for storing the api key and lanaguage selection
+ * create time: 15:33 2018/12/15
+ */
 class PrefManager(context: Context) {
     private var pref: SharedPreferences? = null
     private var editor: SharedPreferences.Editor? = null

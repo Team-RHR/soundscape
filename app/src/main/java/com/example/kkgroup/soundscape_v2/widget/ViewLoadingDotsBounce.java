@@ -27,6 +27,17 @@ import com.example.kkgroup.soundscape_v2.Tools.Tools;
  * android:background="@color/exampleColor"
  */
 
+/**
+ * description: Dynamic dots, used in showing audio list
+ *
+ * Use this view with width = height or width > height
+ * EXAMPLE :
+ *    android:layout_width="50dp"
+ *    android:layout_height="30dp"
+ *
+ * To change dot color you can use :
+ *    android:background="@color/exampleColor"
+ */
 public class ViewLoadingDotsBounce extends LinearLayout {
 
     private Context context;
@@ -91,10 +102,7 @@ public class ViewLoadingDotsBounce extends LinearLayout {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-
-        Tools.INSTANCE.log_e("onLayout 1");
         if (!onLayoutReach) {
-            Tools.INSTANCE.log_e("onLayout 2");
             onLayoutReach = true;
             LayoutParams lp = new LayoutParams(getWidth() / 5, getWidth() / 5);
             for (int i = 0; i < OBJECT_SIZE; i++) {

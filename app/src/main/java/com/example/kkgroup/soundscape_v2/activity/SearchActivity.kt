@@ -30,6 +30,10 @@ import kotlinx.android.synthetic.main.activity_search.*
 import org.jetbrains.anko.startActivity
 import java.io.File
 
+/**
+ * description: This activity is for Searching function
+ * create time: 14:00 2018/12/15
+ */
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
@@ -38,17 +42,19 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var lytSuggestion: LinearLayout
     private var searchResultCount = 0
 
+    /**
+     * This Interface is used for adding audio item from search result to new soundscape page
+     */
     companion object {
-        private var myAddToTrackListener: SearchActivity.addToTrackListener? = null
-        fun setMyAddToTrackListener(myAddToTrackListener: addToTrackListener) {
+        private var myAddToTrackListener: SearchActivity.AddToTrackListener? = null
+        fun setMyAddToTrackListener(myAddToTrackListener: AddToTrackListener) {
             this.myAddToTrackListener = myAddToTrackListener
         }
     }
 
-    interface addToTrackListener {
+    interface AddToTrackListener {
         fun addToTrack(trackNum: Int, audioCardModel: AudioCardModel)
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,13 +73,18 @@ class SearchActivity : AppCompatActivity() {
         recyclerSuggestion.layoutManager = LinearLayoutManager(this)
         recyclerSuggestion.setHasFixedSize(true)
 
-        //set data and list adapter suggestion
+        /**
+         * set data and list adapter suggestion
+         */
         mAdapterSuggestion = SuggestionSearchAdapter(this)
         recyclerSuggestion.adapter = mAdapterSuggestion
         showSuggestionSearch()
     }
 
     private fun initListeners() {
+        /**
+         * when text is not empty, then show clear button, otherwise disappear clear button
+         */
         search_input.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(editable: Editable?) {}
 
@@ -88,6 +99,9 @@ class SearchActivity : AppCompatActivity() {
             }
         })
 
+        /**
+         * Handle click event when user clicks the item from the search history list
+         */
         mAdapterSuggestion.setOnItemClickListener(object : SuggestionSearchAdapter.OnItemClickListener {
             override fun onItemClick(view: View, viewModel: String, pos: Int) {
                 search_input.setText(viewModel)
@@ -95,13 +109,15 @@ class SearchActivity : AppCompatActivity() {
                 hideKeyboard()
                 searchAction()
             }
-
         })
 
         bt_clear.setOnClickListener { search_input.text.clear() }
 
         bt_back.setOnClickListener { this.finish() }
 
+        /**
+         * Start searching when user clicks search on the keyboard
+         */
         search_input.setOnEditorActionListener { textView, actionId, keyEvent ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 hideKeyboard()
@@ -111,6 +127,9 @@ class SearchActivity : AppCompatActivity() {
             return@setOnEditorActionListener false
         }
 
+        /**
+         * When user touches the input bar, then popup the search history list
+         */
         search_input.setOnTouchListener { view, motionEvent ->
             showSuggestionSearch()
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
@@ -118,6 +137,9 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Show progress bar while loading search result
+     */
     private fun searchAction() {
         progress_bar.visibility = View.VISIBLE
         Tools.viewCollapse(lytSuggestion)
@@ -135,6 +157,9 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * hide Keyboard
+     */
     private fun hideKeyboard() {
         val view = this.currentFocus
         if (view != null) {
@@ -143,18 +168,24 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Popup the search history list
+     */
     private fun showSuggestionSearch() {
         mAdapterSuggestion.refreshItems()
         Tools.viewExpand(lytSuggestion)
     }
 
+    /**
+     * Loading search result based on keyword
+     */
     private fun searchAudioFiles() {
         val call = Networking.service.searchAudioFiles(Networking.API_TOKEN, "29", "mp3", search_input.text.trim().toString())
 
         val value = object : retrofit2.Callback<JsonArray> {
-            // this method gets called after a http call, no matter the http code
             override fun onResponse(call: retrofit2.Call<JsonArray>,
                                     response: retrofit2.Response<JsonArray>?) {
+
                 response?.let {
                     if (response.isSuccessful) {
                         /** here we filter the response and alter the json so format is
@@ -195,7 +226,9 @@ class SearchActivity : AppCompatActivity() {
                 }
             }
 
-            // this method gets called if the http call fails (no internet etc)
+            /**
+             * this method gets called if the http call fails (no internet etc)
+             */
             override fun onFailure(call: retrofit2.Call<JsonArray>, t: Throwable) {
                 Tools.toastShow(this@SearchActivity, "Search failed, check your network")
                 Tools.log_e("${t.message}")
@@ -206,18 +239,22 @@ class SearchActivity : AppCompatActivity() {
             }
 
         }
-        call.enqueue(value) // asynchronous request
+        call.enqueue(value)
     }
 
+    /**
+     * Set data and list adapter
+     */
     fun showSearchResults(searchList: Array<SearchApiModel>) {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.setHasFixedSize(true)
 
-        //set data and list adapter
         mSearchItemAdapter = SearchItemAdapter(this, searchList, ItemAnimation.FADE_IN)
         recyclerView.adapter = mSearchItemAdapter
 
-        // on item list clicked
+        /**
+         * on item list clicked, then go to the preview page
+         */
         mSearchItemAdapter.setOnItemClickListener(object : SearchItemAdapter.OnItemClickListener {
             override fun onItemClick(view: View, obj: SearchApiModel, position: Int) {
                 Tools.getAudioPathByObj(obj)?.let {
@@ -228,19 +265,22 @@ class SearchActivity : AppCompatActivity() {
             }
         })
 
-        // add to track button clicked
+        /**
+         * Show a dialog when "add to track" button clicked
+         */
         mSearchItemAdapter.setOnAddToTrackListener(object : SearchItemAdapter.OnAddToTrackListener {
             override fun onAddToTrack(view: View, obj: SearchApiModel, position: Int) {
-
                 if (Tools.getAudioPathByObj(obj) != null) {
-                    Tools.log_e("obj.category: ${obj.category}")
                     showSingleChoiceDialog(obj, view as ImageView)
                 }
-
             }
         })
     }
 
+    /**
+     * Show single choice dialog, and pass the selected audio to the new soundscape page
+     * Each color stands for each category
+     */
     private var single_choice_selected: String? = null
     private val trackNumbers = arrayOf("1", "2")
     private val trackStrs = arrayOf("Track 1", "Track 2")
@@ -251,6 +291,7 @@ class SearchActivity : AppCompatActivity() {
         builder.setSingleChoiceItems(trackStrs, 0) { _, i ->
             single_choice_selected = trackNumbers[i]
         }
+
         builder.setPositiveButton("OK") { _, i ->
             var bgColor: Int
             when(searchApiModel.category){

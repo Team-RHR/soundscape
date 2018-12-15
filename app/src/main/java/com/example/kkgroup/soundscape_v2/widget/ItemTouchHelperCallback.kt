@@ -7,12 +7,17 @@ import android.support.v7.widget.StaggeredGridLayoutManager
 import android.support.v7.widget.helper.ItemTouchHelper
 
 /**
+ * description: This class is used to handle the drag and swipe aduio cards event, used in new soundscape page
  * Reference from https://github.com/WuXiaolong/AndroidSamples/
+ * create time: 15:29 2018/12/15
  */
 class ItemTouchHelperCallback (private val itemTouchHelperAdapter: ItemTouchHelperAdapter) : ItemTouchHelper.Callback() {
 
     private val ALPHA_FULL = 1.0f
 
+    /**
+     * flag == 0 means drag feature or swipe to delete feature is disabled
+     */
     private var dragFlag = ItemTouchHelper.UP or ItemTouchHelper.DOWN   // enable up/down drag
     private var swipeFlag = ItemTouchHelper.START or ItemTouchHelper.END    // enable left/right drag
 
@@ -28,16 +33,19 @@ class ItemTouchHelperCallback (private val itemTouchHelperAdapter: ItemTouchHelp
         if (recyclerView.layoutManager is GridLayoutManager || recyclerView.layoutManager is StaggeredGridLayoutManager) {
             val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
 
+            /**
+             * flag == 0 means swipe to delete feature is disabled
+             */
             val swipeFlags = 0
             return ItemTouchHelper.Callback.makeMovementFlags(dragFlags, swipeFlags)
         } else {
-//            val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
-//            val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
-
             return ItemTouchHelper.Callback.makeMovementFlags(dragFlag, swipeFlag)
         }
     }
 
+    /**
+     * Set up the draggable functionality
+     */
     fun setDraggable(isDraggable: Boolean){
         if (isDraggable) {
             dragFlag = ItemTouchHelper.UP or ItemTouchHelper.DOWN
@@ -59,6 +67,9 @@ class ItemTouchHelperCallback (private val itemTouchHelperAdapter: ItemTouchHelp
         return true
     }
 
+    /**
+     * Notify the adapter of the swipe
+     */
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         itemTouchHelperAdapter.onItemDismiss(viewHolder.adapterPosition)
     }
@@ -78,7 +89,6 @@ class ItemTouchHelperCallback (private val itemTouchHelperAdapter: ItemTouchHelp
      * Let the view holder know that this item is being moved or dragged
      */
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
-        //
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
             if (viewHolder is ItemTouchHelperViewHolder) {
                 val itemViewHolder = viewHolder as ItemTouchHelperViewHolder?

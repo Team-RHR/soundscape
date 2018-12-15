@@ -4,9 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PorterDuff
-import android.media.MediaPlayer
 import android.os.Bundle
-import android.os.Handler
 import android.support.design.widget.TabLayout
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -16,8 +14,6 @@ import android.support.v7.widget.Toolbar
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageButton
-import android.widget.ProgressBar
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.adapter.MyViewPagerAdapter
@@ -28,23 +24,18 @@ import com.example.kkgroup.soundscape_v2.fragment.FragmentRoot
 import org.jetbrains.anko.startActivity
 import kotlin.system.exitProcess
 
+/**
+ * description: This Activity is the main page which includes 4 fragments inside it,
+ *              Basically, this activity will do nothing, but loads 4 fragments as a container
+ * create time: 13:39 2018/12/15
+ */
 private const val REQUEST_WRITE_EXTERNAL_PERMISSION = 200
 class MainActivity : AppCompatActivity() {
 
-    private val LOADING_DURATION = 2000
     private var mExitTime: Long = 0
     private lateinit var view_pager: ViewPager
     private lateinit var tab_layout: TabLayout
     private lateinit var viewPagerAdapter: MyViewPagerAdapter
-
-    private lateinit var bt_play: ImageButton
-    private lateinit var audio_progressbar: ProgressBar
-    // private lateinit var mAdapter: AdapterListMusicSong
-
-    // Media Player
-    private var mp: MediaPlayer? = null
-    // Handler to update UI timer, progress bar etc,.
-    private val mHandler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,18 +44,23 @@ class MainActivity : AppCompatActivity() {
         requestPermission()
         initToolbar()
         initComponents()
-
         initListeners()
     }
 
+    /**
+     * Load our customized Toolbar which contains a search item
+     * And the default fragment is the Recording Fragment
+     */
     private fun initToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         toolbar.setNavigationIcon(R.drawable.ic_logo_sized)
         setSupportActionBar(toolbar)
         supportActionBar!!.title = "Recording"
-        // Tools.setSystemBarColor(this)
     }
 
+    /**
+     * setup viewPager
+     */
     private fun initComponents() {
 
         view_pager = findViewById(R.id.view_pager)
@@ -73,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         setupViewPager(view_pager)
         tab_layout.setupWithViewPager(view_pager)
 
+        // set icon for each tab
         tab_layout.getTabAt(0)!!.setIcon(R.drawable.ic_mic)
         tab_layout.getTabAt(1)!!.setIcon(R.drawable.ic_cloud_download)
         tab_layout.getTabAt(2)!!.setIcon(R.drawable.ic_queue_music)
@@ -85,8 +82,14 @@ class MainActivity : AppCompatActivity() {
         tab_layout.getTabAt(3)!!.icon!!.setColorFilter(resources.getColor(R.color.grey_20), PorterDuff.Mode.SRC_IN)
     }
 
+    /**
+     * setup UI event listener
+     */
     private fun initListeners() {
 
+        /**
+         * update tab icon's color when tab selected
+         */
         tab_layout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 supportActionBar!!.title = viewPagerAdapter.getTitle(tab.position)
@@ -101,18 +104,29 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    /**
+     * Request permission for write storage
+     */
     private fun requestPermission() {
         if(ContextCompat.checkSelfPermission(this,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED){
-            // No permission
+            /**
+             * No permission
+             */
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     ,REQUEST_WRITE_EXTERNAL_PERMISSION)
         }else{
-            // have permission
+            /**
+             * have permission
+             */
+            Tools.updateAudioFiles()
         }
     }
 
+    /**
+     * Add 4 fragments to viewPager
+     */
     private fun setupViewPager(viewPager: ViewPager) {
         viewPagerAdapter = MyViewPagerAdapter(supportFragmentManager)
         viewPagerAdapter.addFragment(FragmentRecording.newInstance(), getString(R.string.recoring))
@@ -123,11 +137,18 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = viewPagerAdapter
     }
 
+    /**
+     * inflate our toolbar xml
+     */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_search, menu)
         return true
     }
 
+    /**
+     * set up toolbar's item click event
+     * if click search icon, then go to the search activity
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_search){
             startActivity<SearchActivity>()
@@ -160,9 +181,8 @@ class MainActivity : AppCompatActivity() {
             REQUEST_WRITE_EXTERNAL_PERMISSION -> {
                 if (grantResults.isNotEmpty()
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // user granted the permission
+
                 } else {
-                    // user denied the permission
                     Tools.toastShow(this, getString(R.string.toast_permission_denied))
                     finish()
                 }

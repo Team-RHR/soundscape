@@ -4,23 +4,33 @@ import android.content.Context
 import android.os.Build
 import java.util.*
 
+/**
+ * description: Customized Locale manager for changing the application language
+ * create time: 15:12 2018/12/15
+ */
 class LocaleManager(context: Context) {
 
     private val context: Context = context
     private val prefManager: PrefManager = PrefManager(context)
 
-    // change + save new locale
+    /**
+     * change + save new locale
+     */
     fun changeLocale(language: String) {
         setCurrentLocale(language)
         prefManager.setLocale(language)
     }
 
-    // get latest locale set
+    /**
+     * get latest locale set
+     */
     fun getLocale() {
         setCurrentLocale(prefManager.getLocale())
     }
 
-    // set current locale settings in system
+    /**
+     * set current locale settings in system
+     */
     private fun setCurrentLocale(lang: String) {
         val locale = Locale(lang)
         val resources = context.resources
@@ -35,7 +45,5 @@ class LocaleManager(context: Context) {
         }
 
         resources.updateConfiguration(configuration, resources.displayMetrics)
-
-        // context.recreate()
     }
 }

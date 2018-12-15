@@ -8,7 +8,7 @@ import java.util.ArrayList
 /**
  * @ Author     ：Hao Zhang.
  * @ Date       ：Created in 2:32 2018/12/5
- * @ Description：Build for Metropolia project
+ * @ Description：Exclusive adapter for viewPager to inflate 4 fragments
  */
 class MyViewPagerAdapter(manager: FragmentManager): FragmentPagerAdapter(manager) {
 

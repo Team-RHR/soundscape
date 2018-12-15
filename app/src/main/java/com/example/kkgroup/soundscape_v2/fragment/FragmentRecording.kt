@@ -22,8 +22,11 @@ import java.io.File
 import java.io.IOException
 import java.util.*
 
+/**
+ * description: Recording page
+ * create time: 15:05 2018/12/15
+ */
 private const val REQUEST_RECORD_AUDIO_PERMISSION = 200
-
 class FragmentRecording : Fragment() {
     private var permissionToRecordAccepted = false
     private var mRecorder: MediaRecorder? = null
@@ -33,10 +36,10 @@ class FragmentRecording : Fragment() {
     private var fileName = ""
 
 
-    // ------------ Timer code ------------
-
+    /**
+     * Timer code
+     */
     inner class MyCounter(millisInFuture: Long, countDownInterval: Long) : CountDownTimer(millisInFuture, countDownInterval) {
-
         override fun onFinish() {
             onRecord(mStartRecording)
             textView_Countdown.text = getString(R.string.time00)
@@ -50,8 +53,6 @@ class FragmentRecording : Fragment() {
             if (second < 10) textView_Countdown.text = "00:0" + second.toString() + "" else textView_Countdown.text = "00:" + second.toString() + ""
         }
     }
-
-    // ------------ Timer code end ------------
 
     companion object {
         fun newInstance(): FragmentRecording {
@@ -73,7 +74,6 @@ class FragmentRecording : Fragment() {
                     Manifest.permission.RECORD_AUDIO,
                     Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS), REQUEST_RECORD_AUDIO_PERMISSION)
         }
-
         val timer = MyCounter(30000, 1000)
         initListeners(timer)
     }
@@ -151,7 +151,9 @@ class FragmentRecording : Fragment() {
     }
 
 
-    // Dialog for saving mp3
+    /**
+     * Dialog for saving mp3
+     */
     private fun showLogOutDialog() {
 
         val dialog1 = Dialog(this.context)

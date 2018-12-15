@@ -11,6 +11,10 @@ import com.example.kkgroup.soundscape_v2.Model.SearchApiModel
 import com.example.kkgroup.soundscape_v2.R
 import com.example.kkgroup.soundscape_v2.widget.ItemAnimation
 
+/**
+ * description: This adapter is used to inflate audio_file_item.xml in search activity
+ * create time: 14:22 2018/12/15
+ */
 class SearchItemAdapter(val ctx: Context,
                         val items: Array<SearchApiModel>,
                         val animation_type: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -52,7 +56,9 @@ class SearchItemAdapter(val ctx: Context,
         return viewHolder
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+    /**
+     * Replace the contents of a view (invoked by the layout manager)
+     */
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is OriginalViewHolder) {
             holder.name.text = items[position].title

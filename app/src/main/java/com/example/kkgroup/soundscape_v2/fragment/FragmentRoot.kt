@@ -7,6 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.kkgroup.soundscape_v2.R
 
+/**
+ * description: This Fragment is a root fragment to toggle FragmentLibraryCategory and FragmentLibraryAudioList
+ * create time: 15:08 2018/12/15
+ */
 class FragmentRoot : Fragment() {
 
     companion object {
@@ -22,7 +26,9 @@ class FragmentRoot : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-		 // When this container fragment is created, we fill it with our first "real" fragment
+        /**
+         * When this container fragment is created, we fill it with our first "real" fragment
+         */
         val transaction = fragmentManager!!.beginTransaction()
         transaction.replace(R.id.root_frame, FragmentLibraryCategory.newInstance())
         transaction.commit()

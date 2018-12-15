@@ -14,16 +14,24 @@ import com.google.gson.Gson
 import java.io.Serializable
 import java.util.*
 
+/**
+ * description: This adapter is used in search history list, only the latest 5 search item will show
+ * create time: 14:24 2018/12/15
+ */
 class SuggestionSearchAdapter(context: Context) : RecyclerView.Adapter<SuggestionSearchAdapter.ViewHolder>() {
 
     private var items: List<String> = ArrayList()
     private var onItemClickListener: OnItemClickListener? = null
     private val SEARCH_HISTORY_KEY = "_SEARCH_HISTORY_KEY"
+    /**
+     *  only the latest 5 search item will show
+     */
     private val MAX_HISTORY_ITEMS = 5
 
-    // using SharedPreferences to store our search history
+    /**
+     * using SharedPreferences to store our search history
+     */
     private val prefs: SharedPreferences = context.getSharedPreferences("PREF_RECENT_SEARCH", Context.MODE_PRIVATE)
-
     private val searchHistory: MutableList<String>
         get() {
             val json = prefs.getString(SEARCH_HISTORY_KEY, "")
@@ -41,6 +49,9 @@ class SuggestionSearchAdapter(context: Context) : RecyclerView.Adapter<Suggestio
         var lyt_parent = v.findViewById<View>(R.id.lyt_parent) as LinearLayout
     }
 
+    /**
+     * Show history items from the latest one to oldest one
+     */
     init {
         this.items = searchHistory
         Collections.reverse(this.items)
@@ -86,7 +97,8 @@ class SuggestionSearchAdapter(context: Context) : RecyclerView.Adapter<Suggestio
     }
 
     /**
-     * To save last state request
+     * To save last state request,
+     * If the size exceeds the MAX_HISTORY_ITEMS = 5, then delete the oldest one
      */
     fun addSearchHistory(s: String) {
         val searchObject = SearchObject(searchHistory)
@@ -107,7 +119,6 @@ class SuggestionSearchAdapter(context: Context) : RecyclerView.Adapter<Suggestio
         }
         val json = Gson().toJson(searchObject, SearchObject::class.java)
         prefs.edit().putString(SEARCH_HISTORY_KEY, json).apply()
-
         refreshItems()
     }
 

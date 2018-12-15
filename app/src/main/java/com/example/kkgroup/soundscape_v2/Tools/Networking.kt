@@ -10,6 +10,10 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
+/**
+ * description: Networking handler using retrofit 2
+ * create time: 15:13 2018/12/15
+ */
 object Networking {
     private const val BASE_URL = "http://resourcespace.tekniikanmuseo.fi/"
     private const val LOGIN_FAIL_RESPONSE = "Incorrect credentials! Try again."
@@ -30,8 +34,6 @@ object Networking {
         fun getAllMp3FilesWithLink(@Query("key") key: String,
                                    @Query("link") link: String,
                                    @Query("format") format: String): Call<JsonArray>
-
-
     }
 
     fun loginResponseValidation(apiKey: String): Boolean {

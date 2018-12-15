@@ -15,6 +15,10 @@ import com.example.kkgroup.soundscape_v2.Tools.Tools
 import com.example.kkgroup.soundscape_v2.activity.LoginActivity
 import org.jetbrains.anko.support.v4.startActivity
 
+/**
+ * description: Settings page
+ * create time: 15:03 2018/12/15
+ */
 class FragmentPreference : Fragment() {
 
     private lateinit var selectLanguage: TextView
@@ -39,14 +43,15 @@ class FragmentPreference : Fragment() {
     }
 
     private fun initComponents(view: View) {
-
         selectLanguage = view.findViewById(R.id.select_language)
         logout = view.findViewById(R.id.logout_button)
         delete = view.findViewById(R.id.delete_soundscapes)
         modeSwitch = view.findViewById(R.id.modeSwitch)
     }
 
-    //Set current state of settings to be displayed
+    /**
+     * Set current state of settings to be displayed
+     */
     private fun setStates() {
         if (PrefManager(context!!).getLocale() == "us") {
             selectLanguage.text = getString(R.string.english)
@@ -56,37 +61,49 @@ class FragmentPreference : Fragment() {
     }
 
     private fun initListeners() {
-        //Logout button listener
+        /**
+         * Logout button listener
+         */
         logout.setOnClickListener {
             showLogOutDialog()
         }
 
-        //Language button listener
+        /**
+         * Language button listener
+         */
         selectLanguage.setOnClickListener {
             showLanguageDialog()
         }
-        //Delete files listener
+
+        /**
+         * Delete files listener
+         */
         delete.setOnClickListener {
             showDeleteDialog()
         }
 
-        // Set an checked change listener for switch button
+        /**
+         * Set an checked change listener for switch button
+         */
         modeSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                // The switch is enabled/checked
-                println("This is theme: " + activity?.packageManager?.getActivityInfo(activity?.componentName, 0)?.theme)
+                /**
+                 * The switch is enabled/checked
+                 */
                 activity?.setTheme(R.style.NightMode)
-                //recreate()
             } else {
-                // The switch is disabled
-                println("This is theme: " + activity?.packageManager?.getActivityInfo(activity?.componentName, 0)?.theme)
+                /**
+                 * The switch is disabled
+                 */
                 activity?.setTheme(R.style.AppTheme)
             }
         }
 
     }
 
-    // Method to show an alert dialog with multiple choice list items
+    /**
+     * Method to show an delete dialog with multiple choice list items
+     */
     private fun showDeleteDialog(){
         // Late initialize an alert dialog object
         lateinit var dialog: AlertDialog
@@ -138,7 +155,9 @@ class FragmentPreference : Fragment() {
         dialog.show()
     }
 
-    // Method to show an alert dialog with single choice list items
+    /**
+     * Method to show an alert dialog with single choice list items
+     */
     private fun showLanguageDialog(){
 
         var language = ""

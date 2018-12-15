@@ -27,11 +27,13 @@ import java.io.InputStream
 /**
  * @ Author     ：Hao Zhang.
  * @ Date       ：Created in 21:22 2018/11/6
- * @ Description：Build for Metropolia project
+ * @ Description：A bunch of handy static methods, Please see instruction of each method
  */
 object Tools {
 
-    // In this project, we use the same TAG for debugging
+    /**
+     *  In this project, we use the same TAG for debugging
+     */
     private val TAG = "hero"
     private val audioFormat = ".mp3"
     private var isShow = true
@@ -47,7 +49,6 @@ object Tools {
      *
      *                 3 --- mySoundscape
      */
-
 
     // return -> /storage/emulated/0/soundscape/
     private fun getRootPath(): String {
@@ -79,7 +80,9 @@ object Tools {
         Log.e(TAG, message)
     }
 
-    // cutomized Toast style
+    /**
+     * cutomized Toast style
+     */
     fun toastShow(context: Context, message: String?) {
         if (isShow) {
             toast = Toast(context)
@@ -99,7 +102,9 @@ object Tools {
         toast?.cancel()
     }
 
-    // setup system title bar color
+    /**
+     * setup system title bar color
+     */
     fun setSystemBarColor(act: Activity, @ColorRes color: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val window = act.window
@@ -109,35 +114,42 @@ object Tools {
         }
     }
 
+    /**
+     * Convert dp to px
+     */
     fun dpToPx(ctx: Context, dp: Int): Int {
         val r = ctx.resources
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), r.displayMetrics))
     }
 
-    // view fade out effect, Prepare the View for the animation
+    /**
+     * view fade out effect, Prepare the View for the animation
+     */
     fun viewFadeOut(v: View) {
         v.alpha = 1.0f
         v.animate().setDuration(500).alpha(0.0f)
     }
 
-    // return list of audio file in a certain folder
+    /**
+     * return list of audio file in a certain folder,
+     * It will return a list of audio files whcih file name ends with .3gp or .mp3
+     */
     fun getLocalAudioFiles(folderPath: String): MutableList<File> {
-
         val folderPath = File(folderPath)
         if (!folderPath.exists()) {
             val mkdirs = folderPath.mkdirs()
         }
 
         val listFiles = folderPath.listFiles().filter {
-            // using 3gp for test purpose
-            // it.name.endsWith(Tools.audioFormat)
             it.name.endsWith(".3gp") || it.name.endsWith(Tools.audioFormat)
-
         }
         return listFiles.toMutableList()
     }
 
-    // return list of audio file in a certain folder
+    /**
+     * return list of audio file in a certain folder,
+     * It will return a list of audio files whcih file name ends with .3gp or .mp3
+     */
     fun getRemoteAudioFiles(folderPath: String): MutableList<File> {
 
         val folderPath = File(folderPath)
@@ -149,6 +161,10 @@ object Tools {
         return listFiles.toMutableList()
     }
 
+    /**
+     * return list of audio file in a certain folder,
+     * It will return a list of audio files whcih file name ends with .3gp or .mp3
+     */
     fun getMyRecordingsFiles(folderPath: String): MutableList<File> {
 
         val folderPath = File(folderPath)
@@ -161,19 +177,23 @@ object Tools {
     }
 
     /**
-     * collapse the view, used in search suggestion bar
+     * collapse the view, used in search history list in search page
      */
     fun viewCollapse(v: View) {
         val a = collapseAction(v)
         v.startAnimation(a)
     }
 
+    /**
+     * expand the view, used in search history list in search page
+     */
     fun viewExpand(v: View) {
         val a = expandAction(v)
         v.startAnimation(a)
     }
 
     /**
+     * Animation of how to expand a view
      * Cutomized Animation, learned from online blog
      */
     private fun expandAction(v: View): Animation {
@@ -200,6 +220,10 @@ object Tools {
         return a
     }
 
+    /**
+     * Animation of how to collaps a view
+     * Cutomized Animation, learned from online blog
+     */
     private fun collapseAction(v: View): Animation {
         val initialHeight = v.measuredHeight
         val a = object : Animation() {
@@ -221,6 +245,11 @@ object Tools {
         return a
     }
 
+    /**
+     * When entering the homepage, try to download all audios from the backend
+     * Whenever there is a network connection, it will automatically check if new audio appears on the backend.
+     * If yes, then downloading this new audio, other wise it will not do anything
+     */
     fun updateAudioFiles() {
 
         val directoryNature = File(Tools.getDownloadPath(), "Nature")
@@ -232,7 +261,6 @@ object Tools {
 
         val call = Networking.service.getAllMp3FilesWithLink(Networking.API_TOKEN, "true", "mp3")
         val value = object : retrofit2.Callback<JsonArray> {
-            // this method gets called after a http call, no matter the http code
             override fun onResponse(call: retrofit2.Call<JsonArray>,
                                     response: retrofit2.Response<JsonArray>?) {
                 response?.let {
@@ -243,7 +271,6 @@ object Tools {
                                 .create()
                         val model: kotlin.Array<SearchApiModel> = gson.fromJson(res, kotlin.Array<SearchApiModel>::class.java)
 
-                        Tools.log_e("size: ${model.size}")
                         for (temp in model) {
                             if (!isAlreadyDownloaded(temp)) {
                                 downloadAudio(temp)
@@ -253,19 +280,21 @@ object Tools {
                 }
             }
 
-            // this method gets called if the http call fails (no internet etc)
+            /**
+             * this method gets called if the http call fails (no internet etc)
+             */
             override fun onFailure(call: retrofit2.Call<JsonArray>, t: Throwable) {
                 Tools.log_e("${t.message}")
             }
         }
-        call.enqueue(value) // asynchronous request
+        call.enqueue(value)
     }
 
+    /**
+     * check if the audio has been downloaded by checking the file's name
+     */
     fun isAlreadyDownloaded(obj: SearchApiModel): Boolean {
         var folderName = "temp"
-        // Tools.log_e(obj.category.toString())
-        Tools.log_e(obj.toString())
-
         if (obj.category != null) {
             when (obj.category) {
                 "human" -> {
@@ -281,12 +310,13 @@ object Tools {
                 }
             }
         }
-
         return (File(Tools.getDownloadedAudioByCategoryPath(folderName) + obj.title + Tools.audioFormat)
                 .exists())
-
     }
 
+    /**
+     * downloadd audio ins seach page
+     */
     fun downloadAudio(obj: SearchApiModel) {
 
         var downloadDest = Tools.getDownloadedAudioByCategoryPath("Temp")
@@ -329,6 +359,9 @@ object Tools {
         })
     }
 
+    /**
+     * Get audio path, return null means this audio does not exist
+     */
     fun getAudioPathByObj(obj: SearchApiModel): String? {
         var folderName = "Temp"
         when (obj.category) {
@@ -351,7 +384,9 @@ object Tools {
         }
     }
 
-    //Write file to device
+    /**
+     * Write file to device
+     */
     private fun File.copyInputStreamToFile(inputStream: InputStream) {
         inputStream.use { input ->
             this.outputStream().use { fileOut ->
@@ -360,18 +395,27 @@ object Tools {
         }
     }
 
+    /**
+     * delete Audios
+     */
     fun deleteAudios() {
         val folderDir = File(getDownloadPath())
         folderDir.deleteRecursively()
         folderDir.mkdirs()
     }
 
+    /**
+     * delete SoundScapes
+     */
     fun deleteSoundScapes() {
         val folderDir = File(getMySoundscapePath())
         folderDir.deleteRecursively()
         folderDir.mkdirs()
     }
 
+    /**
+     * delete my Recordings
+     */
     fun deleteRecordings() {
         val folderDir = File(getMyRecordingPath())
         folderDir.deleteRecursively()

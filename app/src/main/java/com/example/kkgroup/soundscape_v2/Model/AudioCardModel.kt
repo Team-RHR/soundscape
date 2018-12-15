@@ -5,7 +5,7 @@ import java.io.File
 /**
  * @ Author     ：Hao Zhang.
  * @ Date       ：Created in 22:56 2018/12/2
- * @ Description：Build for Metropolia project
+ * @ Description：Model for audio cards in new soundscape page
  */
 data class AudioCardModel(
         val category: String,
