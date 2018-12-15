@@ -8,6 +8,10 @@ Application Authors: Mikael Ramo, Hao Zhang, Robert Laitila
 - Android Phone (version 6.0 or higher)
 - Android Studio
 
+## Relationships of classes (Click the picture to view more clear version)
+Main functionalities  of each class can be found on the top of the class and I also commented almost every method of each class, so that each method has a short description to tell what this method is for. The following picture is the relationships of main classes, you can click it to view more clear version.
+![Route](https://i.imgur.com/b46whxa.png)
+
 ## View demo video to help you understand code
 [![Demo video](https://i.imgur.com/5cQYa4A.png)](https://youtu.be/3QlhLGnfMG8?t=5)
 
